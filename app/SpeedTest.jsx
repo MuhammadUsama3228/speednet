@@ -57,16 +57,16 @@ export default function SpeedTest(){
 
   useEffect(() => {
     // Always use client-side detection for accurate results
-    fetch('https://ipapi.co/json/')
+    fetch('https://ip-api.com/json')
       .then(r => r.json())
       .then(clientData => {
         setClientInfo({
-          ip: clientData.ip || 'Unknown',
-          version: clientData.version || 'IPv4',
+          ip: clientData.query || 'Unknown',
+          version: clientData.query && clientData.query.includes(':') ? 'IPv6' : 'IPv4',
           city: clientData.city || 'Unknown',
-          country_name: clientData.country_name || 'Unknown',
-          region: clientData.region || 'Unknown',
-          isp: clientData.org || clientData.isp || 'Unknown',
+          country_name: clientData.country || 'Unknown',
+          region: clientData.regionName || 'Unknown',
+          isp: clientData.isp || 'Unknown',
           status: 'success'
         });
       })
