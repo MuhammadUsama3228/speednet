@@ -1,6 +1,21 @@
-export async function GET() {
+export async function GET(request) {
   try {
-    const response = await fetch('https://ipapi.co/json/', {
+    // Get the real client IP from Vercel headers
+    const clientIP = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
+                     request.headers.get('x-real-ip') ||
+                     request.headers.get('cf-connecting-ip') ||
+                     'Unknown';
+
+    // If we can't get the client IP, try to get it from the external service
+    let ipToQuery = clientIP;
+    if (clientIP === 'Unknown' || !clientIP) {
+      // Fallback: let the service detect the IP
+      ipToQuery = '';
+    }
+
+    const apiUrl = ipToQuery ? `https://ipapi.co/${ipToQuery}/json/` : 'https://ipapi.co/json/';
+
+    const response = await fetch(apiUrl, {
       headers: {
         'User-Agent': 'SpeedNet-App/1.0'
       },
@@ -14,13 +29,16 @@ export async function GET() {
 
     const data = await response.json();
 
+    // Override with the actual client IP if we got it from headers
+    const finalIP = clientIP !== 'Unknown' ? clientIP : data.ip;
+
     return Response.json({
-      ip: data.ip || 'Unable to detect',
+      ip: finalIP || 'Unable to detect',
       version: data.version || 'Unable to detect',
       city: data.city || 'Unable to detect',
       country_name: data.country_name || 'Unable to detect',
       region: data.region || 'Unable to detect',
-      isp: data.org || 'Unable to detect',
+      isp: data.org || data.isp || 'Unable to detect',
       status: 'success'
     });
   } catch (error) {

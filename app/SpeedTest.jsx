@@ -246,8 +246,8 @@ export default function SpeedTest(){
               <div>
                 <div className="font-semibold text-slate-700 dark:text-slate-200 mb-3">Server Information</div>
                 <div className="text-sm text-slate-600 dark:text-slate-300">
-                  <div>Local Server</div>
-                  <div className="mt-2 text-xs text-slate-500">Running on your device</div>
+                  <div>Vercel Edge Network</div>
+                  <div className="mt-2 text-xs text-slate-500">Deployed globally on Vercel</div>
                 </div>
               </div>
             </div>
