@@ -57,22 +57,23 @@ export default function SpeedTest(){
 
   useEffect(() => {
     // Always use client-side detection for accurate results
-    fetch('https://freegeoip.app/json/')
+    fetch('https://ip-api.com/json/')
       .then(r => r.json())
       .then(clientData => {
         console.log('Client-side detected IP and location:', {
-          ip: clientData.ip,
+          ip: clientData.query,
           city: clientData.city,
-          country: clientData.country_name,
-          region: clientData.region_name
+          country: clientData.country,
+          region: clientData.regionName,
+          isp: clientData.isp
         })
         setClientInfo({
-          ip: clientData.ip || 'Unknown',
-          version: clientData.ip && clientData.ip.includes(':') ? 'IPv6' : 'IPv4',
+          ip: clientData.query || 'Unknown',
+          version: clientData.query && clientData.query.includes(':') ? 'IPv6' : 'IPv4',
           city: clientData.city || 'Unknown',
-          country_name: clientData.country_name || 'Unknown',
-          region: clientData.region_name || 'Unknown',
-          isp: 'Unknown',
+          country_name: clientData.country || 'Unknown',
+          region: clientData.regionName || 'Unknown',
+          isp: clientData.isp || 'Unknown',
           status: 'success'
         });
       })
