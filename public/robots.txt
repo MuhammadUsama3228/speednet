@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Block access to API routes for security
+Disallow: /api/
+
+# Block access to Next.js internal routes
+Disallow: /_next/
+Disallow: /.next/
+
+# Allow crawling of static assets
+Allow: /favicon.svg
+Allow: /manifest.json
+
+# Sitemap - Update domain when deploying
+Sitemap: https://speednet.app/sitemap.xml
