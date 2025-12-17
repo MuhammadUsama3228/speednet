@@ -111,33 +111,40 @@ export default function SpeedTest(){
       return
     }
 
-    // Download test
-    try{
-      const start = performance.now()
-      const resp = await get('/api/download')
-      if(!resp.ok) throw new Error('Download request failed')
-      const reader = resp.body.getReader()
-      let received = 0
-      const total = Number(resp.headers.get('Content-Length')) || 10*1024*1024
-      while(true){
-        const { done, value } = await reader.read()
-        if(done) break
-        received += value.length
-        setProgress(prev => ({ ...prev, download: (received / total) * 100 }))
+    // Download test using Cloudflare CDN for accurate results
+    try {
+      const testSizeMB = 25;
+      const url = `https://speed.cloudflare.com/__down?bytes=${testSizeMB * 1000000}`;
+
+      setProgress(prev => ({ ...prev, download: 10 })); // Starting
+
+      const start = performance.now();
+      const res = await fetch(url, { cache: 'no-store' });
+
+      if (!res.ok) throw new Error('Download failed');
+
+      const reader = res.body.getReader();
+      let received = 0;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        received += value.length;
+        setProgress(prev => ({ ...prev, download: (received / (testSizeMB * 1000000)) * 90 + 10 }));
       }
-      const elapsed = (performance.now() - start) / 1000
-      const bps = received / Math.max(elapsed, 0.001)
-      const mbps = formatMbps(bps)
-      setDownload(mbps)
-      setGauge(Math.min(mbps, 1000))
-    }catch(err){
-      setError('Download failed')
-      toast.error('Download failed — offline or blocked')
-      setRunning(false)
-      return
+
+      const duration = (performance.now() - start) / 1000;
+      const mbps = (received * 8) / duration / 1000000;
+      setDownload(mbps.toFixed(1));
+      setGauge(Math.min(mbps, 1000));
+    } catch (err) {
+      setError('Download test failed');
+      toast.error('Download test failed — check your connection');
+      setRunning(false);
+      return;
     }
 
-    // Upload test: send a 2MB blob (Vercel limit)
+    // Upload test: send a 2MB blob (Vercel limit) - Note: Results are approximate due to serverless limitations
     try{
       setProgress(prev => ({ ...prev, upload: 10 }))
       const size = 2 * 1024 * 1024
@@ -226,7 +233,7 @@ export default function SpeedTest(){
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-2xl">
           <Metric icon="↓" label="Download" value={download ? `${download} Mbps` : running ? 'Testing…' : '-'} progress={progress.download} />
-          <Metric icon="↑" label="Upload" value={upload ? `${upload} Mbps` : running ? 'Testing…' : '-'} progress={progress.upload} />
+          <Metric icon="↑" label="Upload" value={upload ? `${upload} Mbps*` : running ? 'Testing…' : '-'} progress={progress.upload} subValue={upload ? 'Approximate' : null} />
           <Metric icon="⚡" label="Latency" value={unloadedPing ? `${unloadedPing} ms` : running ? 'Testing…' : '-'} subValue={loadedPing ? `${loadedPing} ms` : null} />
         </div>
 
