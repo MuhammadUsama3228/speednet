@@ -60,6 +60,12 @@ export default function SpeedTest(){
     fetch('https://freegeoip.app/json/')
       .then(r => r.json())
       .then(clientData => {
+        console.log('Client-side detected IP and location:', {
+          ip: clientData.ip,
+          city: clientData.city,
+          country: clientData.country_name,
+          region: clientData.region_name
+        })
         setClientInfo({
           ip: clientData.ip || 'Unknown',
           version: clientData.ip && clientData.ip.includes(':') ? 'IPv6' : 'IPv4',
