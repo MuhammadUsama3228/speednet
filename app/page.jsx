@@ -1,9 +1,6 @@
-import SpeedTest from './SpeedTest'
+"use client"
 
-export const metadata = {
-  title: `${process.env.NEXT_PUBLIC_APP_NAME} — Fast, simple speed test`,
-  description: 'A minimal speed test built with Next.js and Tailwind'
-}
+import SpeedTest from './SpeedTest'
 
 export default function Page(){
   return <SpeedTest />
