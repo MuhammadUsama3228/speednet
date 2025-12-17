@@ -56,51 +56,33 @@ export default function SpeedTest(){
   const { get } = useAbortableFetch()
 
   useEffect(() => {
-    // Fetch client info on mount
-    fetch('/api/client-info')
+    // Always use client-side detection for accurate results
+    fetch('https://ipapi.co/json/')
       .then(r => r.json())
-      .then(data => {
-        if (data.status === 'client_side_required') {
-          // Server-side detection failed, try client-side
-          fetch('https://ipapi.co/json/')
-            .then(r => r.json())
-            .then(clientData => {
-              setClientInfo({
-                ip: clientData.ip || 'Unknown',
-                version: clientData.version || 'IPv4',
-                city: clientData.city || 'Unknown',
-                country_name: clientData.country_name || 'Unknown',
-                region: clientData.region || 'Unknown',
-                isp: clientData.org || clientData.isp || 'Unknown',
-                status: 'success'
-              });
-            })
-            .catch(() => {
-              setClientInfo({
-                ip: 'Unknown',
-                version: 'Unknown',
-                city: 'Unknown',
-                country_name: 'Unknown',
-                region: 'Unknown',
-                isp: 'Unknown',
-                status: 'error',
-                reason: 'Unable to detect client information'
-              });
-            });
-        } else {
-          setClientInfo(data);
-        }
+      .then(clientData => {
+        setClientInfo({
+          ip: clientData.ip || 'Unknown',
+          version: clientData.version || 'IPv4',
+          city: clientData.city || 'Unknown',
+          country_name: clientData.country_name || 'Unknown',
+          region: clientData.region || 'Unknown',
+          isp: clientData.org || clientData.isp || 'Unknown',
+          status: 'success'
+        });
       })
-      .catch(() => setClientInfo({
-        ip: 'Unknown',
-        version: 'Unknown',
-        city: 'Unknown',
-        country_name: 'Unknown',
-        region: 'Unknown',
-        isp: 'Unknown',
-        status: 'error',
-        reason: 'Connection failed'
-      }));
+      .catch((error) => {
+        console.error('Client-side IP detection failed:', error);
+        setClientInfo({
+          ip: 'Unknown',
+          version: 'Unknown',
+          city: 'Unknown',
+          country_name: 'Unknown',
+          region: 'Unknown',
+          isp: 'Unknown',
+          status: 'error',
+          reason: 'Unable to detect client information'
+        });
+      });
   }, [])
 
   const runTest = useCallback(async ()=>{
@@ -148,10 +130,10 @@ export default function SpeedTest(){
       return
     }
 
-    // Upload test: send a 5MB blob
+    // Upload test: send a 2MB blob (Vercel limit)
     try{
       setProgress(prev => ({ ...prev, upload: 10 }))
-      const size = 5 * 1024 * 1024
+      const size = 2 * 1024 * 1024
       const chunk = new Uint8Array(1024)
       for(let i=0;i<chunk.length;i++) chunk[i]=i%256
       const parts = []
