@@ -116,13 +116,13 @@ export default function SpeedTest(){
         const { done, value } = await reader.read()
         if(done) break
         received += value.length
-        const elapsed = (performance.now() - start) / 1000
-        const bps = received / Math.max(elapsed, 0.001)
-        const mbps = formatMbps(bps)
-        setDownload(mbps)
-        setGauge(Math.min(mbps, 1000))
         setProgress(prev => ({ ...prev, download: (received / total) * 100 }))
       }
+      const elapsed = (performance.now() - start) / 1000
+      const bps = received / Math.max(elapsed, 0.001)
+      const mbps = formatMbps(bps)
+      setDownload(mbps)
+      setGauge(Math.min(mbps, 1000))
     }catch(err){
       setError('Download failed')
       toast.error('Download failed — offline or blocked')
