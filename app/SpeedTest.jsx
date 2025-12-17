@@ -59,7 +59,38 @@ export default function SpeedTest(){
     // Fetch client info on mount
     fetch('/api/client-info')
       .then(r => r.json())
-      .then(data => setClientInfo(data))
+      .then(data => {
+        if (data.status === 'client_side_required') {
+          // Server-side detection failed, try client-side
+          fetch('https://ipapi.co/json/')
+            .then(r => r.json())
+            .then(clientData => {
+              setClientInfo({
+                ip: clientData.ip || 'Unknown',
+                version: clientData.version || 'IPv4',
+                city: clientData.city || 'Unknown',
+                country_name: clientData.country_name || 'Unknown',
+                region: clientData.region || 'Unknown',
+                isp: clientData.org || clientData.isp || 'Unknown',
+                status: 'success'
+              });
+            })
+            .catch(() => {
+              setClientInfo({
+                ip: 'Unknown',
+                version: 'Unknown',
+                city: 'Unknown',
+                country_name: 'Unknown',
+                region: 'Unknown',
+                isp: 'Unknown',
+                status: 'error',
+                reason: 'Unable to detect client information'
+              });
+            });
+        } else {
+          setClientInfo(data);
+        }
+      })
       .catch(() => setClientInfo({
         ip: 'Unknown',
         version: 'Unknown',
@@ -69,7 +100,7 @@ export default function SpeedTest(){
         isp: 'Unknown',
         status: 'error',
         reason: 'Connection failed'
-      }))
+      }));
   }, [])
 
   const runTest = useCallback(async ()=>{
@@ -212,43 +243,34 @@ export default function SpeedTest(){
 
         {(clientInfo || unloadedPing) && (
           <div className="metric-card w-full max-w-2xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <div className="font-semibold text-slate-700 dark:text-slate-200 mb-3">Client Information</div>
-                <div className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
-                  <div className="flex justify-between">
-                    <span className="font-medium">IP Address:</span>
-                    <span>{clientInfo ? clientInfo.ip : 'Loading…'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium">Version:</span>
-                    <span>{clientInfo ? clientInfo.version : 'Loading…'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium">Location:</span>
-                    <span>{clientInfo ? `${clientInfo.city}, ${clientInfo.region}` : 'Loading…'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium">Country:</span>
-                    <span>{clientInfo ? clientInfo.country_name : 'Loading…'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium">ISP:</span>
-                    <span>{clientInfo ? clientInfo.isp : 'Loading…'}</span>
-                  </div>
-                  {clientInfo && clientInfo.status === 'error' && (
-                    <div className="mt-3 p-2 bg-red-50 dark:bg-red-900/20 rounded text-xs text-red-600 dark:text-red-400">
-                      <strong>Note:</strong> {clientInfo.reason || 'Unable to detect client information'}
-                    </div>
-                  )}
+            <div>
+              <div className="font-semibold text-slate-700 dark:text-slate-200 mb-3">Client Information</div>
+              <div className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
+                <div className="flex justify-between">
+                  <span className="font-medium">IP Address:</span>
+                  <span>{clientInfo ? clientInfo.ip : 'Loading…'}</span>
                 </div>
-              </div>
-              <div>
-                <div className="font-semibold text-slate-700 dark:text-slate-200 mb-3">Server Information</div>
-                <div className="text-sm text-slate-600 dark:text-slate-300">
-                  <div>Vercel Edge Network</div>
-                  <div className="mt-2 text-xs text-slate-500">Deployed globally on Vercel</div>
+                <div className="flex justify-between">
+                  <span className="font-medium">Version:</span>
+                  <span>{clientInfo ? clientInfo.version : 'Loading…'}</span>
                 </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">Location:</span>
+                  <span>{clientInfo ? `${clientInfo.city}, ${clientInfo.region}` : 'Loading…'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">Country:</span>
+                  <span>{clientInfo ? clientInfo.country_name : 'Loading…'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">ISP:</span>
+                  <span>{clientInfo ? clientInfo.isp : 'Loading…'}</span>
+                </div>
+                {clientInfo && clientInfo.status === 'error' && (
+                  <div className="mt-3 p-2 bg-red-50 dark:bg-red-900/20 rounded text-xs text-red-600 dark:text-red-400">
+                    <strong>Note:</strong> {clientInfo.reason || 'Unable to detect client information'}
+                  </div>
+                )}
               </div>
             </div>
           </div>
