@@ -80,7 +80,7 @@ export const metadata = {
     shortcut: '/favicon.svg',
     apple: '/favicon.svg',
   },
-  manifest: '/manifest.json',
+  // manifest: '/manifest.json', // Removed to avoid 401 errors on Vercel preview
 }
 
 export default function RootLayout({ children }){

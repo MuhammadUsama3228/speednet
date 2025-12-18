@@ -62,24 +62,24 @@ export default function SpeedTest(){
       .then(serverData => {
         console.log('Server-side detected IP:', serverData.server_ip)
         // Then get accurate client-side detection
-        fetch('https://ip-api.com/json/')
+        fetch('https://ipwho.is/')
           .then(r => r.json())
           .then(clientData => {
             console.log('Client-side detected IP and location:', {
-              ip: clientData.query,
+              ip: clientData.ip,
               city: clientData.city,
               country: clientData.country,
-              region: clientData.regionName,
-              isp: clientData.isp
+              region: clientData.region,
+              isp: clientData.connection?.isp || 'Unknown'
             })
             setClientInfo({
               server_ip: serverData.server_ip, // Show both for comparison
-              ip: clientData.query || 'Unknown',
-              version: clientData.query && clientData.query.includes(':') ? 'IPv6' : 'IPv4',
+              ip: clientData.ip || 'Unknown',
+              version: clientData.ip && clientData.ip.includes(':') ? 'IPv6' : 'IPv4',
               city: clientData.city || 'Unknown',
               country_name: clientData.country || 'Unknown',
-              region: clientData.regionName || 'Unknown',
-              isp: clientData.isp || 'Unknown',
+              region: clientData.region || 'Unknown',
+              isp: clientData.connection?.isp || 'Unknown',
               status: 'success'
             });
           })
@@ -100,20 +100,21 @@ export default function SpeedTest(){
       })
       .catch(() => {
         // Fallback to client-side only
-        fetch('https://ip-api.com/json/')
+        fetch('https://ipwho.is/')
           .then(r => r.json())
           .then(clientData => {
             setClientInfo({
-              ip: clientData.query || 'Unknown',
-              version: clientData.query && clientData.query.includes(':') ? 'IPv6' : 'IPv4',
+              ip: clientData.ip || 'Unknown',
+              version: clientData.ip && clientData.ip.includes(':') ? 'IPv6' : 'IPv4',
               city: clientData.city || 'Unknown',
               country_name: clientData.country || 'Unknown',
-              region: clientData.regionName || 'Unknown',
-              isp: clientData.isp || 'Unknown',
+              region: clientData.region || 'Unknown',
+              isp: clientData.connection?.isp || 'Unknown',
               status: 'success'
             });
           })
           .catch((error) => {
+            console.error('Client-side IP detection failed:', error);
             setClientInfo({
               ip: 'Unknown',
               version: 'Unknown',
@@ -122,7 +123,7 @@ export default function SpeedTest(){
               region: 'Unknown',
               isp: 'Unknown',
               status: 'error',
-              reason: 'Unable to detect client information'
+              reason: 'Location detection may be blocked in your region'
             });
           });
       });
@@ -335,6 +336,8 @@ export default function SpeedTest(){
 }
 
 function Gauge({ value }) {
+  const numValue = Number(value) || 0; // Convert safely to number
+  
   return (
     <motion.div
       className="relative w-48 h-48 mx-auto"
@@ -360,7 +363,7 @@ function Gauge({ value }) {
           strokeWidth="10"
           strokeLinecap="round"
           initial={{ pathLength: 0 }}
-          animate={{ pathLength: Math.min(value / 100, 1) }}
+          animate={{ pathLength: Math.min(numValue / 100, 1) }}
           transition={{ duration: 1, ease: "easeOut" }}
           transform="rotate(-90 100 100)"
         />
@@ -374,7 +377,7 @@ function Gauge({ value }) {
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center">
           <div className="text-3xl font-bold text-slate-800 dark:text-slate-100">
-            {value.toFixed(1)}
+            {numValue.toFixed(1)}
           </div>
           <div className="text-sm text-slate-500 dark:text-slate-400">Mbps</div>
         </div>
