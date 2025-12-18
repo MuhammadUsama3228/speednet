@@ -56,39 +56,75 @@ export default function SpeedTest(){
   const { get } = useAbortableFetch()
 
   useEffect(() => {
-    // Always use client-side detection for accurate results
-    fetch('https://ip-api.com/json/')
+    // Fetch server-detected IP first
+    fetch('/api/client-info')
       .then(r => r.json())
-      .then(clientData => {
-        console.log('Client-side detected IP and location:', {
-          ip: clientData.query,
-          city: clientData.city,
-          country: clientData.country,
-          region: clientData.regionName,
-          isp: clientData.isp
-        })
-        setClientInfo({
-          ip: clientData.query || 'Unknown',
-          version: clientData.query && clientData.query.includes(':') ? 'IPv6' : 'IPv4',
-          city: clientData.city || 'Unknown',
-          country_name: clientData.country || 'Unknown',
-          region: clientData.regionName || 'Unknown',
-          isp: clientData.isp || 'Unknown',
-          status: 'success'
-        });
+      .then(serverData => {
+        console.log('Server-side detected IP:', serverData.server_ip)
+        // Then get accurate client-side detection
+        fetch('https://ip-api.com/json/')
+          .then(r => r.json())
+          .then(clientData => {
+            console.log('Client-side detected IP and location:', {
+              ip: clientData.query,
+              city: clientData.city,
+              country: clientData.country,
+              region: clientData.regionName,
+              isp: clientData.isp
+            })
+            setClientInfo({
+              server_ip: serverData.server_ip, // Show both for comparison
+              ip: clientData.query || 'Unknown',
+              version: clientData.query && clientData.query.includes(':') ? 'IPv6' : 'IPv4',
+              city: clientData.city || 'Unknown',
+              country_name: clientData.country || 'Unknown',
+              region: clientData.regionName || 'Unknown',
+              isp: clientData.isp || 'Unknown',
+              status: 'success'
+            });
+          })
+          .catch((error) => {
+            console.error('Client-side IP detection failed:', error);
+            setClientInfo({
+              server_ip: serverData.server_ip,
+              ip: 'Unknown',
+              version: 'Unknown',
+              city: 'Unknown',
+              country_name: 'Unknown',
+              region: 'Unknown',
+              isp: 'Unknown',
+              status: 'error',
+              reason: 'Unable to detect client information'
+            });
+          });
       })
-      .catch((error) => {
-        console.error('Client-side IP detection failed:', error);
-        setClientInfo({
-          ip: 'Unknown',
-          version: 'Unknown',
-          city: 'Unknown',
-          country_name: 'Unknown',
-          region: 'Unknown',
-          isp: 'Unknown',
-          status: 'error',
-          reason: 'Unable to detect client information'
-        });
+      .catch(() => {
+        // Fallback to client-side only
+        fetch('https://ip-api.com/json/')
+          .then(r => r.json())
+          .then(clientData => {
+            setClientInfo({
+              ip: clientData.query || 'Unknown',
+              version: clientData.query && clientData.query.includes(':') ? 'IPv6' : 'IPv4',
+              city: clientData.city || 'Unknown',
+              country_name: clientData.country || 'Unknown',
+              region: clientData.regionName || 'Unknown',
+              isp: clientData.isp || 'Unknown',
+              status: 'success'
+            });
+          })
+          .catch((error) => {
+            setClientInfo({
+              ip: 'Unknown',
+              version: 'Unknown',
+              city: 'Unknown',
+              country_name: 'Unknown',
+              region: 'Unknown',
+              isp: 'Unknown',
+              status: 'error',
+              reason: 'Unable to detect client information'
+            });
+          });
       });
   }, [])
 
@@ -243,7 +279,11 @@ export default function SpeedTest(){
               <div className="font-semibold text-slate-700 dark:text-slate-200 mb-3">Client Information</div>
               <div className="space-y-2 text-sm text-slate-600 dark:text-slate-300">
                 <div className="flex justify-between">
-                  <span className="font-medium">IP Address:</span>
+                  <span className="font-medium">Server IP:</span>
+                  <span className="text-xs text-slate-500">{clientInfo ? clientInfo.server_ip : 'Loading…'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="font-medium">Your IP:</span>
                   <span>{clientInfo ? clientInfo.ip : 'Loading…'}</span>
                 </div>
                 <div className="flex justify-between">
@@ -267,6 +307,9 @@ export default function SpeedTest(){
                     <strong>Note:</strong> {clientInfo.reason || 'Unable to detect client information'}
                   </div>
                 )}
+                <div className="mt-3 p-2 bg-blue-50 dark:bg-blue-900/20 rounded text-xs text-blue-600 dark:text-blue-400">
+                  <strong>Why different IPs?</strong> Server sees Vercel's IP, client-side detects your real IP for accurate location.
+                </div>
               </div>
             </div>
           </div>
