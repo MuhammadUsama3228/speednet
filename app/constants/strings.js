@@ -46,10 +46,10 @@ export const APP_STRINGS = {
     RESULTS_LATENCY: 'Latency:',
 
     // Footer
-    FOOTER_TEXT: `© Copyright ${new Date().getFullYear()} scanpings.net - Powered by Cloudflare`,
+    FOOTER_TEXT: `© Copyright ${new Date().getFullYear()} scanpings.net - Powered by ScanPing`,
 
     // Console Messages
-    CONSOLE_START: '🚀 ScanPing - Powered by Cloudflare',
+    CONSOLE_START: '🚀 ScanPing - Powered by ScanPing',
     CONSOLE_ENGINE: '⚡ ScanPing library',
     CONSOLE_COMPLETE: '✅ TEST COMPLETE!',
     CONSOLE_FAILED: '❌ Test failed:',
