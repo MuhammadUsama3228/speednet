@@ -1,30 +1,30 @@
 {
-  "name": "SpeedNet - Internet Speed Test",
+  "name": "SpeedNet",
   "short_name": "SpeedNet",
-  "description": "Fast online internet speed test tool",
+  "description": "Accurate Internet Speed Test - Powered by Cloudflare",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ec4899",
+  "background_color": "#1e40af",
+  "theme_color": "#1e40af",
   "orientation": "portrait-primary",
-  "scope": "/",
-  "lang": "en",
-  "categories": ["utilities", "productivity"],
   "icons": [
     {
       "src": "/favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ],
-  "shortcuts": [
-    {
-      "name": "Start Speed Test",
-      "short_name": "Test Speed",
-      "description": "Quickly test your internet speed",
-      "url": "/",
-      "icons": [{ "src": "/favicon.svg", "sizes": "96x96" }]
-    }
-  ]
+  "categories": [
+    "utilities",
+    "productivity",
+    "tools"
+  ],
+  "prefer_related_applications": false
 }

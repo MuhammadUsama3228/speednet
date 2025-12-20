@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e40af"/>
+      <stop offset="50%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="50%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Rounded square background -->
+  <rect x="0" y="0" width="1000" height="1000" rx="150" ry="150" fill="url(#bgGrad)"/>
+  
+  <!-- Background arc -->
+  <path d="M 220 580 A 280 280 0 0 1 780 580" 
+        stroke="rgba(255,255,255,0.2)" 
+        stroke-width="50" 
+        stroke-linecap="round" 
+        fill="none"/>
+  
+  <!-- Colored speed arc -->
+  <path d="M 220 580 A 280 280 0 0 1 650 350" 
+        stroke="url(#arcGrad)" 
+        stroke-width="50" 
+        stroke-linecap="round" 
+        fill="none"/>
+  
+  <!-- Needle -->
+  <g transform="translate(500, 550) rotate(-50)">
+    <polygon points="0,-15 240,0 0,15" fill="white"/>
+    <circle cx="0" cy="0" r="40" fill="white"/>
+  </g>
+  
+  <!-- Signal waves -->
+  <path d="M 420 320 A 80 80 0 0 1 580 320" stroke="rgba(255,255,255,0.8)" stroke-width="25" stroke-linecap="round" fill="none"/>
+  <path d="M 380 280 A 120 120 0 0 1 620 280" stroke="rgba(255,255,255,0.6)" stroke-width="25" stroke-linecap="round" fill="none"/>
+  <path d="M 340 240 A 160 160 0 0 1 660 240" stroke="rgba(255,255,255,0.4)" stroke-width="25" stroke-linecap="round" fill="none"/>
+  
+  <!-- S text -->
+  <text x="500" y="820" text-anchor="middle" fill="white" font-size="220" font-weight="bold" font-family="Arial, sans-serif">S</text>
+</svg>

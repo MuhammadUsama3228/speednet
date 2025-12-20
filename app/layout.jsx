@@ -1,9 +1,10 @@
 import './globals.css'
-import ThemeProvider from './ThemeProvider'
+
 import { Toaster } from 'react-hot-toast'
 
 export const metadata = {
   title: `${process.env.NEXT_PUBLIC_APP_NAME} - Free Online Internet Speed Test | Fast & Accurate Results`,
+  applicationName: process.env.NEXT_PUBLIC_APP_NAME,
   description: `Test your internet speed with ${process.env.NEXT_PUBLIC_APP_NAME} - the fastest, most accurate online speed test. Measure download, upload speeds, ping, and jitter. Get detailed results in seconds.`,
   keywords: [
     'internet speed test',
@@ -41,7 +42,7 @@ export const metadata = {
     siteName: process.env.NEXT_PUBLIC_APP_NAME,
     images: [
       {
-        url: '/og-image.png',
+        url: '/og-image.svg',
         width: 1200,
         height: 630,
         alt: `${process.env.NEXT_PUBLIC_APP_NAME} Internet Speed Test`,
@@ -54,7 +55,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: `${process.env.NEXT_PUBLIC_APP_NAME} - Free Online Internet Speed Test`,
     description: `Test your internet speed instantly with ${process.env.NEXT_PUBLIC_APP_NAME}. Get accurate download, upload, ping, and jitter measurements.`,
-    images: ['/og-image.png'],
+    images: ['/og-image.svg'],
     creator: `@${process.env.NEXT_PUBLIC_APP_NAME?.toLowerCase()}`,
   },
   robots: {
@@ -80,10 +81,10 @@ export const metadata = {
     shortcut: '/favicon.svg',
     apple: '/favicon.svg',
   },
-  // manifest: '/manifest.json', // Removed to avoid 401 errors on Vercel preview
+  manifest: '/manifest.json',
 }
 
-export default function RootLayout({ children }){
+export default function RootLayout({ children }) {
   const appName = process.env.NEXT_PUBLIC_APP_NAME || 'SpeedNet'
   const structuredData = {
     "@context": "https://schema.org",
@@ -108,7 +109,7 @@ export default function RootLayout({ children }){
       "Mobile Friendly",
       "No Registration Required"
     ],
-    "screenshot": "/og-image.png",
+    "screenshot": "/og-image.svg",
     "author": {
       "@type": "Organization",
       "name": `${appName} Team`
@@ -128,8 +129,8 @@ export default function RootLayout({ children }){
     <html lang="en">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-        <meta name="theme-color" content="#ec4899" />
-        <meta name="msapplication-TileColor" content="#ec4899" />
+        <meta name="theme-color" content="#1e40af" />
+        <meta name="msapplication-TileColor" content="#1e40af" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -141,10 +142,8 @@ export default function RootLayout({ children }){
         />
       </head>
       <body>
-        <ThemeProvider>
-          <Toaster position="top-right" />
-          {children}
-        </ThemeProvider>
+        <Toaster position="top-right" />
+        {children}
       </body>
     </html>
   )
