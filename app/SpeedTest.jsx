@@ -12,6 +12,7 @@ export default function SpeedTest() {
   const [location, setLocation] = useState('');
   const [progress, setProgress] = useState(0);
   const [stage, setStage] = useState('');
+  const [currentSpeed, setCurrentSpeed] = useState(0);
 
   useEffect(() => {
     fetchIPInfo();
@@ -24,151 +25,190 @@ export default function SpeedTest() {
       setIp(data.ip);
       setLocation(`${data.city}, ${data.country_name}`);
     } catch (error) {
-      console.error('Error fetching IP:', error);
+      setIp('Unable to fetch');
+      setLocation('Unknown');
     }
   };
 
   const measurePing = async () => {
     const measurements = [];
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 3; i++) {
       const start = performance.now();
       try {
-        await fetch('https://www.cloudflare.com/cdn-cgi/trace', {
+        // Use local endpoint to avoid CORS, but cache-busting ensures actual RTT
+        await fetch('/api/librespeed/empty?r=' + Math.random(), {
           method: 'HEAD',
           cache: 'no-store'
         });
         const end = performance.now();
         measurements.push(end - start);
       } catch (error) {
-        console.error('Ping measurement failed:', error);
+        console.error('Ping failed:', error);
       }
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
     return measurements.length > 0
-      ? measurements.reduce((a, b) => a + b) / measurements.length
+      ? Math.round(measurements.reduce((a, b) => a + b) / measurements.length)
       : 0;
   };
 
   const measureDownloadSpeed = async () => {
-    const testDuration = 10000; // 10 seconds
-    const warmupTime = 2000; // 2 seconds warmup
-    const numConnections = 6; // Multiple parallel connections
+    return new Promise(async (resolve) => {
+      const testDuration = 15000; // 15 seconds total
+      const warmupDuration = 3000; // 3 second warmup
+      let totalBytesAfterWarmup = 0;
+      let testStartTime = null;
+      let connections = [];
+      const startTime = Date.now();
 
-    // Use our own optimized Vercel Edge endpoints
-    const testUrls = [
-      '/api/librespeed/garbage?ckSize=4',
-      '/api/librespeed/garbage?ckSize=4',
-      '/api/librespeed/garbage?ckSize=4',
-      '/api/librespeed/garbage?ckSize=4',
-      '/api/librespeed/garbage?ckSize=4',
-      '/api/librespeed/garbage?ckSize=4'
-    ];
+      // Create 6 parallel download streams for better saturation
+      const numStreams = 6;
 
-    let totalBytes = 0;
-    let validMeasurements = 0;
-    const startTime = performance.now();
-    let isWarmup = true;
+      for (let i = 0; i < numStreams; i++) {
+        const downloadStream = async () => {
+          while (Date.now() - startTime < testDuration) {
+            try {
+              // Use local proxy to avoid CORS. ckSize=8 requests 8MB chunks.
+              const cacheBuster = Date.now() + Math.random();
+              const url = `/api/librespeed/garbage?ckSize=8&r=${cacheBuster}`;
 
-    const downloadPromises = testUrls.slice(0, numConnections).map(async (url, index) => {
-      let connectionBytes = 0;
+              const response = await fetch(url, {
+                cache: 'no-store',
+                headers: { 'Cache-Control': 'no-cache' }
+              });
 
-      while (performance.now() - startTime < testDuration) {
-        try {
-          const cacheBuster = `${Date.now()}-${Math.random()}`;
-          const response = await fetch(`${url}&cacheBuster=${cacheBuster}`, {
-            cache: 'no-store',
-            headers: { 'Cache-Control': 'no-cache' }
-          });
+              if (!response.ok) throw new Error('Download failed');
 
-          const reader = response.body.getReader();
-          let receivedLength = 0;
+              const reader = response.body.getReader();
 
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) break;
+              while (true) {
+                const { done, value } = await reader.read();
 
-            receivedLength += value.length;
+                if (done) break;
 
-            // Only count bytes after warmup period
-            if (performance.now() - startTime > warmupTime) {
-              if (isWarmup && index === 0) {
-                isWarmup = false;
-                totalBytes = 0;
-                validMeasurements = 0;
+                const currentTime = Date.now();
+                const elapsed = currentTime - startTime;
+
+                // Start counting bytes after warmup
+                if (elapsed > warmupDuration) {
+                  if (testStartTime === null) {
+                    testStartTime = currentTime;
+                    totalBytesAfterWarmup = 0;
+                  }
+                  totalBytesAfterWarmup += value.length;
+
+                  // Calculate and display current speed
+                  const testElapsed = (currentTime - testStartTime) / 1000;
+                  if (testElapsed > 0) {
+                    const currentMbps = (totalBytesAfterWarmup * 8) / (testElapsed * 1000000);
+                    setCurrentSpeed(currentMbps);
+                  }
+                }
+
+                // Stop if we've exceeded test duration
+                if (currentTime - startTime >= testDuration) {
+                  reader.cancel();
+                  break;
+                }
               }
-              connectionBytes += value.length;
+            } catch (error) {
+              // Connection error, will retry or finish
+              await new Promise(r => setTimeout(r, 100));
             }
           }
-        } catch (error) {
-          console.error('Download error:', error);
-          break;
-        }
+        };
+
+        connections.push(downloadStream());
       }
 
-      return connectionBytes;
+      // Wait for all connections to finish
+      await Promise.all(connections);
+
+      // Calculate final speed
+      if (testStartTime && totalBytesAfterWarmup > 0) {
+        const actualTestTime = (Date.now() - testStartTime) / 1000; // in seconds
+        const megabits = (totalBytesAfterWarmup * 8) / 1000000;
+        const mbps = megabits / actualTestTime;
+        resolve(mbps);
+      } else {
+        resolve(0);
+      }
     });
-
-    const results = await Promise.all(downloadPromises);
-    totalBytes = results.reduce((sum, bytes) => sum + bytes, 0);
-
-    const actualTestTime = testDuration - warmupTime;
-    const mbps = (totalBytes * 8) / (actualTestTime / 1000) / 1000000;
-
-    return Math.max(mbps, 0);
   };
 
   const measureUploadSpeed = async () => {
-    const testDuration = 8000; // 8 seconds
-    const warmupTime = 1500; // 1.5 seconds warmup
-    const numConnections = 4;
+    return new Promise(async (resolve) => {
+      const testDuration = 10000; // 10 seconds
+      const warmupDuration = 2000; // 2 second warmup
+      let totalBytesAfterWarmup = 0;
+      let testStartTime = null;
+      const startTime = Date.now();
 
-    // Generate random data to upload
-    const chunkSize = 64000; // 64KB chunks (safe for crypto.getRandomValues)
-    const generateData = () => {
-      const array = new Uint8Array(chunkSize);
-      crypto.getRandomValues(array);
-      return array;
-    };
+      // Generate random data
+      // FIXED: Reduced to 64KB to prevent browser crash (QuotaExceededError)
+      const chunkSize = 64000;
+      const testData = new Uint8Array(chunkSize);
+      crypto.getRandomValues(testData);
 
-    let totalBytes = 0;
-    const startTime = performance.now();
-    let isWarmup = true;
+      const numStreams = 4;
+      const connections = [];
 
-    const uploadPromises = Array(numConnections).fill(0).map(async () => {
-      let connectionBytes = 0;
+      for (let i = 0; i < numStreams; i++) {
+        const uploadStream = async () => {
+          while (Date.now() - startTime < testDuration) {
+            try {
+              // Use local proxy to avoid CORS
+              await fetch('/api/librespeed/empty', {
+                method: 'POST',
+                body: testData,
+                cache: 'no-store',
+                headers: {
+                  'Content-Type': 'application/octet-stream'
+                }
+              });
 
-      while (performance.now() - startTime < testDuration) {
-        try {
-          const data = generateData();
+              const currentTime = Date.now();
+              const elapsed = currentTime - startTime;
 
-          await fetch('/api/librespeed/empty', {
-            method: 'POST',
-            body: data,
-            headers: { 'Content-Type': 'application/octet-stream' }
-          });
+              // Count bytes after warmup
+              if (elapsed > warmupDuration) {
+                if (testStartTime === null) {
+                  testStartTime = currentTime;
+                  totalBytesAfterWarmup = 0;
+                }
+                totalBytesAfterWarmup += testData.length;
 
-          if (performance.now() - startTime > warmupTime) {
-            if (isWarmup) {
-              isWarmup = false;
-              totalBytes = 0;
+                // Calculate current speed
+                const testElapsed = (currentTime - testStartTime) / 1000;
+                if (testElapsed > 0) {
+                  const currentMbps = (totalBytesAfterWarmup * 8) / (testElapsed * 1000000);
+                  setCurrentSpeed(currentMbps);
+                }
+              }
+
+              if (currentTime - startTime >= testDuration) {
+                break;
+              }
+            } catch (error) {
+              await new Promise(r => setTimeout(r, 100));
             }
-            connectionBytes += data.length;
           }
-        } catch (error) {
-          console.error('Upload error:', error);
-          break;
-        }
+        };
+
+        connections.push(uploadStream());
       }
 
-      return connectionBytes;
+      await Promise.all(connections);
+
+      if (testStartTime && totalBytesAfterWarmup > 0) {
+        const actualTestTime = (Date.now() - testStartTime) / 1000;
+        const megabits = (totalBytesAfterWarmup * 8) / 1000000;
+        const mbps = megabits / actualTestTime;
+        resolve(mbps);
+      } else {
+        resolve(0);
+      }
     });
-
-    const results = await Promise.all(uploadPromises);
-    totalBytes = results.reduce((sum, bytes) => sum + bytes, 0);
-
-    const actualTestTime = testDuration - warmupTime;
-    const mbps = (totalBytes * 8) / (actualTestTime / 1000) / 1000000;
-
-    return Math.max(mbps, 0);
   };
 
   const runTest = async () => {
@@ -177,103 +217,125 @@ export default function SpeedTest() {
     setUploadSpeed(0);
     setPing(0);
     setProgress(0);
+    setCurrentSpeed(0);
 
     try {
-      // Measure ping
+      // Ping test
       setStage('Measuring latency...');
       setProgress(10);
       const pingResult = await measurePing();
-      setPing(Math.round(pingResult));
-      setProgress(20);
+      setPing(pingResult);
+      setProgress(25);
+      await new Promise(r => setTimeout(r, 500));
 
-      // Measure download speed
+      // Download test
       setStage('Testing download speed...');
+      setCurrentSpeed(0);
       const downloadResult = await measureDownloadSpeed();
       setDownloadSpeed(downloadResult);
-      setProgress(60);
+      setProgress(65);
+      await new Promise(r => setTimeout(r, 500));
 
-      // Measure upload speed
+      // Upload test
       setStage('Testing upload speed...');
+      setCurrentSpeed(0);
       const uploadResult = await measureUploadSpeed();
       setUploadSpeed(uploadResult);
       setProgress(100);
 
       setStage('Complete!');
     } catch (error) {
-      console.error('Speed test error:', error);
-      setStage('Error - Please try again');
+      console.error('Test error:', error);
+      setStage('Test failed - please try again');
     } finally {
+      setCurrentSpeed(0);
       setTimeout(() => {
         setTesting(false);
         setStage('');
-      }, 1000);
+      }, 1500);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-purple-900 p-4 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 p-4 flex items-center justify-center">
       <div className="w-full max-w-2xl">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-2">
-            <Wifi className="w-8 h-8 text-blue-300" />
-            <h1 className="text-4xl font-bold text-white">SpeedNet</h1>
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <Wifi className="w-10 h-10 text-blue-400" />
+            <h1 className="text-5xl font-bold text-white">SpeedNet</h1>
           </div>
-          <p className="text-blue-200">Accurate Internet Speed Test</p>
+          <p className="text-blue-300 text-lg">Professional Internet Speed Test</p>
         </div>
 
         {/* Main Card */}
-        <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-white/20">
+        <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/20">
 
-          {/* IP and Location Info */}
-          <div className="flex justify-between items-center mb-8 text-sm">
+          {/* IP Info */}
+          <div className="flex justify-between items-center mb-8 pb-6 border-b border-white/10">
             <div className="flex items-center gap-2 text-blue-200">
               <Activity className="w-4 h-4" />
-              <span>IP: {ip || 'Loading...'}</span>
+              <span className="text-sm">IP: {ip || 'Loading...'}</span>
             </div>
             <div className="flex items-center gap-2 text-blue-200">
               <MapPin className="w-4 h-4" />
-              <span>{location || 'Loading...'}</span>
+              <span className="text-sm">{location || 'Loading...'}</span>
             </div>
           </div>
 
-          {/* Speed Display */}
-          <div className="grid grid-cols-2 gap-6 mb-8">
-            {/* Download */}
-            <div className="text-center">
-              <Download className="w-8 h-8 text-green-400 mx-auto mb-2" />
-              <div className="text-4xl font-bold text-white mb-1">
-                {downloadSpeed.toFixed(2)}
+          {/* Real-time Speed Display */}
+          {testing && currentSpeed > 0 && (
+            <div className="text-center mb-6">
+              <div className="text-5xl font-bold text-white">
+                {currentSpeed.toFixed(1)}
               </div>
-              <div className="text-blue-200 text-sm">Mbps Download</div>
+              <div className="text-blue-300 mt-1">Mbps (Live)</div>
+            </div>
+          )}
+
+          {/* Speed Results Grid */}
+          <div className="grid grid-cols-3 gap-4 mb-8">
+            {/* Download */}
+            <div className="bg-white/5 rounded-2xl p-6 text-center border border-white/10">
+              <Download className="w-8 h-8 text-emerald-400 mx-auto mb-3" />
+              <div className="text-3xl font-bold text-white mb-2">
+                {downloadSpeed.toFixed(1)}
+              </div>
+              <div className="text-blue-300 text-xs uppercase tracking-wide">Download</div>
+              <div className="text-blue-400 text-xs mt-1">Mbps</div>
             </div>
 
             {/* Upload */}
-            <div className="text-center">
-              <Upload className="w-8 h-8 text-blue-400 mx-auto mb-2" />
-              <div className="text-4xl font-bold text-white mb-1">
-                {uploadSpeed.toFixed(2)}
+            <div className="bg-white/5 rounded-2xl p-6 text-center border border-white/10">
+              <Upload className="w-8 h-8 text-sky-400 mx-auto mb-3" />
+              <div className="text-3xl font-bold text-white mb-2">
+                {uploadSpeed.toFixed(1)}
               </div>
-              <div className="text-blue-200 text-sm">Mbps Upload</div>
+              <div className="text-blue-300 text-xs uppercase tracking-wide">Upload</div>
+              <div className="text-blue-400 text-xs mt-1">Mbps</div>
             </div>
-          </div>
 
-          {/* Ping */}
-          <div className="text-center mb-8">
-            <div className="text-2xl font-bold text-white mb-1">{ping} ms</div>
-            <div className="text-blue-200 text-sm">Ping</div>
+            {/* Ping */}
+            <div className="bg-white/5 rounded-2xl p-6 text-center border border-white/10">
+              <Activity className="w-8 h-8 text-amber-400 mx-auto mb-3" />
+              <div className="text-3xl font-bold text-white mb-2">
+                {ping}
+              </div>
+              <div className="text-blue-300 text-xs uppercase tracking-wide">Ping</div>
+              <div className="text-blue-400 text-xs mt-1">ms</div>
+            </div>
           </div>
 
           {/* Progress Bar */}
           {testing && (
             <div className="mb-6">
-              <div className="h-2 bg-white/20 rounded-full overflow-hidden">
+              <div className="h-3 bg-white/10 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-green-400 to-blue-500 transition-all duration-300"
+                  className="h-full bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-500 transition-all duration-500 ease-out"
                   style={{ width: `${progress}%` }}
                 />
               </div>
-              <p className="text-center text-blue-200 text-sm mt-2">{stage}</p>
+              <p className="text-center text-blue-300 text-sm mt-3 font-medium">{stage}</p>
             </div>
           )}
 
@@ -281,32 +343,35 @@ export default function SpeedTest() {
           <button
             onClick={runTest}
             disabled={testing}
-            className={`w-full py-4 rounded-xl font-semibold text-lg transition-all ${testing
-              ? 'bg-gray-600 cursor-not-allowed'
-              : 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 transform hover:scale-105'
-              } text-white shadow-lg`}
+            className={`w-full py-5 rounded-2xl font-bold text-lg transition-all shadow-lg ${testing
+                ? 'bg-slate-700 cursor-not-allowed text-slate-400'
+                : 'bg-gradient-to-r from-emerald-500 via-blue-500 to-purple-500 hover:shadow-2xl hover:scale-[1.02] text-white'
+              }`}
           >
-            {testing ? 'Testing...' : 'Start Speed Test'}
+            {testing ? 'Testing in Progress...' : 'START SPEED TEST'}
           </button>
 
-          {/* Tips */}
-          {!testing && (downloadSpeed > 0 || uploadSpeed > 0) && (
-            <div className="mt-6 p-4 bg-white/5 rounded-xl border border-white/10">
-              <h3 className="text-white font-semibold mb-2">Tips for Accurate Results:</h3>
-              <ul className="text-blue-200 text-sm space-y-1">
-                <li>• Close other apps using internet</li>
-                <li>• Use wired connection for best results</li>
-                <li>• Test multiple times at different hours</li>
-                <li>• Results may vary based on server distance</li>
-              </ul>
+          {/* Results Info */}
+          {!testing && downloadSpeed > 0 && (
+            <div className="mt-6 p-5 bg-emerald-500/10 rounded-2xl border border-emerald-500/20">
+              <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
+                <span className="text-emerald-400">✓</span> Test Complete
+              </h3>
+              <div className="text-blue-200 text-sm space-y-2">
+                <p>• Your download speed is <strong className="text-white">{downloadSpeed.toFixed(1)} Mbps</strong></p>
+                <p>• Your upload speed is <strong className="text-white">{uploadSpeed.toFixed(1)} Mbps</strong></p>
+                <p>• Your latency is <strong className="text-white">{ping} ms</strong></p>
+              </div>
             </div>
           )}
         </div>
 
-        {/* Info Footer */}
-        <div className="text-center mt-6 text-blue-200 text-sm">
-          <p>Uses Cloudflare's infrastructure for accurate measurements</p>
-          <p className="mt-1">Results show real-world speeds excluding warmup periods</p>
+        {/* Tips */}
+        <div className="mt-6 text-center">
+          <p className="text-blue-300 text-sm mb-2">Powered by Optimized Edge Network</p>
+          <p className="text-blue-400/60 text-xs">
+            For best results: close other apps, use wired connection, test multiple times
+          </p>
         </div>
       </div>
     </div>
