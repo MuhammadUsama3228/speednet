@@ -21,8 +21,8 @@ export default function Navbar() {
             <Link
                 href={href}
                 className={`font-medium transition-colors ${isActive
-                        ? (isDark ? 'text-blue-400' : 'text-blue-600')
-                        : (isDark ? 'text-slate-300 hover:text-white' : 'text-slate-600 hover:text-slate-900')
+                    ? (isDark ? 'text-blue-400' : 'text-blue-600')
+                    : (isDark ? 'text-slate-300 hover:text-white' : 'text-slate-600 hover:text-slate-900')
                     }`}
             >
                 {label}
@@ -54,6 +54,7 @@ export default function Navbar() {
                     {/* Desktop Nav */}
                     <div className="hidden md:flex items-center gap-8">
                         <NavLink href="/" label="Speed Test" />
+                        <NavLink href="/blog" label="Blog" />
                         <NavLink href="/about" label="About & FAQ" />
 
                         <button
@@ -94,6 +95,13 @@ export default function Navbar() {
                         onClick={() => setIsMenuOpen(false)}
                     >
                         Speed Test
+                    </Link>
+                    <Link
+                        href="/blog"
+                        className={`block px-3 py-2 rounded-md font-medium ${isDark ? 'text-white hover:bg-white/10' : 'text-slate-900 hover:bg-slate-50'}`}
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Blog
                     </Link>
                     <Link
                         href="/about"
