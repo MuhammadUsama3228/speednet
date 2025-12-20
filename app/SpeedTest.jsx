@@ -177,7 +177,7 @@ export default function SpeedTest() {
             <h1 className="text-xl font-bold tracking-tight text-white">SpeedNet <span className="text-cyan-500 text-xs font-mono uppercase tracking-widest ml-1 text-white">Clone</span></h1>
           </div>
           <div className="flex items-center gap-4 text-xs font-mono text-slate-500 uppercase tracking-widest">
-            Production v1.0.0
+            Production v1.2.0 <span className="text-green-500 font-bold">● FIXED</span>
           </div>
         </div>
       </header>
@@ -378,6 +378,6 @@ export default function SpeedTest() {
           </div>
         </div>
       </footer>
-    </div>
+    </div >
   );
 }

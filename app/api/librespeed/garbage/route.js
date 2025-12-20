@@ -1,13 +1,19 @@
 export const runtime = 'edge';
+export const dynamic = 'force-dynamic'; // Prevent static generation attempts
 
-// Pre-allocate a 1MB chunk of random data to reuse across requests
-// This reduces CPU overhead and avoids crypto limits in the Edge runtime.
 const CHUNK_SIZE = 1048576; // 1MB
-const garbageBuffer = new Uint8Array(CHUNK_SIZE);
-if (typeof crypto !== 'undefined') {
-    crypto.getRandomValues(garbageBuffer);
-} else {
-    for (let i = 0; i < CHUNK_SIZE; i++) garbageBuffer[i] = Math.floor(Math.random() * 256);
+let garbageBuffer = null;
+
+function getGarbageBuffer() {
+    if (!garbageBuffer) {
+        garbageBuffer = new Uint8Array(CHUNK_SIZE);
+        if (typeof crypto !== 'undefined') {
+            crypto.getRandomValues(garbageBuffer);
+        } else {
+            for (let i = 0; i < CHUNK_SIZE; i++) garbageBuffer[i] = Math.floor(Math.random() * 256);
+        }
+    }
+    return garbageBuffer;
 }
 
 export async function GET(request) {
@@ -22,7 +28,7 @@ export async function GET(request) {
     const stream = new ReadableStream({
         start(controller) {
             for (let i = 0; i < chunks; i++) {
-                controller.enqueue(new Uint8Array(garbageBuffer));
+                controller.enqueue(new Uint8Array(getGarbageBuffer()));
             }
             controller.close();
         }
