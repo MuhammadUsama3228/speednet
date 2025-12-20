@@ -15,7 +15,8 @@ export default function SpeedTestComponent() {
   const [progress, setProgress] = useState(0);
   const [stage, setStage] = useState('');
   const [liveSpeed, setLiveSpeed] = useState(0);
-  const [theme, setTheme] = useState('dark'); // Default to dark for this design
+  const [theme, setTheme] = useState('dark');
+  const [history, setHistory] = useState([]);
 
   const speedTestRef = useRef(null);
   const stageIntervalRef = useRef(null);
@@ -25,6 +26,14 @@ export default function SpeedTestComponent() {
     const savedTheme = localStorage.getItem('theme') || 'dark';
     setTheme(savedTheme);
     document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+
+    // Load history
+    try {
+      const savedHistory = JSON.parse(localStorage.getItem('speedTestHistory') || '[]');
+      setHistory(savedHistory);
+    } catch (e) {
+      console.error('Failed to load history', e);
+    }
 
     fetchIPInfo();
   }, []);
@@ -75,6 +84,11 @@ export default function SpeedTestComponent() {
       setIp(APP_STRINGS.IP_ERROR);
       setLocation(APP_STRINGS.LOCATION_UNKNOWN);
     }
+  };
+
+  const clearHistory = () => {
+    setHistory([]);
+    localStorage.removeItem('speedTestHistory');
   };
 
   const runTest = () => {
@@ -160,6 +174,19 @@ export default function SpeedTestComponent() {
 
         console.log(`%c${APP_STRINGS.CONSOLE_COMPLETE}`, 'color: #00ff00; font-size: 16px; font-weight: bold');
         console.log(`${APP_STRINGS.DOWNLOAD_LABEL}: ${finalDl} ${APP_STRINGS.SPEED_UNIT} | ${APP_STRINGS.UPLOAD_LABEL}: ${finalUl} ${APP_STRINGS.SPEED_UNIT} | ${APP_STRINGS.PING_LABEL}: ${finalPing} ${APP_STRINGS.PING_UNIT}`);
+
+        // Save result to history
+        const newResult = {
+          date: new Date().toLocaleString(),
+          dl: finalDl,
+          ul: finalUl,
+          ping: finalPing,
+          provider: 'Cloudflare'
+        };
+        const updatedHistory = [newResult, ...history].slice(0, 50); // Keep last 50
+        setHistory(updatedHistory);
+        localStorage.setItem('speedTestHistory', JSON.stringify(updatedHistory));
+
       } catch (e) {
         setStage(APP_STRINGS.STAGE_COMPLETE);
         setTesting(false);
@@ -176,8 +203,8 @@ export default function SpeedTestComponent() {
 
   return (
     <main className={`min-h-screen p-4 flex items-center justify-center transition-colors duration-300 ${theme === 'dark'
-        ? 'bg-gradient-to-br from-blue-900 via-blue-800 to-purple-900'
-        : 'bg-gradient-to-br from-blue-50 via-white to-blue-100'
+      ? 'bg-gradient-to-br from-blue-900 via-blue-800 to-purple-900'
+      : 'bg-gradient-to-br from-blue-50 via-white to-blue-100'
       }`}>
 
       {/* Theme Switcher Button */}
@@ -185,8 +212,8 @@ export default function SpeedTestComponent() {
         onClick={toggleTheme}
         aria-label="Toggle Theme"
         className={`absolute top-6 right-6 p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-10 ${theme === 'dark'
-            ? 'bg-white/10 text-yellow-400 hover:bg-white/20'
-            : 'bg-white text-slate-700 shadow-xl hover:bg-gray-100'
+          ? 'bg-white/10 text-yellow-400 hover:bg-white/20'
+          : 'bg-white text-slate-700 shadow-xl hover:bg-gray-100'
           }`}
       >
         {theme === 'dark' ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
@@ -205,8 +232,8 @@ export default function SpeedTestComponent() {
 
         {/* Main Card */}
         <div className={`backdrop-blur-xl rounded-3xl p-8 shadow-2xl border transition-colors duration-300 ${theme === 'dark'
-            ? 'bg-white/10 border-white/20 shadow-black/20'
-            : 'bg-white/70 border-white/60 shadow-blue-500/10'
+          ? 'bg-white/10 border-white/20 shadow-black/20'
+          : 'bg-white/70 border-white/60 shadow-blue-500/10'
           }`}>
 
           {/* IP & Location */}
@@ -236,8 +263,8 @@ export default function SpeedTestComponent() {
           <section aria-label="Speed Test Results" className="grid grid-cols-3 gap-4 mb-8">
             {/* Download */}
             <div className={`rounded-2xl p-6 text-center border transition-all ${theme === 'dark'
-                ? 'bg-white/5 border-white/10'
-                : 'bg-white border-blue-100 shadow-sm'
+              ? 'bg-white/5 border-white/10'
+              : 'bg-white border-blue-100 shadow-sm'
               }`}>
               <Download className="w-8 h-8 text-green-400 mx-auto mb-3" aria-hidden="true" />
               <div className={`text-3xl font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
@@ -249,8 +276,8 @@ export default function SpeedTestComponent() {
 
             {/* Upload */}
             <div className={`rounded-2xl p-6 text-center border transition-all ${theme === 'dark'
-                ? 'bg-white/5 border-white/10'
-                : 'bg-white border-blue-100 shadow-sm'
+              ? 'bg-white/5 border-white/10'
+              : 'bg-white border-blue-100 shadow-sm'
               }`}>
               <Upload className="w-8 h-8 text-sky-400 mx-auto mb-3" aria-hidden="true" />
               <div className={`text-3xl font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
@@ -262,8 +289,8 @@ export default function SpeedTestComponent() {
 
             {/* Ping */}
             <div className={`rounded-2xl p-6 text-center border transition-all ${theme === 'dark'
-                ? 'bg-white/5 border-white/10'
-                : 'bg-white border-blue-100 shadow-sm'
+              ? 'bg-white/5 border-white/10'
+              : 'bg-white border-blue-100 shadow-sm'
               }`}>
               <Activity className="w-8 h-8 text-amber-400 mx-auto mb-3" aria-hidden="true" />
               <div className={`text-3xl font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
@@ -299,19 +326,48 @@ export default function SpeedTestComponent() {
             onClick={runTest}
             disabled={testing}
             aria-label={testing ? 'Test in progress' : 'Start Speed Test'}
-            className={`w-full py-5 rounded-2xl font-bold text-lg transition-all shadow-lg text-white ${testing
-                ? 'bg-slate-700 cursor-not-allowed opacity-50'
-                : 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 hover:scale-[1.02] active:scale-95'
+            className={`w-full py-5 rounded-2xl font-bold text-lg transition-all shadow-lg text-white mb-6 ${testing
+              ? 'bg-slate-700 cursor-not-allowed opacity-50'
+              : 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 hover:scale-[1.02] active:scale-95'
               }`}
           >
             {testing ? APP_STRINGS.BUTTON_TESTING : APP_STRINGS.BUTTON_START}
           </button>
 
+          {/* Test History */}
+          {!testing && history.length > 0 && (
+            <div className={`mt-6 p-5 rounded-2xl border ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-blue-100 shadow-sm'}`}>
+              <h3 className={`font-bold mb-3 flex items-center justify-between ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
+                <span>Test History</span>
+                <button
+                  onClick={clearHistory}
+                  className={`text-xs px-2 py-1 rounded hover:bg-red-500/10 ${theme === 'dark' ? 'text-blue-300 hover:text-red-400' : 'text-slate-500 hover:text-red-600'}`}
+                >
+                  Clear
+                </button>
+              </h3>
+              <div className="space-y-3 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
+                {history.map((test, index) => (
+                  <div key={index} className={`flex items-center justify-between text-sm p-3 rounded-lg ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50'}`}>
+                    <div className="flex flex-col">
+                      <span className={`font-mono text-xs ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{test.date}</span>
+                      <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-700'}`}>{test.dl} ↓ / {test.ul} ↑</span>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <span className={`font-bold ${theme === 'dark' ? 'text-amber-400' : 'text-amber-600'}`}>{test.ping} ms</span>
+                      <span className={`text-xs ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{test.provider}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Results Summary */}
           {!testing && downloadSpeed > 0 && (
             <div className={`mt-6 p-5 rounded-2xl border ${theme === 'dark'
-                ? 'bg-green-500/10 border-green-500/20'
-                : 'bg-green-50 border-green-200'
+              ? 'bg-green-500/10 border-green-500/20'
+              : 'bg-green-50 border-green-200'
               }`} role="status">
               <h3 className={`font-bold mb-3 flex items-center gap-2 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
                 <CheckCircle className="w-5 h-5 text-green-400" aria-hidden="true" />
