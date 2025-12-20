@@ -8,4 +8,4 @@ Disallow: /api/
 # Googlebot needs access to JS/CSS to render the page correctly
 
 # Sitemap
-Sitemap: https://speednet.app/sitemap.xml
+Sitemap: https://scanpings.net/sitemap.xml

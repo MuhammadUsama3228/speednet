@@ -3,12 +3,12 @@
 
 export const APP_STRINGS = {
     // App Info
-    APP_NAME: 'SpeedNet',
+    APP_NAME: 'ScanPing',
     APP_TAGLINE: 'Accurate Internet Speed Test',
-    APP_DESCRIPTION: 'Test your internet speed with SpeedNet - the fastest, most accurate online speed test.',
+    APP_DESCRIPTION: 'Test your internet speed with ScanPing - the fastest, most accurate online speed test.',
 
     // Header
-    HEADER_TITLE: 'SpeedNet',
+    HEADER_TITLE: 'ScanPing',
     HEADER_SUBTITLE: 'Accurate Internet Speed Test',
 
     // Connection Info
@@ -28,7 +28,7 @@ export const APP_STRINGS = {
     LIVE_INDICATOR: 'Mbps (Live)',
 
     // Button States
-    BUTTON_START: 'START SPEED TEST',
+    BUTTON_START: 'START PING TEST',
     BUTTON_TESTING: 'Testing...',
 
     // Test Stages
@@ -46,11 +46,11 @@ export const APP_STRINGS = {
     RESULTS_LATENCY: 'Latency:',
 
     // Footer
-    FOOTER_TEXT: 'Powered by Cloudflare SpeedTest • Accurate & Real-World Measurements',
+    FOOTER_TEXT: `© Copyright ${new Date().getFullYear()} scanpings.net - Powered by Cloudflare`,
 
     // Console Messages
-    CONSOLE_START: '🚀 SpeedNet - Powered by Cloudflare',
-    CONSOLE_ENGINE: '⚡ Using official Cloudflare SpeedTest library',
+    CONSOLE_START: '🚀 ScanPing - Powered by Cloudflare',
+    CONSOLE_ENGINE: '⚡ ScanPing library',
     CONSOLE_COMPLETE: '✅ TEST COMPLETE!',
     CONSOLE_FAILED: '❌ Test failed:',
 

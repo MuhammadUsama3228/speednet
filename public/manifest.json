@@ -1,6 +1,6 @@
 {
-  "name": "SpeedNet",
-  "short_name": "SpeedNet",
+  "name": "ScanPing",
+  "short_name": "ScanPing",
   "description": "Accurate Internet Speed Test - Powered by Cloudflare",
   "start_url": "/",
   "display": "standalone",

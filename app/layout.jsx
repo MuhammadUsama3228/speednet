@@ -7,19 +7,18 @@ export const metadata = {
   applicationName: process.env.NEXT_PUBLIC_APP_NAME,
   description: `Test your internet speed with ${process.env.NEXT_PUBLIC_APP_NAME} - the fastest, most accurate online speed test. Measure download, upload speeds, ping, and jitter. Get detailed results in seconds.`,
   keywords: [
+    'scanping',
+    'ping test',
+    'packet loss test',
+    'jitter test',
     'internet speed test',
-    'speed test',
     'download speed',
     'upload speed',
-    'ping test',
     'bandwidth test',
     'internet speed checker',
-    'fast.com alternative',
-    'speedtest.net alternative',
+    'latency test',
     'wifi speed test',
-    'broadband speed test',
-    'connection speed',
-    'network speed test',
+    'network diagnostics',
     'online speed test',
     'free speed test'
   ],
@@ -31,14 +30,14 @@ export const metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(`https://${process.env.NEXT_PUBLIC_APP_NAME?.toLowerCase()}.app`),
+  metadataBase: new URL('https://scanpings.net'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     title: `${process.env.NEXT_PUBLIC_APP_NAME} - Free Online Internet Speed Test`,
     description: `Test your internet speed instantly with ${process.env.NEXT_PUBLIC_APP_NAME}. Get accurate download, upload, ping, and jitter measurements. Fast, reliable, and free.`,
-    url: `https://${process.env.NEXT_PUBLIC_APP_NAME?.toLowerCase()}.app`,
+    url: 'https://scanpings.net',
     siteName: process.env.NEXT_PUBLIC_APP_NAME,
     images: [
       {
@@ -85,13 +84,13 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
-  const appName = process.env.NEXT_PUBLIC_APP_NAME || 'SpeedNet'
+  const appName = process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
     "name": appName,
     "description": `Free online internet speed test tool that measures download speed, upload speed, ping, and jitter`,
-    "url": `https://${appName.toLowerCase()}.app`,
+    "url": "https://scanpings.net",
     "applicationCategory": "Utility",
     "operatingSystem": "Web Browser",
     "offers": {
@@ -120,7 +119,7 @@ export default function RootLayout({ children }) {
     },
     "potentialAction": {
       "@type": "UseAction",
-      "target": `https://${appName.toLowerCase()}.app`,
+      "target": "https://scanpings.net",
       "description": "Test your internet speed"
     }
   }
