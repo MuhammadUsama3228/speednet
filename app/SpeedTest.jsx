@@ -77,12 +77,12 @@ export default function SpeedTest() {
     const s = new Speedtest();
     speedtestRef.current = s;
 
-    // Fast.com style: Download -> IP -> Ping -> Upload
+    // Optimized for Vercel Edge: Higher parallelism to saturate bandwidth
     s.setParameter("test_order", "D_I_P_U");
     s.setParameter("time_dl_max", 15);
     s.setParameter("time_ul_max", 15);
     s.setParameter("xhr_dlMultistream", 10);
-    s.setParameter("xhr_ulMultistream", 6);
+    s.setParameter("xhr_ulMultistream", 10);
     s.setParameter("telemetry_level", "basic");
 
     // Server selection
@@ -106,7 +106,7 @@ export default function SpeedTest() {
           latencyIntervalRef.current = setInterval(measureLoadedLatency, 1000);
         }
       } else if (data.testState === 2) {
-        // Keep it running if it's already started
+        // Keep it running
       } else {
         if (latencyIntervalRef.current) {
           clearInterval(latencyIntervalRef.current);
@@ -121,7 +121,14 @@ export default function SpeedTest() {
         clearInterval(latencyIntervalRef.current);
         latencyIntervalRef.current = null;
       }
-      if (!aborted) toast.success("Test complete!");
+
+      if (!aborted) {
+        if (parseFloat(dlSpeed) === 0 && internalState === 4) {
+          toast.error("Test returned 0 Mbps. Possible API error on Vercel.");
+        } else {
+          toast.success("Test complete!");
+        }
+      }
     };
 
     setTestState(3);

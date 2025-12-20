@@ -7,15 +7,16 @@ export async function GET(request) {
     const isp = searchParams.get('isp') === 'true';
     const distance = searchParams.get('distance') || 'km';
 
-    const clientIp = request.headers.get('x-forwarded-for') || '127.0.0.1';
+    const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0] || '127.0.0.1';
+    const isVercel = process.env.VERCEL === '1' || request.headers.get('x-vercel-id');
 
     const response = {
-        processedString: clientIp + (isp ? " - Local Development Server" : ""),
+        processedString: isVercel ? clientIp : (clientIp + (isp ? " - Local Node" : "")),
         rawIspInfo: isp ? {
-            isp: "Localhost Developer Network",
-            country: "Local",
-            city: "Localhost",
-            dist: distance === 'km' ? "0" : "0"
+            isp: isVercel ? "Vercel Edge Network" : "Localhost Developer Network",
+            country: request.headers.get('x-vercel-ip-country') || "Local",
+            city: request.headers.get('x-vercel-ip-city') || "Localhost",
+            dist: "0"
         } : null
     };
 
