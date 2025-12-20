@@ -1,33 +1,30 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Wifi, Download, Upload, Activity, MapPin, Globe, CheckCircle, Moon, Sun } from 'lucide-react';
+import { Wifi, Download, Upload, Activity, MapPin, Globe, CheckCircle } from 'lucide-react';
 import SpeedTest from '@cloudflare/speedtest';
 import { APP_STRINGS, API_ENDPOINTS, SPEEDTEST_CONFIG } from './constants/strings';
+import { useTheme } from './context/ThemeContext';
 
 export default function SpeedTestComponent() {
   const [testing, setTesting] = useState(false);
   const [downloadSpeed, setDownloadSpeed] = useState(0);
   const [uploadSpeed, setUploadSpeed] = useState(0);
   const [ping, setPing] = useState(0);
+  const [jitter, setJitter] = useState(0);
   const [ip, setIp] = useState('');
   const [location, setLocation] = useState('');
   const [progress, setProgress] = useState(0);
   const [stage, setStage] = useState('');
   const [liveSpeed, setLiveSpeed] = useState(0);
-  const [theme, setTheme] = useState('dark');
+  const { theme } = useTheme();
   const [history, setHistory] = useState([]);
 
   const speedTestRef = useRef(null);
   const stageIntervalRef = useRef(null);
 
   useEffect(() => {
-    // Theme initialization
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    setTheme(savedTheme);
-    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
-
-    // Load history
+    // History init logic remains, theme logic removed (handled by context)
     try {
       const savedHistory = JSON.parse(localStorage.getItem('speedTestHistory') || '[]');
       setHistory(savedHistory);
@@ -38,12 +35,7 @@ export default function SpeedTestComponent() {
     fetchIPInfo();
   }, []);
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    localStorage.setItem('theme', newTheme); // Persist
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
-  };
+  // Theme toggle function removed
 
   const fetchIPInfo = async () => {
     // Try primary API
@@ -159,14 +151,17 @@ export default function SpeedTestComponent() {
         const downloadBw = results.getDownloadBandwidth();
         const uploadBw = results.getUploadBandwidth();
         const latency = results.getUnloadedLatency();
+        const jitterVal = results.getUnloadedJitter();
 
         const finalDl = downloadBw ? (downloadBw / 1_000_000).toFixed(2) : 0;
         const finalUl = uploadBw ? (uploadBw / 1_000_000).toFixed(2) : 0;
         const finalPing = latency ? Math.round(latency) : 0;
+        const finalJitter = jitterVal ? Math.round(jitterVal) : 0; // Jitter
 
         setDownloadSpeed(parseFloat(finalDl));
         setUploadSpeed(parseFloat(finalUl));
         setPing(finalPing);
+        setJitter(finalJitter);
         setProgress(100);
         setStage(APP_STRINGS.STAGE_COMPLETE);
         setLiveSpeed(0);
@@ -181,7 +176,8 @@ export default function SpeedTestComponent() {
           dl: finalDl,
           ul: finalUl,
           ping: finalPing,
-          provider: 'Cloudflare'
+          jitter: finalJitter,
+          provider: 'Scanpings.net'
         };
         const updatedHistory = [newResult, ...history].slice(0, 50); // Keep last 50
         setHistory(updatedHistory);
@@ -202,22 +198,10 @@ export default function SpeedTestComponent() {
   };
 
   return (
-    <main className={`min-h-screen p-4 flex items-center justify-center transition-colors duration-300 ${theme === 'dark'
+    <main className={`min-h-screen pt-20 p-4 flex items-center justify-center transition-colors duration-300 ${theme === 'dark'
       ? 'bg-gradient-to-br from-blue-900 via-blue-800 to-purple-900'
       : 'bg-gradient-to-br from-blue-50 via-white to-blue-100'
       }`}>
-
-      {/* Theme Switcher Button */}
-      <button
-        onClick={toggleTheme}
-        aria-label="Toggle Theme"
-        className={`absolute top-6 right-6 p-3 rounded-full shadow-lg transition-all duration-300 hover:scale-110 z-10 ${theme === 'dark'
-          ? 'bg-white/10 text-yellow-400 hover:bg-white/20'
-          : 'bg-white text-slate-700 shadow-xl hover:bg-gray-100'
-          }`}
-      >
-        {theme === 'dark' ? <Sun className="w-6 h-6" /> : <Moon className="w-6 h-6" />}
-      </button>
 
       <div className="w-full max-w-2xl relative">
 
@@ -229,6 +213,24 @@ export default function SpeedTestComponent() {
           </div>
           <p className={`text-lg ${theme === 'dark' ? 'text-blue-200' : 'text-slate-600'}`}>{APP_STRINGS.HEADER_SUBTITLE}</p>
         </header>
+
+        {/* Start Button */}
+        {!testing && (
+          <div className="flex justify-center mb-12">
+            <button
+              onClick={runTest}
+              className={`group relative px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 hover:scale-105 ${theme === 'dark'
+                ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)]'
+                : 'bg-white text-blue-600 shadow-xl hover:shadow-2xl'
+                }`}
+            >
+              <span className="flex items-center gap-2">
+                <Activity className="w-5 h-5 group-hover:animate-pulse" />
+                {APP_STRINGS.START_BUTTON}
+              </span>
+            </button>
+          </div>
+        )}
 
         {/* Main Card */}
         <div className={`backdrop-blur-xl rounded-3xl p-8 shadow-2xl border transition-colors duration-300 ${theme === 'dark'
@@ -346,16 +348,17 @@ export default function SpeedTestComponent() {
                   Clear
                 </button>
               </h3>
-              <div className="space-y-3 max-h-60 overflow-y-auto pr-1 custom-scrollbar">
+              <div className="space-y-2 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
                 {history.map((test, index) => (
-                  <div key={index} className={`flex items-center justify-between text-sm p-3 rounded-lg ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50'}`}>
+                  <div key={index} className={`flex items-center justify-between text-xs p-2 rounded-md ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50'}`}>
                     <div className="flex flex-col">
-                      <span className={`font-mono text-xs ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{test.date}</span>
-                      <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-700'}`}>{test.dl} ↓ / {test.ul} ↑</span>
+                      <span className={`font-mono text-[10px] ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{test.date}</span>
+                      <span className={`font-bold mt-0.5 ${theme === 'dark' ? 'text-white' : 'text-slate-700'}`}>{test.dl} ↓ / {test.ul} ↑</span>
                     </div>
                     <div className="flex flex-col items-end">
                       <span className={`font-bold ${theme === 'dark' ? 'text-amber-400' : 'text-amber-600'}`}>{test.ping} ms</span>
-                      <span className={`text-xs ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{test.provider}</span>
+                      {/* Force display ScanPing to correct old history */}
+                      <span className={`text-[10px] ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>Scanpings.net</span>
                     </div>
                   </div>
                 ))}
@@ -376,14 +379,16 @@ export default function SpeedTestComponent() {
               <div className={`text-sm space-y-2 ${theme === 'dark' ? 'text-blue-200' : 'text-slate-600'}`}>
                 <p>• {APP_STRINGS.RESULTS_DOWNLOAD} <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.formatSpeedWithBytes(downloadSpeed)}</span></p>
                 <p>• {APP_STRINGS.RESULTS_UPLOAD} <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.formatSpeedWithBytes(uploadSpeed)}</span></p>
-                <p>• {APP_STRINGS.RESULTS_LATENCY} <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.formatPing(ping)}</span></p>
+                <p>• {APP_STRINGS.RESULTS_LATENCY} <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.formatPing(ping)}</span> <span className="opacity-50">|</span> Jitter: <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.formatPing(jitter)}</span></p>
               </div>
             </div>
           )}
         </div>
 
+        {/* SEO Content removed (moved to About page) */}
+
         {/* Footer */}
-        <footer className={`text-center mt-6 text-sm ${theme === 'dark' ? 'text-blue-300' : 'text-slate-500'}`}>
+        <footer className={`text-center mt-12 mb-8 text-sm ${theme === 'dark' ? 'text-blue-300' : 'text-slate-500'}`}>
           <p>{APP_STRINGS.FOOTER_TEXT}</p>
         </footer>
       </div>

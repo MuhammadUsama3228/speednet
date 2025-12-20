@@ -1,6 +1,8 @@
 import './globals.css'
 
 import { Toaster } from 'react-hot-toast'
+import ClientProviders from './components/ClientProviders'
+import Navbar from './components/Navbar'
 
 export const metadata = {
   title: `${process.env.NEXT_PUBLIC_APP_NAME} - Free Online Internet Speed Test | Fast & Accurate Results`,
@@ -136,13 +138,41 @@ export default function RootLayout({ children }) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData),
+            __html: JSON.stringify([structuredData, {
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              "mainEntity": [{
+                "@type": "Question",
+                "name": "What is a good ping for gaming?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "For competitive gaming, a ping under 20ms is ideal. 20-50ms is considered good, while anything over 100ms may cause noticeable lag."
+                }
+              }, {
+                "@type": "Question",
+                "name": "What is Jitter and why does it matter?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Jitter is the variation in your ping over time. High jitter means your connection is unstable, which causes 'rubber-banding' in games."
+                }
+              }, {
+                "@type": "Question",
+                "name": "How can I improve my internet speed?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Try connecting via Ethernet cable instead of WiFi, moving closer to your router, or restarting your modem to clear its cache."
+                }
+              }]
+            }]),
           }}
         />
       </head>
       <body>
-        <Toaster position="top-right" />
-        {children}
+        <ClientProviders>
+          <Navbar />
+          <Toaster position="top-right" />
+          {children}
+        </ClientProviders>
       </body>
     </html>
   )
