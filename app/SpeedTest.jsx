@@ -15,7 +15,7 @@ export default function SpeedTest() {
   const [liveSpeed, setLiveSpeed] = useState(0);
   const [calculationDetails, setCalculationDetails] = useState(null);
 
-  // Critical: Use refs to track actual bytes and time
+  // Use refs to track bytes and time accurately
   const bytesRef = useRef(0);
   const startTimeRef = useRef(0);
   const isTestingRef = useRef(false);
@@ -41,8 +41,8 @@ export default function SpeedTest() {
     for (let i = 0; i < 5; i++) {
       const start = performance.now();
       try {
-        // Ping to Cloudflare's CDN
-        await fetch('https://cloudflare.com/cdn-cgi/trace', {
+        // Use HEAD request - doesn't transfer data
+        await fetch('/api/librespeed/empty', {
           method: 'HEAD',
           cache: 'no-store'
         });
@@ -59,14 +59,14 @@ export default function SpeedTest() {
 
   const downloadTest = async () => {
     console.log('=== DOWNLOAD TEST START ===');
-    console.log('Using Cloudflare CDN for accurate internet speed measurement');
+    console.log('⚠️  CRITICAL: Measuring ACTUAL download time, not connection setup');
 
     bytesRef.current = 0;
     startTimeRef.current = 0;
     isTestingRef.current = true;
 
-    const TEST_DURATION = 10000; // 10 seconds
-    const WARMUP = 2000; // 2 second warmup
+    const TEST_DURATION = 15000; // 15 seconds (longer for slow connections)
+    const WARMUP = 3000; // 3 second warmup
     const testStart = performance.now();
 
     const speedInterval = setInterval(() => {
@@ -79,40 +79,51 @@ export default function SpeedTest() {
       }
     }, 300);
 
-    // Start 6 parallel downloads from Cloudflare CDN
+    // Use 4 workers (not 6) for slower connections
     const workers = [];
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 4; i++) {
       workers.push((async () => {
         while (isTestingRef.current && performance.now() - testStart < TEST_DURATION) {
           try {
-            // CRITICAL: Use external CDN, not local endpoints!
+            // Request smaller chunks (1MB) with unique cache busters
             const uniqueId = `${Date.now()}-${Math.random()}-${i}`;
-            const url = `https://speed.cloudflare.com/__down?bytes=25000000&r=${uniqueId}`;
+            const url = `/api/librespeed/garbage?ckSize=1&r=${uniqueId}`;
 
+            const fetchStart = performance.now();
             const response = await fetch(url, {
               cache: 'no-store',
-              headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' }
+              headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache'
+              }
             });
 
             if (!response.body) throw new Error('No response body');
 
             const reader = response.body.getReader();
+            let chunkBytes = 0;
 
             while (isTestingRef.current) {
+              const readStart = performance.now();
               const { done, value } = await reader.read();
+
               if (done) break;
 
               const now = performance.now();
               const elapsed = now - testStart;
 
-              // After warmup, start counting
+              // CRITICAL: Only count bytes AFTER warmup AND after connection setup
               if (elapsed > WARMUP) {
                 if (startTimeRef.current === 0) {
                   startTimeRef.current = now;
                   bytesRef.current = 0;
-                  console.log('✓ Warmup complete, now measuring actual download speed...');
+                  console.log('✓ Warmup complete - Now measuring actual transfer speed');
+                  console.log(`  Connection setup took: ${((fetchStart - testStart) / 1000).toFixed(2)}s (excluded from measurement)`);
                 }
+
+                // Only count this chunk if we're past warmup
                 bytesRef.current += value.length;
+                chunkBytes += value.length;
               }
 
               if (elapsed >= TEST_DURATION) {
@@ -120,8 +131,10 @@ export default function SpeedTest() {
                 break;
               }
             }
+
+            console.log(`Worker ${i}: Downloaded ${(chunkBytes / 1000).toFixed(1)} KB`);
           } catch (e) {
-            console.error(`Download worker ${i} error:`, e);
+            console.error(`Worker ${i} error:`, e.message);
             await new Promise(r => setTimeout(r, 100));
           }
         }
@@ -144,11 +157,12 @@ export default function SpeedTest() {
       const mbps = totalMegabits / totalSeconds;
 
       console.log('=== DOWNLOAD COMPLETE ===');
-      console.log(`📊 Downloaded: ${totalMB.toFixed(3)} MB`);
-      console.log(`⏱️  Time measured: ${totalSeconds.toFixed(3)} seconds`);
-      console.log(`📈 Calculation: (${totalMB.toFixed(3)} MB × 8 bits/byte) ÷ ${totalSeconds.toFixed(3)}s`);
-      console.log(`📈 = ${totalMegabits.toFixed(3)} Mb ÷ ${totalSeconds.toFixed(3)}s`);
-      console.log(`🎯 = ${mbps.toFixed(3)} Mbps`);
+      console.log(`📊 Total data transferred: ${totalMB.toFixed(3)} MB`);
+      console.log(`⏱️  Actual measurement time: ${totalSeconds.toFixed(3)} seconds`);
+      console.log(`🧮 Calculation:`);
+      console.log(`   Step 1: Convert MB to Megabits: ${totalMB.toFixed(3)} × 8 = ${totalMegabits.toFixed(3)} Mb`);
+      console.log(`   Step 2: Divide by time: ${totalMegabits.toFixed(3)} ÷ ${totalSeconds.toFixed(3)} = ${mbps.toFixed(3)} Mbps`);
+      console.log(`🎯 Final Speed: ${mbps.toFixed(2)} Mbps`);
       console.log('');
 
       setCalculationDetails({
@@ -162,23 +176,23 @@ export default function SpeedTest() {
       return Math.min(Math.max(mbps, 0), 10000);
     }
 
+    console.log('❌ No data measured (all requests may have failed)');
     return 0;
   };
 
   const uploadTest = async () => {
     console.log('=== UPLOAD TEST START ===');
-    console.log('Using Cloudflare CDN for accurate upload measurement');
 
     bytesRef.current = 0;
     startTimeRef.current = 0;
     isTestingRef.current = true;
 
-    const TEST_DURATION = 8000;
-    const WARMUP = 1500;
+    const TEST_DURATION = 10000;
+    const WARMUP = 2000;
     const testStart = performance.now();
 
-    // Generate 1MB chunks for upload
-    const chunkSize = 1000000;
+    // Smaller chunks for upload (64KB - crypto limit)
+    const chunkSize = 65536;
     const uploadData = new Uint8Array(chunkSize);
     crypto.getRandomValues(uploadData);
 
@@ -197,29 +211,34 @@ export default function SpeedTest() {
       workers.push((async () => {
         while (isTestingRef.current && performance.now() - testStart < TEST_DURATION) {
           try {
-            // CRITICAL: Use external CDN endpoint!
-            await fetch('https://speed.cloudflare.com/__up', {
+            const uploadStart = performance.now();
+
+            await fetch('/api/librespeed/empty', {
               method: 'POST',
               body: uploadData,
               cache: 'no-store',
-              headers: { 'Content-Type': 'application/octet-stream' }
+              headers: {
+                'Content-Type': 'application/octet-stream',
+                'Cache-Control': 'no-cache'
+              }
             });
 
             const now = performance.now();
             const elapsed = now - testStart;
 
+            // Only count after warmup
             if (elapsed > WARMUP) {
               if (startTimeRef.current === 0) {
                 startTimeRef.current = now;
                 bytesRef.current = 0;
-                console.log('✓ Warmup complete, now measuring actual upload speed...');
+                console.log('✓ Upload warmup complete');
               }
               bytesRef.current += uploadData.length;
             }
 
             if (elapsed >= TEST_DURATION) break;
           } catch (e) {
-            console.error(`Upload worker ${i} error:`, e);
+            console.error(`Upload worker ${i} error:`, e.message);
             await new Promise(r => setTimeout(r, 100));
           }
         }
@@ -241,10 +260,8 @@ export default function SpeedTest() {
       const mbps = totalMegabits / totalSeconds;
 
       console.log('=== UPLOAD COMPLETE ===');
-      console.log(`📊 Uploaded: ${totalMB.toFixed(3)} MB`);
-      console.log(`⏱️  Time measured: ${totalSeconds.toFixed(3)} seconds`);
-      console.log(`📈 Calculation: (${totalMB.toFixed(3)} MB × 8) ÷ ${totalSeconds.toFixed(3)}s`);
-      console.log(`🎯 = ${mbps.toFixed(3)} Mbps`);
+      console.log(`📊 Uploaded: ${totalMB.toFixed(3)} MB in ${totalSeconds.toFixed(3)}s`);
+      console.log(`🎯 Speed: ${mbps.toFixed(2)} Mbps`);
       console.log('');
 
       setCalculationDetails({
@@ -271,8 +288,8 @@ export default function SpeedTest() {
     setCalculationDetails(null);
 
     console.clear();
-    console.log('%c🚀 SpeedNet - Accurate Internet Speed Test', 'color: #00ff00; font-size: 18px; font-weight: bold');
-    console.log('%c⚠️  Using Cloudflare CDN to measure real internet speed', 'color: #ffaa00; font-size: 14px');
+    console.log('%c🚀 SpeedNet - Accurate Speed Test', 'color: #00ff00; font-size: 18px; font-weight: bold');
+    console.log('%c⚡ Using LibreSpeed backend with accurate timing', 'color: #ffaa00; font-size: 14px');
     console.log('');
 
     try {
@@ -283,14 +300,13 @@ export default function SpeedTest() {
       setPing(pingResult);
       console.log(`✅ Ping: ${pingResult}ms\n`);
       setProgress(20);
-      await new Promise(r => setTimeout(r, 300));
 
       // Download
       setStage('Testing download speed...');
       setLiveSpeed(0);
       const dlSpeed = await downloadTest();
       setDownloadSpeed(dlSpeed);
-      setProgress(60);
+      setProgress(65);
       await new Promise(r => setTimeout(r, 500));
 
       // Upload
@@ -351,8 +367,8 @@ export default function SpeedTest() {
 
           {/* Live Speed */}
           {testing && liveSpeed > 0 && (
-            <div className="text-center mb-8 animate-pulse">
-              <div className="text-6xl font-bold text-white">
+            <div className="text-center mb-8">
+              <div className="text-6xl font-bold text-white animate-pulse">
                 {liveSpeed.toFixed(2)}
               </div>
               <div className="text-blue-200 text-lg mt-2">Mbps (Live)</div>
@@ -423,8 +439,8 @@ export default function SpeedTest() {
                   Test Complete
                 </h3>
                 <div className="text-blue-200 text-sm space-y-2">
-                  <p>• Download: <span className="text-white font-bold">{downloadSpeed.toFixed(2)} Mbps</span> = {(downloadSpeed / 8).toFixed(2)} MB/s</p>
-                  <p>• Upload: <span className="text-white font-bold">{uploadSpeed.toFixed(2)} Mbps</span> = {(uploadSpeed / 8).toFixed(2)} MB/s</p>
+                  <p>• Download: <span className="text-white font-bold">{downloadSpeed.toFixed(2)} Mbps</span> ({(downloadSpeed / 8).toFixed(2)} MB/s)</p>
+                  <p>• Upload: <span className="text-white font-bold">{uploadSpeed.toFixed(2)} Mbps</span> ({(uploadSpeed / 8).toFixed(2)} MB/s)</p>
                   <p>• Latency: <span className="text-white font-bold">{ping} ms</span></p>
                 </div>
               </div>
@@ -434,14 +450,13 @@ export default function SpeedTest() {
                 <div className="mt-4 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
                   <h4 className="text-white font-semibold mb-2 flex items-center gap-2 text-sm">
                     <AlertCircle className="w-4 h-4 text-blue-400" />
-                    How We Calculated {calculationDetails.type === 'download' ? 'Download' : 'Upload'} Speed
+                    {calculationDetails.type === 'download' ? 'Download' : 'Upload'} Calculation
                   </h4>
                   <div className="font-mono text-xs text-blue-200 space-y-1">
-                    <p>Data transferred: <span className="text-white">{calculationDetails.mb.toFixed(3)} MB</span></p>
-                    <p>Time measured: <span className="text-white">{calculationDetails.seconds.toFixed(3)} seconds</span></p>
-                    <p className="pt-2 border-t border-blue-500/20">Calculation:</p>
-                    <p className="text-blue-100">
-                      ({calculationDetails.mb.toFixed(3)} MB × 8 bits) ÷ {calculationDetails.seconds.toFixed(3)}s = <span className="text-white font-bold">{calculationDetails.mbps.toFixed(2)} Mbps</span>
+                    <p>Data: <span className="text-white">{calculationDetails.mb.toFixed(3)} MB</span></p>
+                    <p>Time: <span className="text-white">{calculationDetails.seconds.toFixed(3)} sec</span></p>
+                    <p className="pt-2 border-t border-blue-500/20 text-blue-100">
+                      ({calculationDetails.mb.toFixed(3)} MB × 8) ÷ {calculationDetails.seconds.toFixed(3)}s = <span className="text-white font-bold">{calculationDetails.mbps.toFixed(2)} Mbps</span>
                     </p>
                   </div>
                 </div>
@@ -454,7 +469,7 @@ export default function SpeedTest() {
             <div className="flex items-start gap-2">
               <AlertCircle className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
               <p className="text-xs text-blue-300">
-                Press <kbd className="px-1.5 py-0.5 bg-white/10 rounded">F12</kbd> to see detailed logs with step-by-step calculations
+                Press <kbd className="px-1.5 py-0.5 bg-white/10 rounded">F12</kbd> → Console to see detailed speed calculations
               </p>
             </div>
           </div>
@@ -462,7 +477,7 @@ export default function SpeedTest() {
 
         {/* Footer */}
         <div className="text-center mt-6 text-blue-300 text-sm">
-          <p>Powered by Cloudflare CDN • Measures real internet speed • Excludes warmup</p>
+          <p>Powered by LibreSpeed • Excludes warmup & connection setup time</p>
         </div>
       </div>
     </div>
