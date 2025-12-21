@@ -40,7 +40,7 @@ export default function Navbar() {
                     <Link href="/" className="flex items-center gap-2">
                         <Image
                             src="/logo.svg"
-                            alt={APP_STRINGS.APP_NAME}
+                            alt=""
                             width={32}
                             height={32}
                             className="w-8 h-8"
@@ -59,6 +59,7 @@ export default function Navbar() {
 
                         <button
                             onClick={toggleTheme}
+                            aria-label="Toggle dark mode"
                             className={`p-2 rounded-full transition-colors ${isDark ? 'bg-white/10 hover:bg-white/20 text-yellow-400' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
                                 }`}
                         >
@@ -70,6 +71,7 @@ export default function Navbar() {
                     <div className="md:hidden flex items-center gap-4">
                         <button
                             onClick={toggleTheme}
+                            aria-label="Toggle dark mode"
                             className={`p-2 rounded-full transition-colors ${isDark ? 'bg-white/10 hover:bg-white/20 text-yellow-400' : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
                                 }`}
                         >
@@ -77,6 +79,7 @@ export default function Navbar() {
                         </button>
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
                             className={`p-2 rounded-md ${isDark ? 'text-white' : 'text-slate-900'}`}
                         >
                             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

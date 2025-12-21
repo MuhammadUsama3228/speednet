@@ -219,6 +219,7 @@ export default function SpeedTestComponent() {
           <div className="flex justify-center mb-12">
             <button
               onClick={runTest}
+              aria-label="Start internet speed test"
               className={`group relative px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 hover:scale-105 ${theme === 'dark'
                 ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)]'
                 : 'bg-white text-blue-600 shadow-xl hover:shadow-2xl'
