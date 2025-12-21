@@ -9,20 +9,50 @@ export const metadata = {
   applicationName: process.env.NEXT_PUBLIC_APP_NAME,
   description: `Test your internet speed with ${process.env.NEXT_PUBLIC_APP_NAME} - the fastest, most accurate online speed test. Measure download, upload speeds, ping, and jitter. Get detailed results in seconds.`,
   keywords: [
-    'scanping',
-    'ping test',
-    'packet loss test',
-    'jitter test',
+    // Core high-volume keywords (highest search intent & volume, e.g., "speed test" ~9-10M monthly global)
+    'speed test',
     'internet speed test',
-    'download speed',
-    'upload speed',
-    'bandwidth test',
-    'internet speed checker',
-    'latency test',
-    'wifi speed test',
-    'network diagnostics',
     'online speed test',
-    'free speed test'
+    'free speed test',
+    'test my internet speed',
+    'check internet speed',
+    'broadband speed test',
+    'wifi speed test',
+    'download speed test',
+    'upload speed test',
+
+    // Brand & unique strengths (your differentiators)
+    'scanping',
+    'cloudflare speed test',
+    'accurate speed test',
+    'best internet speed test',
+
+    // Competitor/alternative terms (capture users seeking options)
+    'speedtest.net alternative',
+    'fast.com alternative',
+    'ookla speedtest alternative',
+    'speedtest net alternative',
+    'fast com speed test',
+
+    // Technical/diagnostic terms (your existing + refined)
+    'ping test',
+    'jitter test',
+    'packet loss test',
+    'latency test',
+    'bandwidth test',
+    'network speed test',
+    'internet speed checker',
+    'mbps test',
+
+    // Long-tail & user-intent phrases (lower competition, high conversion)
+    'what is my internet speed',
+    'test internet speed',
+    'measure internet speed',
+    'connection speed test',
+    'internet speed meter',
+    'broadband test',
+    'network diagnostics',
+    'librespeed speed test'
   ],
   authors: [{ name: `${process.env.NEXT_PUBLIC_APP_NAME} Team` }],
   creator: process.env.NEXT_PUBLIC_APP_NAME,
