@@ -12,5 +12,17 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://scanpings.net/blog</loc>
+    <lastmod>2025-12-21</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://scanpings.net/blog/latency-vs-jitter-gaming</loc>
+    <lastmod>2025-12-21</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
 </urlset>
 <!-- Note: Update the domain URL above when deploying to a different domain -->

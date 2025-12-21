@@ -21,6 +21,32 @@ export default function Article() {
     return (
         <article className="min-h-screen pt-24 px-4 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-gray-200 transition-colors duration-300">
             <div className="max-w-3xl mx-auto backdrop-blur-sm bg-white/50 dark:bg-slate-800/50 p-6 md:p-12 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl">
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            '@context': 'https://schema.org',
+                            '@type': 'Article',
+                            headline: metadata.title,
+                            description: metadata.description,
+                            image: 'https://scanpings.net/og-image.svg',
+                            datePublished: '2025-12-21',
+                            author: {
+                                '@type': 'Organization',
+                                name: 'ScanPing Team',
+                                url: 'https://scanpings.net'
+                            },
+                            publisher: {
+                                '@type': 'Organization',
+                                name: 'ScanPing',
+                                logo: {
+                                    '@type': 'ImageObject',
+                                    url: 'https://scanpings.net/logo.svg'
+                                }
+                            }
+                        })
+                    }}
+                />
 
                 <header className="mb-10 text-center">
                     <span className="inline-block px-3 py-1 mb-4 text-xs font-bold tracking-wider text-blue-600 dark:text-blue-400 uppercase bg-blue-100 dark:bg-blue-900/30 rounded-full">
