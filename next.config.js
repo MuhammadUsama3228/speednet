@@ -1,13 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  reactStrictMode: true,
+  swcMinify: true,
   experimental: {
     serverComponentsExternalPackages: [],
   },
   images: {
     unoptimized: false,
   },
-  // Remove output: 'standalone' for Vercel deployment
-  // output: 'standalone',
 }
 
 export default nextConfig
