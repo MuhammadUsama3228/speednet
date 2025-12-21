@@ -1,13 +1,13 @@
 import AboutContent from './AboutContent';
 
 export const metadata = {
-    title: `About ${process.env.NEXT_PUBLIC_APP_NAME} - FAQ & Speed Test Guide`,
+    title: `About ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - FAQ & Speed Test Guide`,
     description: 'Learn how ScanPing tests your internet speed, understand Ping, Jitter, and Latency, and find answers to common network questions.',
     alternates: {
         canonical: '/about',
     },
     openGraph: {
-        title: `About ${process.env.NEXT_PUBLIC_APP_NAME} - FAQ & Guide`,
+        title: `About ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - FAQ & Guide`,
         description: 'Everything you need to know about internet speed testing, latency, and network diagnostics.',
         url: 'https://scanpings.net/about',
     }

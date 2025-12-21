@@ -5,9 +5,9 @@ import ClientProviders from './components/ClientProviders'
 import Navbar from './components/Navbar'
 
 export const metadata = {
-  title: `${process.env.NEXT_PUBLIC_APP_NAME} - Free Online Internet Speed Test | Fast & Accurate Results`,
-  applicationName: process.env.NEXT_PUBLIC_APP_NAME,
-  description: `Test your internet speed with ${process.env.NEXT_PUBLIC_APP_NAME} - the fastest, most accurate online speed test. Measure download, upload speeds, ping, and jitter. Get detailed results in seconds.`,
+  title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Free Online Internet Speed Test | Fast & Accurate Results`,
+  applicationName: process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing',
+  description: `Test your internet speed with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - the fastest, most accurate online speed test. Measure download, upload speeds, ping, and jitter. Get detailed results in seconds.`,
   keywords: [
     // Core high-volume keywords (highest search intent & volume, e.g., "speed test" ~9-10M monthly global)
     'speed test',
@@ -54,9 +54,9 @@ export const metadata = {
     'network diagnostics',
     'librespeed speed test'
   ],
-  authors: [{ name: `${process.env.NEXT_PUBLIC_APP_NAME} Team` }],
-  creator: process.env.NEXT_PUBLIC_APP_NAME,
-  publisher: process.env.NEXT_PUBLIC_APP_NAME,
+  authors: [{ name: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} Team` }],
+  creator: process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing',
+  publisher: process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing',
   formatDetection: {
     email: false,
     address: false,
@@ -67,16 +67,16 @@ export const metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: `${process.env.NEXT_PUBLIC_APP_NAME} - Free Online Internet Speed Test`,
-    description: `Test your internet speed instantly with ${process.env.NEXT_PUBLIC_APP_NAME}. Get accurate download, upload, ping, and jitter measurements. Fast, reliable, and free.`,
+    title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Free Online Internet Speed Test`,
+    description: `Test your internet speed instantly with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}. Get accurate download, upload, ping, and jitter measurements. Fast, reliable, and free.`,
     url: 'https://scanpings.net',
-    siteName: process.env.NEXT_PUBLIC_APP_NAME,
+    siteName: process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing',
     images: [
       {
         url: '/og-image.svg',
         width: 1200,
         height: 630,
-        alt: `${process.env.NEXT_PUBLIC_APP_NAME} Internet Speed Test`,
+        alt: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} Internet Speed Test`,
       },
     ],
     locale: 'en_US',
@@ -84,10 +84,10 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${process.env.NEXT_PUBLIC_APP_NAME} - Free Online Internet Speed Test`,
-    description: `Test your internet speed instantly with ${process.env.NEXT_PUBLIC_APP_NAME}. Get accurate download, upload, ping, and jitter measurements.`,
+    title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Free Online Internet Speed Test`,
+    description: `Test your internet speed instantly with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}. Get accurate download, upload, ping, and jitter measurements.`,
     images: ['/og-image.svg'],
-    creator: `@${process.env.NEXT_PUBLIC_APP_NAME?.toLowerCase()}`,
+    creator: `@${(process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing').toLowerCase()}`,
   },
   robots: {
     index: true,
@@ -108,9 +108,14 @@ export const metadata = {
     bing: 'your-bing-verification-code',
   },
   icons: {
-    icon: '/favicon.svg',
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/logo.svg', type: 'image/svg+xml', sizes: 'any' }
+    ],
     shortcut: '/favicon.svg',
-    apple: '/favicon.svg',
+    apple: [
+      { url: '/logo.svg', type: 'image/svg+xml', sizes: '180x180' }
+    ],
   },
   manifest: '/manifest.json',
 }
@@ -147,7 +152,11 @@ export default function RootLayout({ children }) {
     },
     "publisher": {
       "@type": "Organization",
-      "name": appName
+      "name": appName,
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://scanpings.net/logo.svg"
+      }
     },
     "potentialAction": {
       "@type": "UseAction",
@@ -168,32 +177,18 @@ export default function RootLayout({ children }) {
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify([structuredData, {
-              "@context": "https://schema.org",
-              "@type": "FAQPage",
-              "mainEntity": [{
-                "@type": "Question",
-                "name": "What is a good ping for gaming?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "For competitive gaming, a ping under 20ms is ideal. 20-50ms is considered good, while anything over 100ms may cause noticeable lag."
-                }
-              }, {
-                "@type": "Question",
-                "name": "What is Jitter and why does it matter?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Jitter is the variation in your ping over time. High jitter means your connection is unstable, which causes 'rubber-banding' in games."
-                }
-              }, {
-                "@type": "Question",
-                "name": "How can I improve my internet speed?",
-                "acceptedAnswer": {
-                  "@type": "Answer",
-                  "text": "Try connecting via Ethernet cable instead of WiFi, moving closer to your router, or restarting your modem to clear its cache."
-                }
-              }]
-            }]),
+            __html: JSON.stringify([
+              structuredData,
+              {
+                "@context": "https://schema.org",
+                "@type": "WebSite",
+                "name": "ScanPing",
+                "alternateName": "ScanPings",
+                "url": "https://scanpings.net",
+                "logo": "https://scanpings.net/logo.svg",
+                "image": "https://scanpings.net/logo.svg"
+              }
+            ]),
           }}
         />
       </head>
