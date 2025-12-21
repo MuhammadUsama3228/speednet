@@ -203,13 +203,13 @@ export default function SpeedTestComponent() {
       : 'bg-gradient-to-br from-blue-50 via-white to-blue-100'
       }`}>
 
-      <div className="w-full max-w-2xl relative">
+      <div className="w-full max-w-3xl relative">
 
         {/* Header */}
         <header className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-3">
-            <Wifi className={`w-10 h-10 ${theme === 'dark' ? 'text-blue-300' : 'text-blue-600'}`} aria-hidden="true" />
-            <h1 className={`text-5xl font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.HEADER_TITLE}</h1>
+            <Wifi className={`w-8 h-8 md:w-9 md:h-9 ${theme === 'dark' ? 'text-blue-300' : 'text-blue-600'}`} aria-hidden="true" />
+            <h1 className={`text-3xl md:text-5xl font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.HEADER_TITLE}</h1>
           </div>
           <p className={`text-lg ${theme === 'dark' ? 'text-blue-200' : 'text-slate-600'}`}>{APP_STRINGS.HEADER_SUBTITLE}</p>
         </header>
@@ -239,7 +239,7 @@ export default function SpeedTestComponent() {
           }`}>
 
           {/* IP & Location */}
-          <section aria-label="Connection Information" className={`flex justify-between items-center mb-8 pb-6 border-b text-sm ${theme === 'dark' ? 'border-white/10 text-blue-200' : 'border-slate-200 text-slate-600'
+          <section aria-label="Connection Information" className={`flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 pb-6 border-b text-sm ${theme === 'dark' ? 'border-white/10 text-blue-200' : 'border-slate-200 text-slate-600'
             }`}>
             <div className="flex items-center gap-2">
               <Globe className="w-4 h-4" aria-hidden="true" />
@@ -262,44 +262,57 @@ export default function SpeedTestComponent() {
           )}
 
           {/* Results Grid */}
-          <section aria-label="Speed Test Results" className="grid grid-cols-3 gap-4 mb-8">
+          <section aria-label="Speed Test Results" className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
             {/* Download */}
-            <div className={`rounded-2xl p-6 text-center border transition-all ${theme === 'dark'
+            <div className={`rounded-2xl p-4 md:p-6 text-center border transition-all ${theme === 'dark'
               ? 'bg-white/5 border-white/10'
               : 'bg-white border-blue-100 shadow-sm'
               }`}>
-              <Download className="w-8 h-8 text-green-400 mx-auto mb-3" aria-hidden="true" />
-              <div className={`text-3xl font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
+              <Download className="w-6 h-6 md:w-8 md:h-8 text-green-400 mx-auto mb-3" aria-hidden="true" />
+              <div className={`text-2xl md:text-3xl font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
                 {downloadSpeed > 0 ? downloadSpeed.toFixed(2) : '0.00'}
               </div>
-              <div className={`text-xs uppercase ${theme === 'dark' ? 'text-blue-200' : 'text-slate-500'}`}>{APP_STRINGS.DOWNLOAD_LABEL}</div>
-              <div className={`text-xs mt-1 ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{APP_STRINGS.SPEED_UNIT}</div>
+              <div className={`text-[10px] md:text-xs uppercase ${theme === 'dark' ? 'text-blue-200' : 'text-slate-500'}`}>{APP_STRINGS.DOWNLOAD_LABEL}</div>
+              <div className={`text-[10px] md:text-xs mt-1 ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{APP_STRINGS.SPEED_UNIT}</div>
             </div>
 
             {/* Upload */}
-            <div className={`rounded-2xl p-6 text-center border transition-all ${theme === 'dark'
+            <div className={`rounded-2xl p-4 md:p-6 text-center border transition-all ${theme === 'dark'
               ? 'bg-white/5 border-white/10'
               : 'bg-white border-blue-100 shadow-sm'
               }`}>
-              <Upload className="w-8 h-8 text-sky-400 mx-auto mb-3" aria-hidden="true" />
-              <div className={`text-3xl font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
+              <Upload className="w-6 h-6 md:w-8 md:h-8 text-sky-400 mx-auto mb-3" aria-hidden="true" />
+              <div className={`text-2xl md:text-3xl font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
                 {uploadSpeed > 0 ? uploadSpeed.toFixed(2) : '0.00'}
               </div>
-              <div className={`text-xs uppercase ${theme === 'dark' ? 'text-blue-200' : 'text-slate-500'}`}>{APP_STRINGS.UPLOAD_LABEL}</div>
-              <div className={`text-xs mt-1 ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{APP_STRINGS.SPEED_UNIT}</div>
+              <div className={`text-[10px] md:text-xs uppercase ${theme === 'dark' ? 'text-blue-200' : 'text-slate-500'}`}>{APP_STRINGS.UPLOAD_LABEL}</div>
+              <div className={`text-[10px] md:text-xs mt-1 ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{APP_STRINGS.SPEED_UNIT}</div>
             </div>
 
             {/* Ping */}
-            <div className={`rounded-2xl p-6 text-center border transition-all ${theme === 'dark'
+            <div className={`rounded-2xl p-5 md:p-6 text-center border transition-all ${theme === 'dark'
               ? 'bg-white/5 border-white/10'
               : 'bg-white border-blue-100 shadow-sm'
               }`}>
-              <Activity className="w-8 h-8 text-amber-400 mx-auto mb-3" aria-hidden="true" />
-              <div className={`text-3xl font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
+              <Activity className="w-6 h-6 md:w-8 md:h-8 text-amber-400 mx-auto mb-3" aria-hidden="true" />
+              <div className={`text-2xl md:text-3xl font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
                 {ping > 0 ? ping : '0'}
               </div>
-              <div className={`text-xs uppercase ${theme === 'dark' ? 'text-blue-200' : 'text-slate-500'}`}>{APP_STRINGS.PING_LABEL}</div>
-              <div className={`text-xs mt-1 ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{APP_STRINGS.PING_UNIT}</div>
+              <div className={`text-[10px] md:text-xs uppercase ${theme === 'dark' ? 'text-blue-200' : 'text-slate-500'}`}>{APP_STRINGS.PING_LABEL}</div>
+              <div className={`text-[10px] md:text-xs mt-1 ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{APP_STRINGS.PING_UNIT}</div>
+            </div>
+
+            {/* Jitter */}
+            <div className={`rounded-2xl p-5 md:p-6 text-center border transition-all ${theme === 'dark'
+              ? 'bg-white/5 border-white/10'
+              : 'bg-white border-blue-100 shadow-sm'
+              }`}>
+              <Activity className="w-6 h-6 md:w-8 md:h-8 text-purple-400 mx-auto mb-3" aria-hidden="true" />
+              <div className={`text-2xl md:text-3xl font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
+                {jitter > 0 ? jitter : '0'}
+              </div>
+              <div className={`text-[10px] md:text-xs uppercase ${theme === 'dark' ? 'text-blue-200' : 'text-slate-500'}`}>Jitter</div>
+              <div className={`text-[10px] md:text-xs mt-1 ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>ms</div>
             </div>
           </section>
 
