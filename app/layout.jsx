@@ -3,6 +3,7 @@ import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import ClientProviders from './components/ClientProviders'
 import Navbar from './components/Navbar'
+import Script from 'next/script'
 
 export const metadata = {
   title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Free Online Internet Speed Test | Fast & Accurate Results`,
@@ -191,6 +192,20 @@ export default function RootLayout({ children }) {
             ]),
           }}
         />
+        {/* Google Analytics 4 */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID || 'G-VQ6VB5LY8D'}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID || 'G-VQ6VB5LY8D'}');
+          `}
+        </Script>
       </head>
       <body>
         <ClientProviders>
