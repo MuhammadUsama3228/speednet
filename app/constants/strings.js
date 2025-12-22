@@ -64,7 +64,7 @@ export const APP_STRINGS = {
 // API Endpoints
 export const API_ENDPOINTS = {
     IP_PRIMARY: 'https://ipapi.co/json/',
-    IP_FALLBACK: 'http://ip-api.com/json/',
+    IP_FALLBACK: 'https://ipwho.is/json/',
     CLOUDFLARE_TRACE: 'https://cloudflare.com/cdn-cgi/trace',
 };
 
