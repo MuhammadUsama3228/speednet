@@ -3,7 +3,10 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   experimental: {
-    serverComponentsExternalPackages: [],
+    serverComponentsExternalPackages: ['@maxmind/geoip2-node'],
+    outputFileTracingIncludes: {
+      '/api/ip-info': ['./GeoLite2-City.mmdb'],
+    },
   },
   images: {
     unoptimized: false,
