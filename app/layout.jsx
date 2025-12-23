@@ -116,15 +116,24 @@ export const metadata = {
   },
   icons: {
     icon: [
+      { url: '/favicon.ico', sizes: 'any' },
       { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/logo.svg', type: 'image/svg+xml', sizes: 'any' }
+      { url: '/favicon-96x96.png', type: 'image/png', sizes: '96x96' },
+      { url: '/web-app-manifest-192x192.png', type: 'image/png', sizes: '192x192' },
     ],
-    shortcut: '/favicon.svg',
+    shortcut: '/favicon.ico',
     apple: [
-      { url: '/logo.svg', type: 'image/svg+xml', sizes: '180x180' }
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
     ],
+    other: [
+      {
+        rel: 'mask-icon',
+        url: '/favicon.svg', // Browsers often use SVG for pinned tabs
+        color: '#1e40af' // Matches theme-color
+      }
+    ]
   },
-  manifest: '/manifest.json',
+  manifest: '/site.webmanifest',
 }
 
 export default function RootLayout({ children }) {
