@@ -63,14 +63,22 @@ export const APP_STRINGS = {
 
 // API Endpoints
 export const API_ENDPOINTS = {
-    IP_PRIMARY: 'https://ipapi.co/json/',
-    IP_FALLBACK: 'https://ipwho.is/json/',
+    IP_INFO: '/api/ip-info', // Your own API route
     CLOUDFLARE_TRACE: 'https://cloudflare.com/cdn-cgi/trace',
 };
 
-// Speed Test Configuration
+// Speed Test Configuration - Optimized for accuracy
 export const SPEEDTEST_CONFIG = {
-    autoStart: true,
+    autoStart: false,
+    measureUpload: true,
+    measureDownload: true,
+    measurements: [
+        { type: 'latency', numPackets: 5 },  // Initial ping samples
+        { type: 'download', bytes: 1e5, count: 8, bypassMinDuration: true },
+        { type: 'latency', numPackets: 10 }, // Mid-test latency
+        { type: 'upload', bytes: 1e5, count: 8, bypassMinDuration: true },
+        { type: 'latency', numPackets: 30 }  // Final latency (more samples = accurate jitter)
+    ]
 };
 
 // Default export for convenience
