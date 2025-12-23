@@ -8,7 +8,7 @@ import Script from 'next/script'
 export const metadata = {
   title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Free Online Internet Speed Test | Fast & Accurate Results`,
   applicationName: process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing',
-  description: `Test your internet speed with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - the fastest, most accurate online speed test. Measure download, upload speeds, ping, and jitter. Get detailed results in seconds.`,
+  description: `Test your internet speed with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - the fastest, most accurate online speed test. Measure download, upload speeds, ping, jitter, and detect your IP address and location.`,
   keywords: [
     // Core high-volume keywords (highest search intent & volume, e.g., "speed test" ~9-10M monthly global)
     'speed test',
@@ -21,12 +21,16 @@ export const metadata = {
     'wifi speed test',
     'download speed test',
     'upload speed test',
+    'check my ip',
+    'what is my ip',
+    'ip address location',
 
     // Brand & unique strengths (your differentiators)
     'scanping',
     'cloudflare speed test',
     'accurate speed test',
     'best internet speed test',
+    'location speed test',
 
     // Competitor/alternative terms (capture users seeking options)
     'speedtest.net alternative',
@@ -44,6 +48,8 @@ export const metadata = {
     'network speed test',
     'internet speed checker',
     'mbps test',
+    'ip lookup',
+    'geoip test',
 
     // Long-tail & user-intent phrases (lower competition, high conversion)
     'what is my internet speed',
@@ -141,6 +147,8 @@ export default function RootLayout({ children }) {
       "Upload Speed Test",
       "Ping Test",
       "Jitter Measurement",
+      "IP Detection",
+      "Location Lookup",
       "Real-time Results",
       "Detailed Analytics",
       "Mobile Friendly",
