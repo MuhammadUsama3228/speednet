@@ -30,13 +30,13 @@ export async function GET(request) {
             if (response) {
                 return NextResponse.json({
                     ip: ip,
-                    city: response.city?.names?.en || 'Unknown',
-                    country: response.country?.isoCode || 'Unknown',
-                    country_name: response.country?.names?.en || 'Unknown',
-                    region: response.subdivisions?.[0]?.names?.en || 'Unknown',
+                    city: response.city?.names?.en || null,
+                    country: response.country?.isoCode || null,
+                    country_name: response.country?.names?.en || null,
+                    region: response.subdivisions?.[0]?.names?.en || null,
                     latitude: response.location?.latitude || null,
                     longitude: response.location?.longitude || null,
-                    timezone: response.location?.timeZone || 'Unknown',
+                    timezone: response.location?.timeZone || null,
                     success: true
                 });
             }
@@ -48,11 +48,11 @@ export async function GET(request) {
         // If MaxMind fails or file missing, return basic info
         return NextResponse.json({
             ip: ip,
-            city: 'Unknown',
-            country: 'Unknown',
-            country_name: 'Unknown',
-            region: 'Unknown',
-            timezone: 'Unknown',
+            city: null,
+            country: null,
+            country_name: null,
+            region: null,
+            timezone: null,
             success: true,
             note: 'GeoLite2-City.mmdb likely missing'
         });

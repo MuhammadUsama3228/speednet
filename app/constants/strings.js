@@ -58,7 +58,11 @@ export const APP_STRINGS = {
     formatSpeed: (mbps) => `${mbps.toFixed(2)} Mbps`,
     formatSpeedWithBytes: (mbps) => `${mbps.toFixed(2)} Mbps (${(mbps / 8).toFixed(2)} MB/s)`,
     formatPing: (ms) => `${ms} ms`,
-    formatLocation: (city, country) => city && country ? `${city}, ${country}` : null,
+    formatLocation: (city, country) => {
+        if (city && city !== 'Unknown' && country && country !== 'Unknown') return `${city}, ${country}`;
+        if (country && country !== 'Unknown') return country;
+        return 'Detecting...';
+    },
 };
 
 // API Endpoints
