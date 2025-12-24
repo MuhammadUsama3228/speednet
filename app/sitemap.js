@@ -20,6 +20,17 @@ export default function sitemap() {
             changeFrequency: 'weekly',
             priority: 0.8,
         },
-        // Add more dynamic routes here if you have a CMS or database for blog posts
+        {
+            url: `${baseUrl}/blog/speed-test-accuracy-and-benchmarks`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.7,
+        },
+        {
+            url: `${baseUrl}/blog/latency-vs-jitter-gaming`,
+            lastModified: new Date(),
+            changeFrequency: 'monthly',
+            priority: 0.7,
+        },
     ]
 }

@@ -6,6 +6,10 @@ import { motion } from 'framer-motion';
 import SpeedTest from '@cloudflare/speedtest';
 import { APP_STRINGS, API_ENDPOINTS, SPEEDTEST_CONFIG } from './constants/strings';
 import { useTheme } from './context/ThemeContext';
+import ResultCard from './components/ResultCard';
+import TestHistory from './components/TestHistory';
+import SpeedHero from './components/SpeedHero';
+import AnalyzingPill from './components/AnalyzingPill';
 
 export default function SpeedTestComponent() {
   const [testing, setTesting] = useState(false);
@@ -263,17 +267,9 @@ export default function SpeedTestComponent() {
       : 'bg-gradient-to-br from-blue-50 via-white to-blue-100'
       }`}>
 
-      <div className="w-full max-w-3xl relative">
-
-        {/* Header */}
-        <header className="text-center mb-8">
-          <div className="flex items-center justify-center gap-3 mb-3">
-            <Wifi className={`w-8 h-8 md:w-9 md:h-9 ${theme === 'dark' ? 'text-blue-300' : 'text-blue-600'}`} aria-hidden="true" />
-            <h1 className={`text-3xl md:text-5xl font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.HEADER_TITLE}</h1>
-          </div>
-          <p className={`text-lg ${theme === 'dark' ? 'text-blue-200' : 'text-slate-600'}`}>{APP_STRINGS.HEADER_SUBTITLE}</p>
-        </header>
-
+      <div className="max-w-[968px] mx-auto">
+        {/* Header Section */}
+        <SpeedHero theme={theme} />
         {/* Start Button Removed - Using Main Button Inside Card */}
 
         {/* Main Card */}
@@ -306,73 +302,43 @@ export default function SpeedTestComponent() {
           )}
 
           {/* Results Grid */}
-          <section aria-label="Speed Test Results" className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            {/* Download */}
-            <div className={`rounded-2xl p-4 md:p-6 text-center border transition-all ${theme === 'dark'
-              ? 'bg-white/5 border-white/10'
-              : 'bg-white border-blue-100 shadow-sm'
-              }`}>
-              <Download className="w-6 h-6 md:w-8 md:h-8 text-green-400 mx-auto mb-3" aria-hidden="true" />
-              <div className={`text-2xl md:text-3xl font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
-                {downloadSpeed > 0 ? downloadSpeed.toFixed(2) : '0.00'}
-              </div>
-              <div className={`text-[10px] md:text-xs uppercase ${theme === 'dark' ? 'text-blue-200' : 'text-slate-500'}`}>{APP_STRINGS.DOWNLOAD_LABEL}</div>
-              <div className={`text-[10px] md:text-xs mt-1 ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{APP_STRINGS.SPEED_UNIT}</div>
-            </div>
-
-            {/* Upload */}
-            <div className={`rounded-2xl p-4 md:p-6 text-center border transition-all ${theme === 'dark'
-              ? 'bg-white/5 border-white/10'
-              : 'bg-white border-blue-100 shadow-sm'
-              }`}>
-              <Upload className="w-6 h-6 md:w-8 md:h-8 text-sky-400 mx-auto mb-3" aria-hidden="true" />
-              <div className={`text-2xl md:text-3xl font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
-                {uploadSpeed > 0 ? uploadSpeed.toFixed(2) : '0.00'}
-              </div>
-              <div className={`text-[10px] md:text-xs uppercase ${theme === 'dark' ? 'text-blue-200' : 'text-slate-500'}`}>{APP_STRINGS.UPLOAD_LABEL}</div>
-              <div className={`text-[10px] md:text-xs mt-1 ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{APP_STRINGS.SPEED_UNIT}</div>
-            </div>
-
-            {/* Ping */}
-            <div className={`rounded-2xl p-5 md:p-6 text-center border transition-all ${theme === 'dark'
-              ? 'bg-white/5 border-white/10'
-              : 'bg-white border-blue-100 shadow-sm'
-              }`}>
-              <Activity className="w-6 h-6 md:w-8 md:h-8 text-amber-400 mx-auto mb-3" aria-hidden="true" />
-              <div className={`text-2xl md:text-3xl font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
-                {ping > 0 ? ping : '0'}
-              </div>
-              <div className={`text-[10px] md:text-xs uppercase ${theme === 'dark' ? 'text-blue-200' : 'text-slate-500'}`}>{APP_STRINGS.PING_LABEL}</div>
-              <div className={`text-[10px] md:text-xs mt-1 ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{APP_STRINGS.PING_UNIT}</div>
-            </div>
-
-            {/* Jitter */}
-            <div className={`rounded-2xl p-5 md:p-6 text-center border transition-all ${theme === 'dark'
-              ? 'bg-white/5 border-white/10'
-              : 'bg-white border-blue-100 shadow-sm'
-              }`}>
-              <Activity className="w-6 h-6 md:w-8 md:h-8 text-purple-400 mx-auto mb-3" aria-hidden="true" />
-              <div className={`text-2xl md:text-3xl font-bold mb-1 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
-                {jitter > 0 ? jitter : '0'}
-              </div>
-              <div className={`text-[10px] md:text-xs uppercase ${theme === 'dark' ? 'text-blue-200' : 'text-slate-500'}`}>Jitter</div>
-              <div className={`text-[10px] md:text-xs mt-1 ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>ms</div>
-            </div>
+          <section aria-label="Live Speed Test Results" className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <ResultCard
+              icon={Download}
+              value={downloadSpeed > 0 ? downloadSpeed.toFixed(2) : '0.00'}
+              label={APP_STRINGS.DOWNLOAD_LABEL}
+              unit={APP_STRINGS.SPEED_UNIT}
+              colorClass="text-green-400"
+              theme={theme}
+            />
+            <ResultCard
+              icon={Upload}
+              value={uploadSpeed > 0 ? uploadSpeed.toFixed(2) : '0.00'}
+              label={APP_STRINGS.UPLOAD_LABEL}
+              unit={APP_STRINGS.SPEED_UNIT}
+              colorClass="text-sky-400"
+              theme={theme}
+            />
+            <ResultCard
+              icon={Activity}
+              value={ping > 0 ? ping : '0'}
+              label={APP_STRINGS.PING_LABEL}
+              unit={APP_STRINGS.PING_UNIT}
+              colorClass="text-amber-400"
+              theme={theme}
+            />
+            <ResultCard
+              icon={Activity}
+              value={jitter > 0 ? jitter : '0'}
+              label={APP_STRINGS.JITTER_LABEL || 'Jitter'}
+              unit={APP_STRINGS.PING_UNIT}
+              colorClass="text-purple-400"
+              theme={theme}
+            />
           </section>
 
           {/* Analyzing Indicator */}
-          {testing && (
-            <div className="flex justify-center mb-8">
-              <div className={`flex items-center gap-3 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-[0.2em] border ${theme === 'dark'
-                ? 'bg-white/5 text-blue-300 border-white/10'
-                : 'bg-blue-50 text-blue-600 border-blue-100'
-                }`}>
-                <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
-                ANALYZING NETWORK DATA...
-              </div>
-            </div>
-          )}
-
+          {testing && <AnalyzingPill theme={theme} />}
           {/* Test Button */}
           <motion.button
             onClick={runTest}
@@ -397,40 +363,17 @@ export default function SpeedTestComponent() {
             ) : (
               <>
                 <Rocket className="w-8 h-8" />
-                START SPEED TEST NOW
+                Test My Speed Now
               </>
             )}
           </motion.button>
 
           {/* Test History */}
-          {!testing && history.length > 0 && (
-            <div className={`mt-6 p-5 rounded-2xl border ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-blue-100 shadow-sm'}`}>
-              <h3 className={`font-bold mb-3 flex items-center justify-between ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
-                <span>Test History</span>
-                <button
-                  onClick={clearHistory}
-                  className={`text-xs px-2 py-1 rounded hover:bg-red-500/10 ${theme === 'dark' ? 'text-blue-300 hover:text-red-400' : 'text-slate-500 hover:text-red-600'}`}
-                >
-                  Clear
-                </button>
-              </h3>
-              <div className="space-y-2 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
-                {history.map((test, index) => (
-                  <div key={index} className={`flex items-center justify-between text-xs p-2 rounded-md ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50'}`}>
-                    <div className="flex flex-col">
-                      <span className={`font-mono text-[10px] ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{test.date}</span>
-                      <span className={`font-bold mt-0.5 ${theme === 'dark' ? 'text-white' : 'text-slate-700'}`}>{test.dl} ↓ / {test.ul} ↑</span>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <span className={`font-bold ${theme === 'dark' ? 'text-amber-400' : 'text-amber-600'}`}>{test.ping} ms</span>
-                      {/* Force display ScanPing to correct old history */}
-                      <span className={`text-[10px] ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>Scanpings.net</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          <TestHistory
+            history={history}
+            clearHistory={clearHistory}
+            theme={theme}
+          />
 
           {/* Results Summary */}
           {!testing && downloadSpeed > 0 && (

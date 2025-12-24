@@ -40,7 +40,7 @@ export default function Navbar() {
                     <Link href="/" className="flex items-center gap-2">
                         <Image
                             src="/logo.svg"
-                            alt=""
+                            alt="ScanPing Logo - Free Internet Speed Test Tool"
                             width={32}
                             height={32}
                             className="w-8 h-8"

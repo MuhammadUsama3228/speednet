@@ -10,6 +10,14 @@ export default function BlogList() {
 
     const posts = [
         {
+            slug: 'speed-test-accuracy-and-benchmarks',
+            title: 'Speed Test Accuracy & Benchmarks: What Speed Do You Actually Need?',
+            excerpt: 'Learn how to interpret your speed test results. Explore benchmarks for gaming, streaming, and mobile usage.',
+            date: 'Dec 24, 2025',
+            category: 'Network Guide',
+            icon: <Zap className="w-6 h-6" />
+        },
+        {
             slug: 'latency-vs-jitter-gaming',
             title: 'Latency vs Jitter: The Ultimate Guide for Gamers',
             excerpt: 'Why having high download speed doesn\'t mean zero lag. Learn the difference between Ping and Jitter and how to fix them.',
@@ -17,13 +25,12 @@ export default function BlogList() {
             category: 'Gaming',
             icon: <Activity className="w-6 h-6" />
         },
-        // Future posts will be added here
     ];
 
     return (
         <main className={`min-h-screen pt-24 px-4 transition-colors duration-300 ${theme === 'dark'
-                ? 'bg-gradient-to-br from-blue-900 via-blue-800 to-purple-900'
-                : 'bg-gradient-to-br from-blue-50 via-white to-blue-100'
+            ? 'bg-gradient-to-br from-blue-900 via-blue-800 to-purple-900'
+            : 'bg-gradient-to-br from-blue-50 via-white to-blue-100'
             }`}>
             <div className="max-w-4xl mx-auto">
                 <header className="text-center mb-16">
@@ -41,8 +48,8 @@ export default function BlogList() {
                             key={post.slug}
                             href={`/blog/${post.slug}`}
                             className={`group block p-8 rounded-3xl border transition-all duration-300 ${theme === 'dark'
-                                    ? 'bg-white/10 border-white/10 hover:bg-white/20 hover:border-blue-400/50'
-                                    : 'bg-white border-slate-200 hover:shadow-xl hover:border-blue-300'
+                                ? 'bg-white/10 border-white/10 hover:bg-white/20 hover:border-blue-400/50'
+                                : 'bg-white border-slate-200 hover:shadow-xl hover:border-blue-300'
                                 }`}
                         >
                             <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">

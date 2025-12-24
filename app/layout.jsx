@@ -62,7 +62,12 @@ export const metadata = {
     'internet speed meter',
     'broadband test',
     'network diagnostics',
-    'librespeed speed test'
+    'librespeed speed test',
+    'real time speed test',
+    'mobile internet speed test',
+    'fastest speed test',
+    'internet quality test',
+    'stability test'
   ],
   authors: [{ name: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} Team` }],
   creator: process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing',
@@ -94,10 +99,9 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Free Online Internet Speed Test`,
-    description: `Test your internet speed instantly with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}. Get accurate download, upload, ping, and jitter measurements.`,
-    images: ['/og-image.svg'],
-    creator: `@${(process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing').toLowerCase()}`,
+    title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Accurate Speed Test`,
+    description: 'Test your internet speed with our free, accurate, and easy-to-use tool. Fast.com alternative powered by Cloudflare.',
+    images: ['https://scanpings.net/og-image.svg'],
   },
   robots: {
     index: true,
