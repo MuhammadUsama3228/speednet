@@ -1,6 +1,5 @@
 "use client";
 import React from 'react';
-import { motion } from 'framer-motion';
 
 export default function ResultCard({ icon: Icon, value, label, unit, colorClass, theme }) {
     const isDark = theme === 'dark';

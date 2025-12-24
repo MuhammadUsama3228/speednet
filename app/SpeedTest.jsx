@@ -1,15 +1,18 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { RefreshCw, Download, Upload, Activity, AlertCircle, Play, Rocket, Wifi, MapPin, Globe, CheckCircle } from 'lucide-react';
+import { Download, Upload, Activity, Globe, MapPin, Rocket } from 'lucide-react';
 import { motion } from 'framer-motion';
+import dynamic from 'next/dynamic';
 import SpeedTest from '@cloudflare/speedtest';
 import { APP_STRINGS, API_ENDPOINTS, SPEEDTEST_CONFIG } from './constants/strings';
 import { useTheme } from './context/ThemeContext';
 import ResultCard from './components/ResultCard';
-import TestHistory from './components/TestHistory';
 import SpeedHero from './components/SpeedHero';
-import AnalyzingPill from './components/AnalyzingPill';
+
+// Dynamic imports for improved FCP / LCP (non-critical components)
+const TestHistory = dynamic(() => import('./components/TestHistory'), { ssr: false });
+const AnalyzingPill = dynamic(() => import('./components/AnalyzingPill'), { ssr: false });
 
 export default function SpeedTestComponent() {
   const [testing, setTesting] = useState(false);
