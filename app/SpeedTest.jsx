@@ -270,7 +270,7 @@ export default function SpeedTestComponent() {
       : 'bg-gradient-to-br from-blue-50 via-white to-blue-100'
       }`}>
 
-      <div className="w-full max-w-3xl lg:max-w-[851px] mx-auto">
+      <div className="w-full max-w-[706px] mx-auto">
         {/* Header Section */}
         <SpeedHero theme={theme} />
         {/* Start Button Removed - Using Main Button Inside Card */}
