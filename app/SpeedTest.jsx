@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Download, Upload, Activity, Globe, MapPin, Rocket } from 'lucide-react';
+import { Download, Upload, Activity, Globe, MapPin, Rocket, RefreshCw, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 import SpeedTest from '@cloudflare/speedtest';
@@ -270,7 +270,7 @@ export default function SpeedTestComponent() {
       : 'bg-gradient-to-br from-blue-50 via-white to-blue-100'
       }`}>
 
-      <div className="w-full max-w-3xl lg:max-w-4xl mx-auto">
+      <div className="w-full max-w-3xl lg:max-w-[851px] mx-auto">
         {/* Header Section */}
         <SpeedHero theme={theme} />
         {/* Start Button Removed - Using Main Button Inside Card */}
