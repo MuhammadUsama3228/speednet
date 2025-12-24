@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Wifi, Download, Upload, Activity, MapPin, Globe, CheckCircle } from 'lucide-react';
+import { RefreshCw, Download, Upload, Activity, AlertCircle, Play, Rocket, Wifi, MapPin, Globe, CheckCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
 import SpeedTest from '@cloudflare/speedtest';
 import { APP_STRINGS, API_ENDPOINTS, SPEEDTEST_CONFIG } from './constants/strings';
 import { useTheme } from './context/ThemeContext';
@@ -107,17 +108,22 @@ export default function SpeedTestComponent() {
 
         if (dlMbps > 0) setDownloadSpeed(parseFloat(dlMbps));
         if (ulMbps > 0) setUploadSpeed(parseFloat(ulMbps));
-        if (pingMs > 0) setPing(pingMs);
+
+        // Lock Ping: only update during initial Ping stage or if not yet set
+        const downloadPoints = speedTest.results.getDownloadBandwidthPoints()?.length || 0;
+        if (pingMs > 0 && downloadPoints === 0) {
+          setPing(pingMs);
+        }
 
         const currentLive = dlMbps > ulMbps ? dlMbps : ulMbps;
         if (currentLive > 0) setLiveSpeed(parseFloat(currentLive));
 
-        const downloadPoints = speedTest.results.getDownloadBandwidthPoints()?.length || 0;
+        // Simplified progress calculation if needed elsewhere, but no longer showing the bar
         const uploadPoints = speedTest.results.getUploadBandwidthPoints()?.length || 0;
         const totalPoints = downloadPoints + uploadPoints;
         setProgress(Math.min(99, Math.round(totalPoints * 3)));
       } catch (e) {
-        // Ignore errors during update
+        console.warn('Error in onResultsChange:', e);
       }
     };
 
@@ -128,12 +134,17 @@ export default function SpeedTestComponent() {
       try {
         const latency = speedTest.results.getUnloadedLatency();
         const downloadBw = speedTest.results.getDownloadBandwidth();
+        const uploadPoints = speedTest.results.getUploadBandwidthPoints()?.length || 0; // Define uploadPoints here
 
         if (latency > 0 && currentStage === APP_STRINGS.STAGE_LATENCY) {
           currentStage = APP_STRINGS.STAGE_DOWNLOAD;
           setStage(currentStage);
         } else if (downloadBw > 0 && currentStage === APP_STRINGS.STAGE_DOWNLOAD) {
           currentStage = APP_STRINGS.STAGE_UPLOAD;
+          setStage(currentStage);
+        } else if (uploadPoints > 15 && currentStage === APP_STRINGS.STAGE_UPLOAD) {
+          // Transition to Jitter stage once upload is mostly done based on points
+          currentStage = APP_STRINGS.STAGE_JITTER;
           setStage(currentStage);
         }
       } catch (e) { }
@@ -263,24 +274,7 @@ export default function SpeedTestComponent() {
           <p className={`text-lg ${theme === 'dark' ? 'text-blue-200' : 'text-slate-600'}`}>{APP_STRINGS.HEADER_SUBTITLE}</p>
         </header>
 
-        {/* Start Button */}
-        {!testing && (
-          <div className="flex justify-center mb-12">
-            <button
-              onClick={runTest}
-              aria-label="Start internet speed test"
-              className={`group relative px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 hover:scale-105 ${theme === 'dark'
-                ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)]'
-                : 'bg-white text-blue-600 shadow-xl hover:shadow-2xl'
-                }`}
-            >
-              <span className="flex items-center gap-2">
-                <Activity className="w-5 h-5 group-hover:animate-pulse" />
-                {APP_STRINGS.START_BUTTON}
-              </span>
-            </button>
-          </div>
-        )}
+        {/* Start Button Removed - Using Main Button Inside Card */}
 
         {/* Main Card */}
         <div className={`backdrop-blur-xl rounded-3xl p-8 shadow-2xl border transition-colors duration-300 ${theme === 'dark'
@@ -366,38 +360,47 @@ export default function SpeedTestComponent() {
             </div>
           </section>
 
-          {/* Progress */}
+          {/* Analyzing Indicator */}
           {testing && (
-            <div className="mb-6">
-              <div
-                className={`h-3 rounded-full overflow-hidden ${theme === 'dark' ? 'bg-white/10' : 'bg-slate-200'}`}
-                role="progressbar"
-                aria-valuenow={progress}
-                aria-valuemin="0"
-                aria-valuemax="100"
-                aria-label="Test Progress"
-              >
-                <div
-                  className="h-full bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 transition-all duration-500"
-                  style={{ width: `${progress}%` }}
-                />
+            <div className="flex justify-center mb-8">
+              <div className={`flex items-center gap-3 px-6 py-2.5 rounded-full text-xs font-bold uppercase tracking-[0.2em] border ${theme === 'dark'
+                ? 'bg-white/5 text-blue-300 border-white/10'
+                : 'bg-blue-50 text-blue-600 border-blue-100'
+                }`}>
+                <div className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_rgba(59,130,246,0.6)]" />
+                ANALYZING NETWORK DATA...
               </div>
-              <p className={`text-center text-sm mt-3 font-medium ${theme === 'dark' ? 'text-blue-300' : 'text-slate-500'}`} aria-live="polite">{stage}</p>
             </div>
           )}
 
           {/* Test Button */}
-          <button
+          <motion.button
             onClick={runTest}
             disabled={testing}
+            whileHover={!testing ? { scale: 1.05, filter: "brightness(1.1)" } : {}}
+            whileTap={!testing ? { scale: 0.95 } : {}}
+            animate={!testing ? {
+              boxShadow: ["0px 0px 0px 0px rgba(16, 185, 129, 0.7)", "0px 0px 0px 10px rgba(16, 185, 129, 0)"],
+              transition: { duration: 2, repeat: Infinity }
+            } : {}}
             aria-label={testing ? 'Test in progress' : 'Start Speed Test'}
-            className={`w-full py-5 rounded-2xl font-bold text-lg transition-all shadow-lg text-white mb-6 ${testing
+            className={`giant-start-button flex items-center justify-center gap-3 w-full py-5 rounded-2xl font-bold text-lg transition-all shadow-lg text-white mb-6 ${testing
               ? 'bg-slate-700 cursor-not-allowed opacity-50'
               : 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 hover:scale-[1.02] active:scale-95'
               }`}
           >
-            {testing ? APP_STRINGS.BUTTON_TESTING : APP_STRINGS.BUTTON_START}
-          </button>
+            {testing ? (
+              <>
+                <RefreshCw className="w-6 h-6 animate-spin" />
+                {APP_STRINGS.BUTTON_TESTING}
+              </>
+            ) : (
+              <>
+                <Rocket className="w-8 h-8" />
+                START SPEED TEST NOW
+              </>
+            )}
+          </motion.button>
 
           {/* Test History */}
           {!testing && history.length > 0 && (

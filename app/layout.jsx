@@ -4,6 +4,9 @@ import { Toaster } from 'react-hot-toast'
 import ClientProviders from './components/ClientProviders'
 import Navbar from './components/Navbar'
 import Script from 'next/script'
+import { Inter } from 'next/font/google'
+
+const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
 export const metadata = {
   title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Free Online Internet Speed Test | Fast & Accurate Results`,
@@ -211,8 +214,6 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" content="#1e40af" />
         <meta name="msapplication-TileColor" content="#1e40af" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -231,7 +232,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body>
+      <body className={inter.className}>
         <ClientProviders>
           <Navbar />
           <Toaster position="top-right" />
