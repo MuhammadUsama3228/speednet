@@ -193,6 +193,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <link rel="preconnect" href="https://cloudflaretest.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cloudflare.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://cloudflaretest.com" />
+        <link rel="dns-prefetch" href="https://cloudflare.com" />
+        <link rel="preconnect" href="https://ipapi.co" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://ipwho.is" crossOrigin="anonymous" />
         {/* Google Analytics 4 */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID || 'G-VQ6VB5LY8D'}`}
@@ -211,7 +217,7 @@ export default function RootLayout({ children }) {
         <Script
           src="https://analytics.ahrefs.com/analytics.js"
           data-key="xp+7TLRdbxql1OUhd77S2w"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
 
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
