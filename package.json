@@ -15,7 +15,6 @@
   "license": "MIT",
   "dependencies": {
     "@cloudflare/speedtest": "^1.7.0",
-    "@maxmind/geoip2-node": "^6.3.4",
     "autoprefixer": "^10.4.14",
     "framer-motion": "^10.12.16",
     "lucide-react": "^0.562.0",

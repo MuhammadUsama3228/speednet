@@ -4,12 +4,12 @@
 export const APP_STRINGS = {
     // App Info
     APP_NAME: 'ScanPing',
-    APP_TAGLINE: 'Accurate Internet Speed Test',
-    APP_DESCRIPTION: 'Test your internet speed with ScanPing - the fastest, most accurate online speed test.',
+    APP_TAGLINE: 'Fast, Accurate Internet Speed Test',
+    APP_DESCRIPTION: 'Test your internet speed with ScanPing - check download, upload speeds, ping, and latency. Free online speed test for wifi, broadband, and network diagnostics.',
 
     // Header
     HEADER_TITLE: 'ScanPing',
-    HEADER_SUBTITLE: 'Accurate Internet Speed Test',
+    HEADER_SUBTITLE: 'Fast, Accurate Internet Speed Test',
 
     // Connection Info
     CONNECTION_TITLE: 'Your Connection',

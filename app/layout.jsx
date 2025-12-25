@@ -4,14 +4,11 @@ import { Toaster } from 'react-hot-toast'
 import ClientProviders from './components/ClientProviders'
 import Navbar from './components/Navbar'
 import Script from 'next/script'
-import { Inter } from 'next/font/google'
-
-const inter = Inter({ subsets: ['latin'], display: 'swap' })
 
 export const metadata = {
-  title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Free Online Internet Speed Test | Fast & Accurate Results`,
+  title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Free Online Internet Speed Test | Check Download, Upload & Ping`,
   applicationName: process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing',
-  description: `Test your internet speed with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - the fastest, most accurate online speed test. Measure download, upload speeds, ping, jitter, and detect your IP address and location.`,
+  description: `Test your internet speed with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - fast, accurate online speed test. Check download speed, upload speed, ping, and latency. Free wifi speed test and network diagnostics.`,
   keywords: [
     // Core high-volume keywords (highest search intent & volume, e.g., "speed test" ~9-10M monthly global)
     'speed test',
@@ -24,16 +21,22 @@ export const metadata = {
     'wifi speed test',
     'download speed test',
     'upload speed test',
-    'check my ip',
-    'what is my ip',
-    'ip address location',
+    'speed test of internet',
+    'speed check wifi',
+    'speed test for wifi',
+    'network speed',
+    'test internet speed fast',
+    'speed check for internet',
+    'speed check on internet',
+    'speedtest sites',
+    'wi fi speed',
+    'my speed test internet',
 
     // Brand & unique strengths (your differentiators)
     'scanping',
     'cloudflare speed test',
     'accurate speed test',
     'best internet speed test',
-    'location speed test',
 
     // Competitor/alternative terms (capture users seeking options)
     'speedtest.net alternative',
@@ -41,6 +44,9 @@ export const metadata = {
     'ookla speedtest alternative',
     'speedtest net alternative',
     'fast com speed test',
+    'fast',
+    'cloudflare',
+    'speedtest',
 
     // Technical/diagnostic terms (your existing + refined)
     'ping test',
@@ -51,8 +57,6 @@ export const metadata = {
     'network speed test',
     'internet speed checker',
     'mbps test',
-    'ip lookup',
-    'geoip test',
 
     // Long-tail & user-intent phrases (lower competition, high conversion)
     'what is my internet speed',
@@ -62,12 +66,7 @@ export const metadata = {
     'internet speed meter',
     'broadband test',
     'network diagnostics',
-    'librespeed speed test',
-    'real time speed test',
-    'mobile internet speed test',
-    'fastest speed test',
-    'internet quality test',
-    'stability test'
+    'librespeed speed test'
   ],
   authors: [{ name: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} Team` }],
   creator: process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing',
@@ -83,7 +82,7 @@ export const metadata = {
   },
   openGraph: {
     title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Free Online Internet Speed Test`,
-    description: `Test your internet speed instantly with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}. Get accurate download, upload, ping, and jitter measurements. Fast, reliable, and free.`,
+    description: `Test your internet speed instantly with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}. Check download speed, upload speed, ping, and latency. Free wifi speed test and network diagnostics.`,
     url: 'https://scanpings.net',
     siteName: process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing',
     images: [
@@ -99,9 +98,10 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Accurate Speed Test`,
-    description: 'Test your internet speed with our free, accurate, and easy-to-use tool. Fast.com alternative powered by Cloudflare.',
-    images: ['https://scanpings.net/og-image.svg'],
+    title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Free Online Internet Speed Test`,
+    description: `Test your internet speed instantly with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}. Check download speed, upload speed, ping, and latency. Free wifi speed test.`,
+    images: ['/og-image.svg'],
+    creator: `@${(process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing').toLowerCase()}`,
   },
   robots: {
     index: true,
@@ -123,24 +123,15 @@ export const metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.ico', sizes: 'any' },
       { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon-96x96.png', type: 'image/png', sizes: '96x96' },
-      { url: '/web-app-manifest-192x192.png', type: 'image/png', sizes: '192x192' },
+      { url: '/logo.svg', type: 'image/svg+xml', sizes: 'any' }
     ],
-    shortcut: '/favicon.ico',
+    shortcut: '/favicon.svg',
     apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/logo.svg', type: 'image/svg+xml', sizes: '180x180' }
     ],
-    other: [
-      {
-        rel: 'mask-icon',
-        url: '/favicon.svg', // Browsers often use SVG for pinned tabs
-        color: '#1e40af' // Matches theme-color
-      }
-    ]
   },
-  manifest: '/site.webmanifest',
+  manifest: '/manifest.json',
 }
 
 export default function RootLayout({ children }) {
@@ -163,8 +154,6 @@ export default function RootLayout({ children }) {
       "Upload Speed Test",
       "Ping Test",
       "Jitter Measurement",
-      "IP Detection",
-      "Location Lookup",
       "Real-time Results",
       "Detailed Analytics",
       "Mobile Friendly",
@@ -193,16 +182,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link rel="preconnect" href="https://cloudflaretest.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://cloudflare.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://cloudflaretest.com" />
-        <link rel="dns-prefetch" href="https://cloudflare.com" />
-        <link rel="preconnect" href="https://ipapi.co" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://ipwho.is" crossOrigin="anonymous" />
         {/* Google Analytics 4 */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID || 'G-VQ6VB5LY8D'}`}
-          strategy="lazyOnload"
+          strategy="afterInteractive"
         />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
@@ -213,17 +196,12 @@ export default function RootLayout({ children }) {
             gtag('config', '${process.env.NEXT_PUBLIC_GA_ID || 'G-VQ6VB5LY8D'}');
           `}
         </Script>
-        {/* Ahrefs Analytics */}
-        <Script
-          src="https://analytics.ahrefs.com/analytics.js"
-          data-key="xp+7TLRdbxql1OUhd77S2w"
-          strategy="lazyOnload"
-        />
-
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
         <meta name="theme-color" content="#1e40af" />
         <meta name="msapplication-TileColor" content="#1e40af" />
         <meta name="msapplication-config" content="/browserconfig.xml" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -242,7 +220,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className={inter.className}>
+      <body>
         <ClientProviders>
           <Navbar />
           <Toaster position="top-right" />
