@@ -10,6 +10,17 @@ export const metadata = {
         title: `About ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - FAQ & Guide`,
         description: 'Everything you need to know about internet speed testing, latency, and network diagnostics.',
         url: 'https://scanpings.net/about',
+        siteName: 'ScanPing',
+        images: [
+            {
+                url: '/og-image.svg',
+                width: 1200,
+                height: 630,
+                alt: 'About ScanPing - Internet Speed Test Guide',
+            },
+        ],
+        locale: 'en_US',
+        type: 'website'
     }
 };
 

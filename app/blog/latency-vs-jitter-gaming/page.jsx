@@ -10,6 +10,16 @@ export const metadata = {
         title: 'Latency vs Jitter: What Matters More for Gaming?',
         description: 'Stop blaming your download speed. The real enemy of online gaming is Jitter. Here is why.',
         url: 'https://scanpings.net/blog/latency-vs-jitter-gaming',
+        siteName: 'ScanPing',
+        images: [
+            {
+                url: '/og-image.svg',
+                width: 1200,
+                height: 630,
+                alt: 'Latency vs Jitter Guide for Gaming',
+            },
+        ],
+        locale: 'en_US',
         type: 'article'
     }
 };
@@ -26,11 +36,12 @@ export default function Article() {
                     dangerouslySetInnerHTML={{
                         __html: JSON.stringify({
                             '@context': 'https://schema.org',
-                            '@type': 'Article',
+                            '@type': 'BlogPosting',
                             headline: metadata.title,
                             description: metadata.description,
                             image: 'https://scanpings.net/og-image.svg',
                             datePublished: '2025-12-21',
+                            dateModified: '2025-12-21',
                             author: {
                                 '@type': 'Organization',
                                 name: 'ScanPing Team',
@@ -43,7 +54,13 @@ export default function Article() {
                                     '@type': 'ImageObject',
                                     url: 'https://scanpings.net/logo.svg'
                                 }
-                            }
+                            },
+                            mainEntityOfPage: {
+                                '@type': 'WebPage',
+                                '@id': 'https://scanpings.net/blog/latency-vs-jitter-gaming'
+                            },
+                            articleSection: 'Gaming Guides',
+                            wordCount: 800
                         })
                     }}
                 />

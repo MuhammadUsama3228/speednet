@@ -10,6 +10,16 @@ export const metadata = {
         title: 'How Accurate is Your Speed Test? The Ultimate Guide',
         description: 'Discover the science behind speed tests and the actual benchmarks you need for a stable internet connection.',
         url: 'https://scanpings.net/blog/speed-test-accuracy-and-benchmarks',
+        siteName: 'ScanPing',
+        images: [
+            {
+                url: '/og-image.svg',
+                width: 1200,
+                height: 630,
+                alt: 'ScanPing Speed Test Accuracy Guide',
+            },
+        ],
+        locale: 'en_US',
         type: 'article'
     }
 };
@@ -23,11 +33,12 @@ export default function Article() {
                     dangerouslySetInnerHTML={{
                         __html: JSON.stringify({
                             '@context': 'https://schema.org',
-                            '@type': 'Article',
+                            '@type': 'BlogPosting',
                             headline: metadata.title,
                             description: metadata.description,
                             image: 'https://scanpings.net/og-image.svg',
                             datePublished: '2025-12-24',
+                            dateModified: '2025-12-24',
                             author: {
                                 '@type': 'Organization',
                                 name: 'ScanPing Team',
@@ -40,7 +51,13 @@ export default function Article() {
                                     '@type': 'ImageObject',
                                     url: 'https://scanpings.net/logo.svg'
                                 }
-                            }
+                            },
+                            mainEntityOfPage: {
+                                '@type': 'WebPage',
+                                '@id': 'https://scanpings.net/blog/speed-test-accuracy-and-benchmarks'
+                            },
+                            articleSection: 'Network Guides',
+                            wordCount: 1200
                         })
                     }}
                 />

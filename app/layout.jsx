@@ -6,7 +6,7 @@ import Navbar from './components/Navbar'
 import Script from 'next/script'
 
 export const metadata = {
-  title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Free Online Internet Speed Test | Check Download, Upload & Ping`,
+  title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Internet Speed Test | Check Download & Upload`,
   applicationName: process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing',
   description: `Test your internet speed with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - fast, accurate online speed test. Check download speed, upload speed, ping, and latency. Free wifi speed test and network diagnostics.`,
   keywords: [
