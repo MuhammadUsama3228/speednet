@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useTheme } from '../context/ThemeContext';
-import { ArrowRight, Wifi, Zap, Activity } from 'lucide-react';
+import { ArrowRight, Wifi, Zap, Activity, Video } from 'lucide-react';
 import { APP_STRINGS } from '../constants/strings';
 
 export default function BlogList() {
@@ -10,10 +10,18 @@ export default function BlogList() {
 
     const posts = [
         {
+            slug: 'video-streaming-requirements',
+            title: 'Video Streaming Speed Requirements: Netflix, YouTube, Disney+ Complete Guide',
+            excerpt: 'Official internet speed requirements for 4K streaming on all major platforms. Stop buffering forever.',
+            date: 'Dec 27, 2025',
+            category: 'Streaming',
+            icon: <Video className="w-6 h-6" />
+        },
+        {
             slug: 'speed-test-accuracy-and-benchmarks',
             title: 'Speed Test Accuracy & Benchmarks: What Speed Do You Actually Need?',
             excerpt: 'Learn how to interpret your speed test results. Explore benchmarks for gaming, streaming, and mobile usage.',
-            date: 'Dec 24, 2025',
+            date: 'Dec 27, 2025',
             category: 'Network Guide',
             icon: <Zap className="w-6 h-6" />
         },
@@ -21,7 +29,7 @@ export default function BlogList() {
             slug: 'latency-vs-jitter-gaming',
             title: 'Latency vs Jitter: The Ultimate Guide for Gamers',
             excerpt: 'Why having high download speed doesn\'t mean zero lag. Learn the difference between Ping and Jitter and how to fix them.',
-            date: 'Dec 21, 2025',
+            date: 'Dec 27, 2025',
             category: 'Gaming',
             icon: <Activity className="w-6 h-6" />
         },
