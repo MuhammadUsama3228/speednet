@@ -6,9 +6,9 @@ import Navbar from './components/Navbar'
 import Script from 'next/script'
 
 export const metadata = {
-  title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Internet Speed Test | Check Download & Upload`,
+  title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Fast Internet Speed Test`,
   applicationName: process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing',
-  description: `Test your internet speed with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - fast, accurate online speed test. Check download speed, upload speed, ping, and latency. Free wifi speed test and network diagnostics.`,
+  description: `Test your internet speed with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}. Fast, accurate online speed test for download, upload, ping, and latency.`,
   keywords: [
     // Core high-volume keywords (highest search intent & volume, e.g., "speed test" ~9-10M monthly global)
     'speed test',

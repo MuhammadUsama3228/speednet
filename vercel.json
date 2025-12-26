@@ -17,5 +17,12 @@
         }
       ]
     }
+  ],
+  "redirects": [
+    {
+      "source": "http://scanpings.net/:path*",
+      "destination": "https://scanpings.net/:path*",
+      "permanent": true
+    }
   ]
 }
