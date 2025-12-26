@@ -87,11 +87,16 @@ export default function SpeedTestComponent() {
   // Remove ipify and ipapi fetches, use only /api/ip-info
   const fetchIPInfo = async () => {
     try {
-      const localApiResponse = await fetch('/api/ip-info');
+      let apiUrl = '/api/ip-info';
+      // If running on localhost, use a test US IP for dev
+      if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+        apiUrl = '/api/ip-info?ip=8.8.8.8'; // Google Public DNS (US)
+      }
+      const localApiResponse = await fetch(apiUrl);
       if (localApiResponse.ok) {
         const data = await localApiResponse.json();
-  setIp(data.ip || '');
-  setLocation(data.location_display || APP_STRINGS.formatLocation(data.city, data.country_name) || '');
+        setIp(data.ip || '');
+        setLocation(APP_STRINGS.formatLocation(data.city, data.country_name));
         return;
       }
     } catch (error) {
