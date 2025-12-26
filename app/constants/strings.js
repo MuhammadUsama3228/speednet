@@ -61,9 +61,11 @@ export const APP_STRINGS = {
         const speed = typeof mbps === 'string' ? parseFloat(mbps) : (typeof mbps === 'number' ? mbps : 0);
 
         if (speed >= 1000) {
-            return `${(speed / 1000).toFixed(1)} Gbps`;
+            const val = (speed / 1000).toFixed(2);
+            return `${val.endsWith('0') ? val.slice(0, -1) : val} Gbps`;
         } else if (speed >= 1) {
-            return `${speed.toFixed(1)} Mbps`;
+            const val = speed.toFixed(2);
+            return `${val.endsWith('0') ? val.slice(0, -1) : val} Mbps`;
         } else if (speed >= 0.001) {
             return `${(speed * 1000).toFixed(0)} Kbps`;
         } else {
@@ -72,15 +74,23 @@ export const APP_STRINGS = {
     },
     formatSpeedValue: (mbps) => {
         const n = Number(mbps);
+        let formatted;
+
         if (n >= 1000) {
-            return (n / 1000).toFixed(1);
+            formatted = (n / 1000).toFixed(2);
         } else if (n >= 1) {
-            return n.toFixed(1);
+            formatted = n.toFixed(2);
         } else if (n >= 0.001) {
             return (n * 1000).toFixed(0);
         } else {
             return (n * 1000000).toFixed(0);
         }
+
+        // Rule: If it ends in '0', remove it (e.g. 28.00 -> 28.0, 28.10 -> 28.1)
+        if (formatted.endsWith('0')) {
+            return formatted.slice(0, -1);
+        }
+        return formatted;
     },
     formatSpeedUnit: (mbps) => {
         if (mbps >= 1000) {
@@ -115,10 +125,10 @@ export const SPEEDTEST_CONFIG = {
     measureUpload: true,
     measureDownload: true,
     measurements: [
-        { type: 'latency', numPackets: 1 },  // Simple latency test
-        { type: 'download', bytes: 1e5, count: 5, bypassMinDuration: true },
-        { type: 'upload', bytes: 1e5, count: 5, bypassMinDuration: true },
-        { type: 'latency', numPackets: 1 }  // Final latency
+        { type: 'latency', numPackets: 20 },
+        { type: 'download', bytes: 1e7, count: 4 },
+        { type: 'upload', bytes: 1e6, count: 8 },
+        { type: 'latency', numPackets: 20 }
     ]
 };
 

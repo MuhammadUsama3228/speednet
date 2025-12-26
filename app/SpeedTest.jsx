@@ -182,10 +182,10 @@ export default function SpeedTestComponent() {
         measureUpload: true,
         measureDownload: true,
         measurements: [
-          { type: 'latency', numPackets: 5 },  // Reduced from 10 to 5
-          { type: 'download', bytes: 1e6, count: 3, bypassMinDuration: true }, // Reduced to 1MB x 3
-          { type: 'upload', bytes: 1e6, count: 3, bypassMinDuration: true },   // Reduced to 1MB x 3
-          { type: 'latency', numPackets: 5 }   // Reduced from 10 to 5
+          { type: 'latency', numPackets: 10 }, // Reduced latency checks
+          { type: 'download', bytes: 5e5, count: 16 }, // Lightweight: 500KB x 16 = 8MB Max (Super fast, no stuck tests)
+          { type: 'upload', bytes: 5e5, count: 8 },   // Lightweight: 500KB x 8 = 4MB Max
+          { type: 'latency', numPackets: 5 }
         ]
       });
       speedTestRef.current = speedTest;
@@ -210,7 +210,7 @@ export default function SpeedTestComponent() {
             if (latencyPoints && latencyPoints.length > 1) {
               const variations = [];
               for (let i = 1; i < latencyPoints.length; i++) {
-                variations.push(Math.abs(latencyPoints[i] - latencyPoints[i-1]));
+                variations.push(Math.abs(latencyPoints[i] - latencyPoints[i - 1]));
               }
               if (variations.length > 0) {
                 jitter = variations.reduce((sum, v) => sum + v, 0) / variations.length;
@@ -294,7 +294,7 @@ export default function SpeedTestComponent() {
             if (latencyPoints && latencyPoints.length > 1) {
               const variations = [];
               for (let i = 1; i < latencyPoints.length; i++) {
-                variations.push(Math.abs(latencyPoints[i] - latencyPoints[i-1]));
+                variations.push(Math.abs(latencyPoints[i] - latencyPoints[i - 1]));
               }
               if (variations.length > 0) {
                 jitterVal = variations.reduce((sum, v) => sum + v, 0) / variations.length;
@@ -551,11 +551,10 @@ export default function SpeedTestComponent() {
                   className="sr-only peer"
                   disabled={testing}
                 />
-                <div className={`w-11 h-6 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 transition-all ${
-                  multiTestEnabled
-                    ? 'bg-blue-600 peer-focus:ring-blue-800'
-                    : isDark ? 'bg-gray-600' : 'bg-gray-200'
-                } peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
+                <div className={`w-11 h-6 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 transition-all ${multiTestEnabled
+                  ? 'bg-blue-600 peer-focus:ring-blue-800'
+                  : isDark ? 'bg-gray-600' : 'bg-gray-200'
+                  } peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
               </label>
             </div>
           </div>
@@ -626,6 +625,27 @@ export default function SpeedTestComponent() {
               />
             </div>
           </section>
+
+          {/* Test Standards Info */}
+          {!testing && !stage && (
+            <div className={`mb-8 p-4 rounded-xl border text-xs text-center mx-auto max-w-lg transition-all ${theme === 'dark' ? 'bg-white/5 border-white/10 text-slate-400' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
+              <h4 className="font-bold uppercase tracking-widest mb-3 opacity-70">Adaptive Test Standards</h4>
+              <div className="flex justify-center gap-4 sm:gap-8">
+                <div className="flex flex-col">
+                  <span className={`font-mono font-bold text-lg ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}>Adaptive</span>
+                  <span className="opacity-70">Download (~8MB)</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className={`font-mono font-bold text-lg ${theme === 'dark' ? 'text-sky-400' : 'text-sky-600'}`}>Adaptive</span>
+                  <span className="opacity-70">Upload (~4MB)</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className={`font-mono font-bold text-lg ${theme === 'dark' ? 'text-amber-400' : 'text-amber-600'}`}>20x</span>
+                  <span className="opacity-70">Latency Samples</span>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Speed Chart */}
           <SpeedChart
@@ -734,7 +754,7 @@ export default function SpeedTestComponent() {
               likelyType={'Slow'}
             />
           )}
-  </section>
+        </section>
 
         {/* SEO Content removed (moved to About page) */}
 
