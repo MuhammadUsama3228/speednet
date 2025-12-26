@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e3a8a"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Rounded Square Background -->
+  <rect x="0" y="0" width="512" height="512" rx="100" ry="100" fill="url(#bgGrad)"/>
+  
+  <!-- Content Container -->
+  <g transform="translate(256, 256)">
+    
+    <!-- Radar Grid Circles -->
+    <circle cx="0" cy="0" r="180" stroke="rgba(56, 189, 248, 0.25)" stroke-width="8" fill="none"/>
+    <circle cx="0" cy="0" r="120" stroke="rgba(56, 189, 248, 0.3)" stroke-width="8" fill="none"/>
+    <circle cx="0" cy="0" r="60" stroke="rgba(56, 189, 248, 0.35)" stroke-width="8" fill="none"/>
+    
+    <!-- Crosshairs -->
+    <line x1="-200" y1="0" x2="200" y2="0" stroke="rgba(56, 189, 248, 0.2)" stroke-width="4"/>
+    <line x1="0" y1="-200" x2="0" y2="200" stroke="rgba(56, 189, 248, 0.2)" stroke-width="4"/>
+
+    <!-- Center Pulse Dot -->
+    <circle cx="0" cy="0" r="25" fill="#38bdf8"/>
+    
+    <!-- WiFi Waves (Top Right) -->
+    <g transform="translate(50, -50) rotate(-45)">
+      <path d="M -35 -35 A 50 50 0 0 1 35 -35" stroke="#a855f7" stroke-width="16" stroke-linecap="round" fill="none"/>
+      <path d="M -60 -60 A 85 85 0 0 1 60 -60" stroke="#8b5cf6" stroke-width="16" stroke-linecap="round" fill="none"/>
+      <path d="M -85 -85 A 120 120 0 0 1 85 -85" stroke="#6366f1" stroke-width="16" stroke-linecap="round" fill="none"/>
+    </g>
+  </g>
+</svg>

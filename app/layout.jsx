@@ -124,12 +124,19 @@ export const metadata = {
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/logo.svg', type: 'image/svg+xml', sizes: 'any' }
+      { url: '/favicon-96x96.png', type: 'image/png', sizes: '96x96' }
     ],
     shortcut: '/favicon.svg',
     apple: [
-      { url: '/logo.svg', type: 'image/svg+xml', sizes: '180x180' }
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }
     ],
+    other: [
+      {
+        rel: 'mask-icon',
+        url: '/favicon.svg',
+        color: '#38bdf8'
+      }
+    ]
   },
   manifest: '/manifest.json',
 }

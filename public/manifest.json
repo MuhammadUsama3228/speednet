@@ -4,7 +4,7 @@
   "description": "Accurate Internet Speed Test - Powered by Cloudflare",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1e40af",
+  "background_color": "#0f172a",
   "theme_color": "#1e40af",
   "orientation": "portrait-primary",
   "icons": [
@@ -15,10 +15,28 @@
       "purpose": "any"
     },
     {
-      "src": "/logo.svg",
+      "src": "/favicon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/web-app-manifest-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/web-app-manifest-512x512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "categories": [
