@@ -13,9 +13,11 @@ export async function GET(request) {
     ip: ip || '',
     city: '',
     country: '',
+    country_name: '',
     region: '',
     latitude: null,
-    longitude: null
+    longitude: null,
+    location_display: 'Detecting...'
   };
 
   if (ip) {
@@ -30,13 +32,17 @@ export async function GET(request) {
           ip,
           city: result.city?.names?.en || '',
           country: result.country?.names?.en || '',
+          country_name: result.country?.names?.en || '',
           region: result.subdivisions?.[0]?.names?.en || '',
           latitude: result.location?.latitude || null,
-          longitude: result.location?.longitude || null
+          longitude: result.location?.longitude || null,
+          location_display: (result.city?.names?.en && result.country?.names?.en)
+            ? `${result.city.names.en}, ${result.country.names.en}`
+            : (result.country?.names?.en || 'Detecting...')
         };
       }
     } catch (e) {
-      // fallback: just return IP
+      // fallback: just return IP and Detecting...
     }
   }
 
