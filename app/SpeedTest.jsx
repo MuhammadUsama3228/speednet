@@ -90,8 +90,8 @@ export default function SpeedTestComponent() {
       const localApiResponse = await fetch('/api/ip-info');
       if (localApiResponse.ok) {
         const data = await localApiResponse.json();
-        setIp(data.ip || '');
-        setLocation(APP_STRINGS.formatLocation(data.city, data.country_name) || '');
+  setIp(data.ip || '');
+  setLocation(data.location_display || APP_STRINGS.formatLocation(data.city, data.country_name) || '');
         return;
       }
     } catch (error) {
