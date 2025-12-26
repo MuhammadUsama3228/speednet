@@ -1,14 +1,15 @@
 import { APP_STRINGS } from '../../constants/strings';
 
 export const metadata = {
-    title: 'Speed Test Accuracy & Benchmarks: What Speed Do You Actually Need? - ScanPing',
-    description: 'Learn how ScanPing measures your connection accuracy. Discover the best speed benchmarks for gaming, 4K streaming, and mobile browsing based on FCC 2024 standards.',
+    title: 'What Internet Speed Do I Need? 100 Mbps for 2024 | Speed Test Guide',
+    description: 'FCC 2024 standard: 100 Mbps download, 20 Mbps upload. Gaming needs 15 Mbps + under 30ms ping. Streaming 4K needs 25 Mbps. Complete speed benchmarks guide.',
+    keywords: ['what internet speed do i need', 'how much internet speed do i need', 'good internet speed', 'internet speed for gaming', 'speed test accuracy', 'fcc broadband speed'],
     alternates: {
         canonical: '/blog/speed-test-accuracy-and-benchmarks',
     },
     openGraph: {
-        title: 'How Accurate is Your Speed Test? The Ultimate Guide',
-        description: 'Discover the science behind speed tests and the actual benchmarks you need for a stable internet connection.',
+        title: 'What Internet Speed Do I Need? 2024 Benchmarks Guide',
+        description: 'FCC says 100/20 Mbps is the new standard. Find out what speed you actually need for gaming, streaming, and work.',
         url: 'https://scanpings.net/blog/speed-test-accuracy-and-benchmarks',
         siteName: 'ScanPing',
         images: [
@@ -16,7 +17,7 @@ export const metadata = {
                 url: '/og-image.svg',
                 width: 1200,
                 height: 630,
-                alt: 'ScanPing Speed Test Accuracy Guide',
+                alt: 'Internet Speed Benchmarks 2024 Guide',
             },
         ],
         locale: 'en_US',
@@ -254,11 +255,30 @@ export default function Article() {
 
                     <hr className="my-12 border-slate-200 dark:border-slate-700" />
 
-                    <div className="bg-slate-100 dark:bg-slate-800 p-8 rounded-2xl text-center">
-                        <h3 className="text-xl font-bold mb-4">Ready for a forensic network audit?</h3>
-                        <a href="/" className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-full transition-all hover:scale-105 shadow-xl">
-                            Test My Connection Accuracy
+                    {/* CTA Section */}
+                    <div className="bg-gradient-to-r from-blue-600 to-cyan-600 p-8 rounded-2xl text-center text-white">
+                        <h3 className="text-2xl font-bold mb-3">Test Your Internet Speed Now</h3>
+                        <p className="text-blue-100 mb-6">See how your connection compares to FCC benchmarks and get detailed results for download, upload, ping and jitter.</p>
+                        <a href="/" className="inline-block bg-white text-blue-600 font-bold py-3 px-8 rounded-full transition-all hover:scale-105 shadow-xl hover:bg-blue-50">
+                            Run Free Speed Test →
                         </a>
+                    </div>
+
+                    {/* Related Articles - Keeps users on site */}
+                    <div className="mt-12">
+                        <h2 className="text-2xl font-bold mb-6 text-slate-900 dark:text-white">Related Articles</h2>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            <a href="/blog/latency-vs-jitter-gaming" className="group p-5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all hover:shadow-lg">
+                                <span className="text-xs font-bold text-green-600 dark:text-green-400 uppercase">Gaming</span>
+                                <h3 className="font-bold text-slate-900 dark:text-white mt-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">What is Good Jitter?</h3>
+                                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Ping vs jitter vs latency explained for gamers</p>
+                            </a>
+                            <a href="/blog/video-streaming-requirements" className="group p-5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 transition-all hover:shadow-lg">
+                                <span className="text-xs font-bold text-red-600 dark:text-red-400 uppercase">Streaming</span>
+                                <h3 className="font-bold text-slate-900 dark:text-white mt-1 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">4K Streaming Speed Requirements</h3>
+                                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Netflix, YouTube, Disney+ official requirements</p>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
