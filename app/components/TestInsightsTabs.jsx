@@ -49,12 +49,12 @@ export default function TestInsightsTabs({
       (downloadSpeed > 100
         ? 'Fiber/5G'
         : downloadSpeed > 50
-        ? 'High-Speed'
-        : downloadSpeed > 25
-        ? 'Good'
-        : downloadSpeed > 10
-        ? 'Fair'
-        : 'Slow');
+          ? 'High-Speed'
+          : downloadSpeed > 25
+            ? 'Good'
+            : downloadSpeed > 10
+              ? 'Fair'
+              : 'Slow');
 
     const pLoss = packetLoss ?? Math.max(0, (jitter / 100) * 5).toFixed(2);
     const videoQuality =
@@ -80,120 +80,255 @@ export default function TestInsightsTabs({
 
   return (
     <div className="mt-6 sm:mt-8">
-      {/* Tabs */}
+      {/* Tabs Navigation */}
       <nav
-        className={`flex gap-1 border-b mb-4 ${isDark ? 'border-white/10' : 'border-blue-200 bg-white'}`}
+        className={`flex gap-1 p-1.5 rounded-xl mb-4 ${isDark
+          ? 'bg-slate-800/50 border border-white/10'
+          : 'bg-white border border-slate-200 shadow-sm'
+          }`}
         role="tablist"
       >
         {TABS.map(tab => {
           const Icon = tab.icon;
+          const isActive = activeTab === tab.key;
           return (
             <button
               key={tab.key}
               role="tab"
-              aria-selected={activeTab === tab.key}
+              aria-selected={isActive}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-t-md transition-all focus:outline-none ${
-                activeTab === tab.key
+              className={`
+                flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg
+                transition-all duration-200 ease-out
+                focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500
+                ${isActive
                   ? isDark
-                    ? 'border-b-4 border-blue-400 text-white bg-blue-900/40'
-                    : 'border-b-4 border-blue-600 text-blue-900 bg-white shadow-md'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30'
+                    : 'bg-blue-600 text-white shadow-md'
                   : isDark
-                    ? 'text-blue-200/70 hover:text-white'
-                    : 'text-gray-500 hover:text-blue-900 hover:bg-blue-50'
-              }`}
+                    ? 'text-slate-300 hover:text-white hover:bg-white/10'
+                    : 'text-slate-700 hover:text-blue-700 hover:bg-slate-100'
+                }
+              `}
             >
-              <Icon className="w-4 h-4" />
-              {tab.label}
+              <Icon className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`} />
+              <span className="hidden sm:inline">{tab.label}</span>
             </button>
           );
         })}
       </nav>
 
-      {/* Panel */}
+      {/* Panel Container */}
       <div
-        className={`rounded-xl p-6 border ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-blue-200 shadow-xl'}`}
+        className={`rounded-xl p-6 border transition-all duration-300 ${isDark
+          ? 'bg-slate-800/50 border-white/10'
+          : 'bg-white border-slate-200 shadow-lg'
+          }`}
       >
-        {/* Analysis */}
+        {/* Analysis Tab */}
         {activeTab === 'analysis' && (
-          <div>
-            <h3 className={`font-bold mb-4 ${isDark ? 'text-white' : 'text-blue-900'}`}>Connection Analysis</h3>
+          <div className="animate-fadeIn">
+            <h3 className={`font-bold mb-4 text-lg ${isDark ? 'text-white' : 'text-slate-800'}`}>
+              Connection Analysis
+            </h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
               {[
-                ['Quality Score', metrics.qualityScore],
-                ['DL/UL Ratio', `${metrics.speedRatio}x`],
-                ['Packet Loss', `${metrics.packetLoss}%`],
-                ['Type', metrics.connectionType],
-              ].map(([label, value], i) => (
+                ['Quality Score', metrics.qualityScore, metrics.qualityScore >= 70 ? 'text-emerald-600' : metrics.qualityScore >= 40 ? 'text-amber-600' : 'text-red-600'],
+                ['DL/UL Ratio', `${metrics.speedRatio}x`, 'text-blue-600'],
+                ['Packet Loss', `${String(metrics.packetLoss).replace(/%/g, '')}%`, parseFloat(metrics.packetLoss) < 1 ? 'text-emerald-600' : 'text-amber-600'],
+                ['Type', metrics.connectionType, 'text-purple-600'],
+              ].map(([label, value, colorClass], i) => (
                 <div
                   key={i}
-                  className={`p-4 rounded-lg border ${isDark ? 'bg-white/5 border-white/10' : 'bg-blue-50 border-blue-200 shadow-sm'}`}
+                  className={`p-4 rounded-xl border transition-all duration-200 hover:scale-[1.02] cursor-default ${isDark
+                    ? 'bg-slate-700/50 border-slate-600 hover:bg-slate-700'
+                    : 'bg-slate-50 border-slate-200 hover:bg-white hover:shadow-md hover:border-slate-300'
+                    }`}
                 >
-                  <div className={`text-xl font-bold ${isDark ? 'text-white' : 'text-blue-900'}`}>{value}</div>
-                  <div className={`text-sm ${isDark ? 'text-blue-200' : 'text-blue-700'}`}>{label}</div>
+                  <div className={`text-2xl font-bold ${isDark ? colorClass : colorClass}`}>{value}</div>
+                  <div className={`text-sm mt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{label}</div>
                 </div>
               ))}
             </div>
-            <div className={`p-4 rounded-lg border ${isDark ? 'bg-blue-900/20 border-blue-500/30 text-white' : 'bg-blue-100 border-blue-300 text-blue-900 shadow'}`}>Insights: {metrics.qualityScore > 80 ? 'Excellent connection for all activities.' : metrics.qualityScore > 60 ? 'Good for most uses, but may struggle with 4K streaming.' : metrics.qualityScore > 40 ? 'Fair, expect some issues with gaming/video.' : 'Poor, upgrade recommended.'}</div>
+            <div className={`p-4 rounded-xl border flex items-start gap-3 ${isDark
+              ? 'bg-blue-900/40 border-blue-500/30'
+              : 'bg-blue-50 border-blue-300'
+              }`}>
+              <Info className={`w-5 h-5 flex-shrink-0 mt-0.5 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
+              <p className={`text-sm ${isDark ? 'text-blue-100' : 'text-blue-700'}`}>
+                {metrics.qualityScore > 80
+                  ? 'Excellent connection for all activities including 4K streaming and competitive gaming.'
+                  : metrics.qualityScore > 60
+                    ? 'Good for most uses, but may experience occasional buffering with 4K content.'
+                    : metrics.qualityScore > 40
+                      ? 'Fair connection. Expect some issues with high-definition streaming and online gaming.'
+                      : 'Poor connection quality. Consider upgrading your internet plan for better performance.'}
+              </p>
+            </div>
           </div>
         )}
-        {/* Video */}
+
+        {/* Video Streaming Tab */}
         {activeTab === 'video' && (
-          <div className="space-y-3">
+          <div className="space-y-3 animate-fadeIn">
+            <h3 className={`font-bold mb-4 text-lg ${isDark ? 'text-white' : 'text-slate-800'}`}>
+              Video Streaming Quality
+            </h3>
             {VIDEO_QUALITY_REQUIREMENTS.map((v, i) => {
               const ok = downloadSpeed >= v.minSpeed;
               return (
                 <div
                   key={i}
-                  className={`p-4 rounded-lg border ${isDark ? (ok ? 'bg-green-900/20 border-green-500/30 text-white' : 'bg-red-900/20 border-red-500/30 text-white') : (ok ? 'bg-green-50 border-green-300 text-green-900 shadow-sm' : 'bg-rose-50 border-rose-300 text-rose-900 shadow-sm')}`}
+                  className={`p-4 rounded-xl border-2 transition-all duration-200 hover:scale-[1.01] ${isDark
+                    ? ok
+                      ? 'bg-emerald-900/30 border-emerald-500/50 hover:bg-emerald-900/40'
+                      : 'bg-red-900/30 border-red-500/50 hover:bg-red-900/40'
+                    : ok
+                      ? 'bg-emerald-50 border-emerald-400 hover:bg-emerald-100'
+                      : 'bg-red-50 border-red-400 hover:bg-red-100'
+                    }`}
                 >
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-start">
                     <div>
-                      <div className="font-semibold">{v.quality}</div>
-                      <div className="text-sm opacity-80">{v.description}</div>
+                      <div className={`font-bold text-base ${isDark
+                        ? 'text-white'
+                        : ok ? 'text-emerald-800' : 'text-red-800'
+                        }`}>{v.quality}</div>
+                      <div className={`text-sm mt-0.5 ${isDark
+                        ? 'text-slate-300'
+                        : ok ? 'text-emerald-700' : 'text-red-700'
+                        }`}>{v.description}</div>
+                      <div className={`text-xs mt-2 font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'
+                        }`}>
+                        Requires: {v.minSpeed} Mbps
+                      </div>
                     </div>
-                    {ok ? (
-                      <CheckCircle className="text-emerald-600" />
-                    ) : (
-                      <AlertCircle className="text-rose-600" />
-                    )}
+                    <div className={`p-2 rounded-full ${ok
+                      ? isDark ? 'bg-emerald-500/30' : 'bg-emerald-200'
+                      : isDark ? 'bg-red-500/30' : 'bg-red-200'
+                      }`}>
+                      {ok ? (
+                        <CheckCircle className={`w-5 h-5 ${isDark ? 'text-emerald-400' : 'text-emerald-700'}`} />
+                      ) : (
+                        <AlertCircle className={`w-5 h-5 ${isDark ? 'text-red-400' : 'text-red-700'}`} />
+                      )}
+                    </div>
                   </div>
-                  <div className="mt-2 text-xs opacity-80">{ok ? 'Supported' : 'Not supported at current speed.'}</div>
                 </div>
               );
             })}
           </div>
         )}
-        {/* Gaming */}
+
+        {/* Gaming Tab */}
         {activeTab === 'gaming' && (
-          <div className="space-y-4">
+          <div className="space-y-4 animate-fadeIn">
+            <h3 className={`font-bold mb-4 text-lg ${isDark ? 'text-white' : 'text-slate-800'}`}>
+              Gaming Performance
+            </h3>
             {GAMING_REQUIREMENTS.map((g, i) => {
               const ok = downloadSpeed >= g.minSpeed && ping <= g.maxPing;
               return (
                 <div
                   key={i}
-                  className={`p-4 rounded-lg border ${isDark ? (ok ? 'bg-green-900/20 border-green-500/30 text-white' : 'bg-red-900/20 border-red-500/30 text-white') : (ok ? 'bg-green-50 border-green-300 text-green-900 shadow-sm' : 'bg-rose-50 border-rose-300 text-rose-900 shadow-sm')}`}
+                  className={`p-4 rounded-xl border-2 transition-all duration-200 hover:scale-[1.01] ${isDark
+                    ? ok
+                      ? 'bg-emerald-900/30 border-emerald-500/50 hover:bg-emerald-900/40'
+                      : 'bg-red-900/30 border-red-500/50 hover:bg-red-900/40'
+                    : ok
+                      ? 'bg-emerald-50 border-emerald-400 hover:bg-emerald-100'
+                      : 'bg-red-50 border-red-400 hover:bg-red-100'
+                    }`}
                 >
-                  <div className="font-semibold">{g.game}</div>
-                  <div className="text-sm opacity-80">{g.description}</div>
-                  <div className="mt-2 text-xs opacity-80">{ok ? 'Great experience expected.' : 'Performance may be limited.'}</div>
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <div className={`font-bold flex items-center gap-2 text-base ${isDark
+                        ? 'text-white'
+                        : ok ? 'text-emerald-800' : 'text-red-800'
+                        }`}>
+                        <Gamepad2 className="w-4 h-4" />
+                        {g.game}
+                      </div>
+                      <div className={`text-sm mt-0.5 ${isDark
+                        ? 'text-slate-300'
+                        : ok ? 'text-emerald-700' : 'text-red-700'
+                        }`}>{g.description}</div>
+                      <div className={`text-xs mt-2 flex gap-3 font-medium ${isDark ? 'text-slate-400' : 'text-slate-600'
+                        }`}>
+                        <span>Min Speed: {g.minSpeed} Mbps</span>
+                        <span>Max Ping: {g.maxPing} ms</span>
+                      </div>
+                    </div>
+                    <div className={`p-2 rounded-full ${ok
+                      ? isDark ? 'bg-emerald-500/30' : 'bg-emerald-200'
+                      : isDark ? 'bg-red-500/30' : 'bg-red-200'
+                      }`}>
+                      {ok ? (
+                        <CheckCircle className={`w-5 h-5 ${isDark ? 'text-emerald-400' : 'text-emerald-700'}`} />
+                      ) : (
+                        <AlertCircle className={`w-5 h-5 ${isDark ? 'text-red-400' : 'text-red-700'}`} />
+                      )}
+                    </div>
+                  </div>
                 </div>
               );
             })}
           </div>
         )}
-        {/* Insights */}
+
+        {/* Performance/Insights Tab */}
         {activeTab === 'insights' && (
-          <div className={`p-4 rounded-lg border ${isDark ? 'bg-blue-900/30 border-blue-500/50 text-white' : 'bg-blue-50 border-blue-300 text-blue-900 shadow'}`}>
-            <h4 className="font-bold mb-2">Summary</h4>
-            <p className="text-sm">Overall quality score: <strong>{metrics.qualityScore}/100</strong></p>
-            <ul className="mt-2 space-y-1 text-xs">
-              <li>Download: <span className="font-semibold">{downloadSpeed} Mbps</span></li>
-              <li>Upload: <span className="font-semibold">{uploadSpeed} Mbps</span></li>
-              <li>Ping: <span className="font-semibold">{ping} ms</span></li>
-              <li>Jitter: <span className="font-semibold">{jitter} ms</span></li>
-              <li>Packet Loss: <span className="font-semibold">{metrics.packetLoss}%</span></li>
-            </ul>
+          <div className="animate-fadeIn">
+            <h3 className={`font-bold mb-4 text-lg flex items-center gap-2 ${isDark ? 'text-white' : 'text-slate-800'}`}>
+              <Zap className="w-5 h-5 text-amber-500" />
+              Performance Summary
+            </h3>
+            <div className={`p-5 rounded-xl border-2 ${isDark
+              ? 'bg-gradient-to-br from-slate-700 to-slate-800 border-slate-600'
+              : 'bg-gradient-to-br from-slate-50 to-white border-slate-300'
+              }`}>
+              <div className={`text-3xl font-bold mb-3 ${metrics.qualityScore >= 70
+                ? 'text-emerald-600'
+                : metrics.qualityScore >= 40
+                  ? 'text-amber-600'
+                  : 'text-red-600'
+                }`}>
+                {metrics.qualityScore}/100
+                <span className={`text-sm font-normal ml-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                  Quality Score
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 mt-4">
+                {[
+                  { label: 'Download', value: `${downloadSpeed} Mbps`, icon: '↓', color: 'text-emerald-600' },
+                  { label: 'Upload', value: `${uploadSpeed} Mbps`, icon: '↑', color: 'text-blue-600' },
+                  { label: 'Ping', value: `${ping} ms`, icon: '◉', color: 'text-amber-600' },
+                  { label: 'Jitter', value: `${jitter} ms`, icon: '~', color: 'text-purple-600' },
+                ].map((item, i) => (
+                  <div key={i} className={`p-3 rounded-lg border ${isDark
+                    ? 'bg-slate-700/50 border-slate-600'
+                    : 'bg-white border-slate-200 shadow-sm'
+                    }`}>
+                    <div className={`text-xs uppercase tracking-wide font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                      <span className={item.color}>{item.icon}</span> {item.label}
+                    </div>
+                    <div className={`text-lg font-bold mt-1 ${isDark ? 'text-white' : 'text-slate-800'}`}>
+                      {item.value}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className={`mt-4 pt-4 border-t ${isDark ? 'border-slate-600' : 'border-slate-200'}`}>
+                <div className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+                  <strong>Connection Type:</strong> {metrics.connectionType}
+                </div>
+                <div className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+                  <strong>Packet Loss:</strong> {String(metrics.packetLoss).replace('%%', '%').replace(/%$/, '')}%
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
