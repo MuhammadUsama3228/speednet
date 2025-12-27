@@ -20,8 +20,11 @@
   ],
   "redirects": [
     {
-      "source": "http://scanpings.net/:path*",
+      "source": "/:path*",
       "destination": "https://scanpings.net/:path*",
+      "has": [
+        { "type": "host", "value": "scanpings.net" }
+      ],
       "permanent": true
     }
   ]
