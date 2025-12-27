@@ -3,28 +3,22 @@
     {
       "source": "/api/librespeed/(.*)",
       "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET,OPTIONS,POST"
-        },
-        {
-          "key": "Access-Control-Allow-Headers",
-          "value": "Content-Type"
-        }
+        { "key": "Access-Control-Allow-Origin", "value": "*" },
+        { "key": "Access-Control-Allow-Methods", "value": "GET,OPTIONS,POST" },
+        { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
       ]
     }
   ],
   "redirects": [
     {
       "source": "/:path*",
-      "destination": "https://scanpings.net/:path*",
       "has": [
-        { "type": "host", "value": "scanpings.net" }
+        {
+          "type": "host",
+          "value": "www.scanpings.net"
+        }
       ],
+      "destination": "https://scanpings.net/:path*",
       "permanent": true
     }
   ]
