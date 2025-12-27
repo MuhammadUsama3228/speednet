@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Wifi, Download, Upload, Activity, MapPin, Globe, CheckCircle } from 'lucide-react';
-import SpeedTest from '@cloudflare/speedtest';
 import { APP_STRINGS, API_ENDPOINTS, SPEEDTEST_CONFIG, TEST_SERVERS } from './constants/strings';
 import { useTheme } from './context/ThemeContext';
 import dynamic from 'next/dynamic';
@@ -43,32 +42,9 @@ export default function SpeedTestComponent() {
   const speedTestRef = useRef(null);
   const stageIntervalRef = useRef(null);
 
-  const testSpeedTest = () => {
-    console.log('Testing speed test initialization...');
-    try {
-      const test = new SpeedTest({
-        autoStart: false,
-        measureUpload: false,
-        measureDownload: false,
-        measurements: [{ type: 'latency', numPackets: 1 }]
-      });
-      console.log('Speed test created successfully:', test);
-      test.onFinish = (results) => {
-        console.log('Test finished:', results);
-      };
-      test.onError = (error) => {
-        console.error('Test error:', error);
-      };
-      // Don't actually start the test, just check if it initializes
-    } catch (error) {
-      console.error('Failed to create speed test:', error);
-    }
-  };
 
-  // Call test on component mount
-  useEffect(() => {
-    testSpeedTest();
-  }, []);
+
+
 
   useEffect(() => {
     // History init logic remains, theme logic removed (handled by context)
@@ -160,8 +136,10 @@ export default function SpeedTestComponent() {
     localStorage.removeItem('speedTestHistory');
   };
 
-  const runSingleTest = () => {
+  const runSingleTest = async () => {
     console.log('runSingleTest called');
+    const { default: SpeedTest } = await import('@cloudflare/speedtest');
+
     return new Promise((resolve, reject) => {
       setDownloadSpeed(0);
       setUploadSpeed(0);
@@ -513,9 +491,9 @@ export default function SpeedTestComponent() {
                 <div className="flex items-center gap-3">
                   <Globe className={`w-5 h-5 ${isDark ? 'text-blue-300' : 'text-blue-600'}`} />
                   <div>
-                    <h3 className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>
+                    <h2 className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>
                       Test Server
-                    </h3>
+                    </h2>
                     <p className={`text-sm ${isDark ? 'text-blue-200' : 'text-slate-600'}`}>
                       Automatically selected for optimal performance
                     </p>
@@ -535,9 +513,9 @@ export default function SpeedTestComponent() {
               <div className="flex items-center gap-3">
                 <Activity className={`w-5 h-5 ${isDark ? 'text-blue-300' : 'text-blue-600'}`} />
                 <div>
-                  <h3 className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>
+                  <h2 className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>
                     Multi-Test Mode
-                  </h3>
+                  </h2>
                   <p className={`text-sm ${isDark ? 'text-blue-200' : 'text-slate-600'}`}>
                     Run multiple tests for more accurate results
                   </p>
@@ -550,7 +528,11 @@ export default function SpeedTestComponent() {
                   onChange={(e) => setMultiTestEnabled(e.target.checked)}
                   className="sr-only peer"
                   disabled={testing}
+                  id="multiTestToggle"
+                  aria-checked={multiTestEnabled}
+                  aria-label="Enable multi-test averaging"
                 />
+                <span className="sr-only">Enable multi-test averaging</span>
                 <div className={`w-11 h-6 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 transition-all ${multiTestEnabled
                   ? 'bg-blue-600 peer-focus:ring-blue-800'
                   : isDark ? 'bg-gray-600' : 'bg-gray-200'
@@ -629,7 +611,7 @@ export default function SpeedTestComponent() {
           {/* Test Standards Info */}
           {!testing && !stage && (
             <div className={`mb-8 p-4 rounded-xl border text-xs text-center mx-auto max-w-lg transition-all ${theme === 'dark' ? 'bg-white/5 border-white/10 text-slate-400' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
-              <h4 className="font-bold uppercase tracking-widest mb-3 opacity-70">Adaptive Test Standards</h4>
+              <h2 className="font-bold uppercase tracking-widest mb-3 opacity-70">Adaptive Test Standards</h2>
               <div className="flex justify-center gap-4 sm:gap-8">
                 <div className="flex flex-col">
                   <span className={`font-mono font-bold text-lg ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}>Adaptive</span>
@@ -696,7 +678,7 @@ export default function SpeedTestComponent() {
           {/* Test History */}
           {!testing && history.length > 0 && (
             <div className={`mt-6 p-5 rounded-2xl border ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-blue-100 shadow-sm'}`}>
-              <h3 className={`font-bold mb-3 flex items-center justify-between ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
+              <h2 className={`font-bold mb-3 flex items-center justify-between ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
                 <span>Test History</span>
                 <button
                   onClick={clearHistory}
@@ -704,7 +686,7 @@ export default function SpeedTestComponent() {
                 >
                   Clear
                 </button>
-              </h3>
+              </h2>
               <div className="space-y-2 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
                 {history.map((test, index) => (
                   <div key={index} className={`flex items-center justify-between text-xs p-2 rounded-md ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50'}`}>
@@ -729,10 +711,10 @@ export default function SpeedTestComponent() {
               ? 'bg-green-500/10 border-green-500/20'
               : 'bg-green-50 border-green-200'
               }`} role="status">
-              <h3 className={`font-bold mb-3 flex items-center gap-2 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
+              <h2 className={`font-bold mb-3 flex items-center gap-2 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
                 <CheckCircle className="w-5 h-5 text-green-400" aria-hidden="true" />
                 {APP_STRINGS.RESULTS_TITLE}
-              </h3>
+              </h2>
               <div className={`text-sm space-y-2 ${theme === 'dark' ? 'text-blue-200' : 'text-slate-600'}`}>
                 <p>• {APP_STRINGS.RESULTS_DOWNLOAD} <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.formatSpeedWithBytes(downloadSpeed)}</span></p>
                 <p>• {APP_STRINGS.RESULTS_UPLOAD} <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.formatSpeedWithBytes(uploadSpeed)}</span></p>
