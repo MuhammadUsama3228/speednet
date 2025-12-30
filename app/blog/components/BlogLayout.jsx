@@ -9,7 +9,6 @@ export default function BlogLayout({
     readTime = "5 min read",
     schemas = []
 }) {
-    const { theme } = useTheme();
 
     const categoryColors = {
         blue: "text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30",

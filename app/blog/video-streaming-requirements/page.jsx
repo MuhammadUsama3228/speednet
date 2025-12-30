@@ -332,7 +332,7 @@ export default function Article() {
                         <h3 className="text-2xl font-bold mb-3">Is Your Connection Ready for 4K?</h3>
                         <p className="text-red-100 mb-6">Test your download speed now to see if you can stream 4K content without buffering.</p>
                         <a href="/" className="inline-block bg-white text-red-600 font-bold py-3 px-8 rounded-full transition-all hover:scale-105 shadow-xl hover:bg-red-50">
-                            Run Free Speed Test →
+                            Run Free Speed Test &rarr;
                         </a>
                     </div>
 

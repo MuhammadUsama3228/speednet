@@ -177,7 +177,7 @@ export default function Article() {
             <BlogCTA
                 title="Stop the Rubberbanding"
                 description="Test your connection stability now. If your Jitter is high, you're losing data."
-                buttonText="Check Stability Now →"
+                buttonText="Check Stability Now &rarr;"
             />
 
             <FAQSection faqs={faqs} />

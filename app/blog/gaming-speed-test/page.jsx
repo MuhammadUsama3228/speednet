@@ -172,7 +172,7 @@ export default function Article() {
 
             <h3 className="text-xl font-bold mt-8 mb-4 text-slate-900 dark:text-white">3. Network Card (NIC) Tuning</h3>
             <p>
-                On Windows, go to "Device Manager" -> "Network Adapters" -> "Advanced". Disable **"Energy Efficient Ethernet"** and **"Green Ethernet"**. These power-saving features can introduce microscopic delays (micro-stutter) in your data flow.
+                On Windows, go to &quot;Device Manager&quot; &rarr; &quot;Network Adapters&quot; &rarr; &quot;Advanced&quot;. Disable **&quot;Energy Efficient Ethernet&quot;** and **&quot;Green Ethernet&quot;**. These power-saving features can introduce microscopic delays (micro-stutter) in your data flow.
             </p>
 
             <hr className="my-12 border-slate-200 dark:border-slate-700" />

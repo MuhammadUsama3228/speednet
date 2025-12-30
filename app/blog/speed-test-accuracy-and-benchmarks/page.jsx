@@ -313,7 +313,7 @@ export default function Article() {
                         <h3 className="text-2xl font-bold mb-3">Test Your Internet Speed Now</h3>
                         <p className="text-blue-100 mb-6">See how your connection compares to FCC benchmarks and get detailed results for download, upload, ping and jitter.</p>
                         <a href="/" className="inline-block bg-white text-blue-600 font-bold py-3 px-8 rounded-full transition-all hover:scale-105 shadow-xl hover:bg-blue-50">
-                            Run Free Speed Test →
+                            Run Free Speed Test &rarr;
                         </a>
                     </div>
 

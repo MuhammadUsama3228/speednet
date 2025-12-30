@@ -150,7 +150,7 @@ export default function Article() {
             <BlogCTA
                 title="Get the Full Picture"
                 description="Fast.com only shows you one slice of the pie. Get your Upload, Ping, and Jitter results in 60 seconds."
-                buttonText="Start Full Diagnostic →"
+                buttonText="Start Full Diagnostic &rarr;"
             />
 
             <FAQSection faqs={faqs} />

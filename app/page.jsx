@@ -4,8 +4,8 @@ import SEOContent from './components/SEOContent'
 import SimpleFooter from './components/SimpleFooter'
 
 export const metadata = {
-  title: 'Fast Speed Test - Check My Internet Speed & Speedometer',
-  description: 'Test how fast is my internet with ScanPing. A free, accurate internet speed test & wifi speedometer. Compare results with Netflix speed test and more.',
+  title: 'Internet Speedometer - Fast Speed Test',
+  description: 'Check how fast is my internet with our accurate Internet Speedometer. Run a fast speed test for wifi, broadband, and mobile in 30 seconds. 100% free.',
   keywords: [
     'fast speed test',
     'how fast is my internet',

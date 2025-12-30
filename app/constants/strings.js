@@ -12,7 +12,7 @@ export const APP_STRINGS = {
     HEADER_SUBTITLE: 'Fast, Accurate Internet Speed Test',
 
     // Hero Section (SEO Optimized)
-    HERO_TITLE: 'Fast Internet Speed Test - WiFi Speedometer',
+    HERO_TITLE: "Internet Speedometer",
     HERO_SUBTITLE: 'How fast is my internet? Run an accurate speed test in seconds. Measure your wifi speed, download, upload, and latency with our free internet speedometer.',
 
     // Connection Info
