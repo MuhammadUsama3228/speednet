@@ -10,8 +10,8 @@ export default function SEOContent({ theme }) {
         <div className={`w-full max-w-4xl mx-auto mt-16 px-4 ${isDark ? 'text-blue-200' : 'text-slate-600'}`}>
 
             {/* Introduction */}
-            <section className="mb-12 text-center">
-                <h2 className={`text-3xl font-bold mb-4 ${isDark ? 'text-white' : 'text-slate-800'}`}>
+            <section className="mb-10 text-center">
+                <h2 className={`text-2xl md:text-3xl font-bold mb-4 ${isDark ? 'text-white' : 'text-slate-800'}`}>
                     Why ScanPing?
                 </h2>
                 <p className="max-w-2xl mx-auto leading-relaxed">
@@ -49,7 +49,7 @@ export default function SEOContent({ theme }) {
 
             {/* FAQ Section */}
             <section>
-                <h2 className={`text-3xl font-bold mb-8 text-center ${isDark ? 'text-white' : 'text-slate-800'}`}>
+                <h2 className={`text-2xl md:text-3xl font-bold mb-6 text-center ${isDark ? 'text-white' : 'text-slate-800'}`}>
                     Frequently Asked Questions
                 </h2>
                 <div className="space-y-4">

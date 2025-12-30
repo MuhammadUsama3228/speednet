@@ -37,21 +37,21 @@ export default function BlogLayout({
                     />
                 ))}
 
-                <header className="mb-10 text-center">
-                    <span className={`inline-block px-3 py-1 mb-4 text-xs font-bold tracking-wider uppercase rounded-full ${categoryColors[categoryColor] || categoryColors.blue}`}>
+                <header className="mb-8 sm:mb-10 text-center">
+                    <span className={`inline-block px-3 py-1 mb-4 text-[10px] sm:text-xs font-black tracking-widest uppercase rounded-full ${categoryColors[categoryColor] || categoryColors.blue}`}>
                         {category}
                     </span>
-                    <h1 className="text-3xl md:text-5xl font-black mb-6 text-slate-900 dark:text-white leading-tight">
+                    <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-4 sm:mb-6 text-slate-900 dark:text-white leading-tight tracking-tight">
                         {title}
                     </h1>
-                    <div className="flex items-center justify-center gap-4 text-sm text-slate-500 dark:text-slate-400">
+                    <div className="flex items-center justify-center gap-3 sm:gap-4 text-[11px] sm:text-sm text-slate-500 dark:text-slate-400 font-medium">
                         <time>{date}</time>
-                        <span>•</span>
+                        <span className="opacity-30">•</span>
                         <span>{readTime}</span>
                     </div>
                 </header>
 
-                <div className="prose prose-lg dark:prose-invert mx-auto">
+                <div className="prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert mx-auto leading-relaxed">
                     {children}
                 </div>
             </div>

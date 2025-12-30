@@ -4,32 +4,32 @@ import { AlertTriangle, TrendingUp, Info, Zap, Gauge, Network, Wifi, CheckCircle
 
 export default function ConnectionMetrics({ downloadSpeed, uploadSpeed, ping, jitter, theme = 'light' }) {
   const isDark = theme === 'dark';
-  
+
   const qualityScore = Math.max(
     100 - (ping / 2) - (jitter * 2) - (downloadSpeed < 50 ? 20 : 0) - (uploadSpeed < 10 ? 20 : 0),
     0
   );
-  
+
   const qualityInfo =
     qualityScore > 80
       ? { label: 'Excellent', color: isDark ? 'text-emerald-400' : 'text-emerald-700', bgColor: isDark ? 'bg-emerald-900/20' : 'bg-emerald-50', borderColor: isDark ? 'border-emerald-500/30' : 'border-emerald-300', iconBg: isDark ? 'bg-emerald-900/40' : 'bg-emerald-100' }
       : qualityScore > 60
-      ? { label: 'Good', color: isDark ? 'text-blue-400' : 'text-blue-700', bgColor: isDark ? 'bg-blue-900/20' : 'bg-blue-50', borderColor: isDark ? 'border-blue-500/30' : 'border-blue-300', iconBg: isDark ? 'bg-blue-900/40' : 'bg-blue-100' }
-      : qualityScore > 40
-      ? { label: 'Fair', color: isDark ? 'text-amber-400' : 'text-amber-700', bgColor: isDark ? 'bg-amber-900/20' : 'bg-amber-50', borderColor: isDark ? 'border-amber-500/30' : 'border-amber-300', iconBg: isDark ? 'bg-amber-900/40' : 'bg-amber-100' }
-      : { label: 'Poor', color: isDark ? 'text-red-400' : 'text-red-700', bgColor: isDark ? 'bg-red-900/20' : 'bg-red-50', borderColor: isDark ? 'border-red-500/30' : 'border-red-300', iconBg: isDark ? 'bg-red-900/40' : 'bg-red-100' };
-  
+        ? { label: 'Good', color: isDark ? 'text-blue-400' : 'text-blue-700', bgColor: isDark ? 'bg-blue-900/20' : 'bg-blue-50', borderColor: isDark ? 'border-blue-500/30' : 'border-blue-300', iconBg: isDark ? 'bg-blue-900/40' : 'bg-blue-100' }
+        : qualityScore > 40
+          ? { label: 'Fair', color: isDark ? 'text-amber-400' : 'text-amber-700', bgColor: isDark ? 'bg-amber-900/20' : 'bg-amber-50', borderColor: isDark ? 'border-amber-500/30' : 'border-amber-300', iconBg: isDark ? 'bg-amber-900/40' : 'bg-amber-100' }
+          : { label: 'Poor', color: isDark ? 'text-red-400' : 'text-red-700', bgColor: isDark ? 'bg-red-900/20' : 'bg-red-50', borderColor: isDark ? 'border-red-500/30' : 'border-red-300', iconBg: isDark ? 'bg-red-900/40' : 'bg-red-100' };
+
   const estimatedPacketLoss = Math.max(
     Math.round((jitter / (downloadSpeed + uploadSpeed + 1)) * 100),
     0
   );
-  
+
   const speedRatio = downloadSpeed / (uploadSpeed || 1);
   const connectionType = downloadSpeed > 1000 ? 'Fiber' :
     downloadSpeed > 100 ? 'Cable' :
-    downloadSpeed > 50 ? 'DSL' :
-    downloadSpeed > 25 ? '4G/5G' : 'Slow';
-  
+      downloadSpeed > 50 ? 'DSL' :
+        downloadSpeed > 25 ? '4G/5G' : 'Slow';
+
   const connectionInfo = {
     'Fiber': { color: isDark ? 'text-emerald-400' : 'text-emerald-700', bgColor: isDark ? 'bg-emerald-900/20' : 'bg-emerald-50', borderColor: isDark ? 'border-emerald-500/30' : 'border-emerald-300', iconBg: isDark ? 'bg-emerald-900/40' : 'bg-emerald-100' },
     'Cable': { color: isDark ? 'text-blue-400' : 'text-blue-700', bgColor: isDark ? 'bg-blue-900/20' : 'bg-blue-50', borderColor: isDark ? 'border-blue-500/30' : 'border-blue-300', iconBg: isDark ? 'bg-blue-900/40' : 'bg-blue-100' },
@@ -41,14 +41,14 @@ export default function ConnectionMetrics({ downloadSpeed, uploadSpeed, ping, ji
   const packetLossInfo = estimatedPacketLoss > 5
     ? { color: isDark ? 'text-red-400' : 'text-red-700', bgColor: isDark ? 'bg-red-900/20' : 'bg-red-50', borderColor: isDark ? 'border-red-500/30' : 'border-red-300', iconBg: isDark ? 'bg-red-900/40' : 'bg-red-100' }
     : estimatedPacketLoss > 1
-    ? { color: isDark ? 'text-orange-400' : 'text-orange-700', bgColor: isDark ? 'bg-orange-900/20' : 'bg-orange-50', borderColor: isDark ? 'border-orange-500/30' : 'border-orange-300', iconBg: isDark ? 'bg-orange-900/40' : 'bg-orange-100' }
-    : { color: isDark ? 'text-emerald-400' : 'text-emerald-700', bgColor: isDark ? 'bg-emerald-900/20' : 'bg-emerald-50', borderColor: isDark ? 'border-emerald-500/30' : 'border-emerald-300', iconBg: isDark ? 'bg-emerald-900/40' : 'bg-emerald-100' };
+      ? { color: isDark ? 'text-orange-400' : 'text-orange-700', bgColor: isDark ? 'bg-orange-900/20' : 'bg-orange-50', borderColor: isDark ? 'border-orange-500/30' : 'border-orange-300', iconBg: isDark ? 'bg-orange-900/40' : 'bg-orange-100' }
+      : { color: isDark ? 'text-emerald-400' : 'text-emerald-700', bgColor: isDark ? 'bg-emerald-900/20' : 'bg-emerald-50', borderColor: isDark ? 'border-emerald-500/30' : 'border-emerald-300', iconBg: isDark ? 'bg-emerald-900/40' : 'bg-emerald-100' };
 
   const speedRatioInfo = speedRatio > 5
     ? { color: isDark ? 'text-emerald-400' : 'text-emerald-700', bgColor: isDark ? 'bg-emerald-900/20' : 'bg-emerald-50', borderColor: isDark ? 'border-emerald-500/30' : 'border-emerald-300', iconBg: isDark ? 'bg-emerald-900/40' : 'bg-emerald-100' }
     : speedRatio > 2
-    ? { color: isDark ? 'text-blue-400' : 'text-blue-700', bgColor: isDark ? 'bg-blue-900/20' : 'bg-blue-50', borderColor: isDark ? 'border-blue-500/30' : 'border-blue-300', iconBg: isDark ? 'bg-blue-900/40' : 'bg-blue-100' }
-    : { color: isDark ? 'text-orange-400' : 'text-orange-700', bgColor: isDark ? 'bg-orange-900/20' : 'bg-orange-50', borderColor: isDark ? 'border-orange-500/30' : 'border-orange-300', iconBg: isDark ? 'bg-orange-900/40' : 'bg-orange-100' };
+      ? { color: isDark ? 'text-blue-400' : 'text-blue-700', bgColor: isDark ? 'bg-blue-900/20' : 'bg-blue-50', borderColor: isDark ? 'border-blue-500/30' : 'border-blue-300', iconBg: isDark ? 'bg-blue-900/40' : 'bg-blue-100' }
+      : { color: isDark ? 'text-orange-400' : 'text-orange-700', bgColor: isDark ? 'bg-orange-900/20' : 'bg-orange-50', borderColor: isDark ? 'border-orange-500/30' : 'border-orange-300', iconBg: isDark ? 'bg-orange-900/40' : 'bg-orange-100' };
 
   const insights = [];
   if (ping > 100) insights.push({ type: 'warning', message: 'High ping may affect gaming and video calls.', icon: AlertTriangle });
@@ -58,11 +58,10 @@ export default function ConnectionMetrics({ downloadSpeed, uploadSpeed, ping, ji
   if (qualityScore > 80) insights.push({ type: 'success', message: 'Your connection is excellent for most online activities.', icon: CheckCircle });
 
   return (
-    <div className={`mt-8 p-6 sm:p-8 rounded-2xl border-2 transition-all ${
-      isDark
+    <div className={`mt-8 p-4 sm:p-8 rounded-2xl border-2 transition-all ${isDark
         ? 'bg-white/5 border-white/10'
         : 'bg-gradient-to-br from-slate-50 via-white to-blue-50 border-slate-400 shadow-lg'
-    }`}>
+      }`}>
       {/* Header */}
       <div className="flex items-center gap-3 mb-6 pb-6 border-b-2" style={{
         borderColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgb(203, 213, 225)'
@@ -104,9 +103,8 @@ export default function ConnectionMetrics({ downloadSpeed, uploadSpeed, ping, ji
             <div className={`p-3 rounded-lg ${packetLossInfo.iconBg}`}>
               <AlertTriangle className={`w-5 h-5 ${packetLossInfo.color}`} />
             </div>
-            <span className={`text-xs font-bold px-2 py-1 rounded-full ${
-              estimatedPacketLoss > 5 ? 'text-red-700 bg-red-100' : estimatedPacketLoss > 1 ? 'text-orange-700 bg-orange-100' : 'text-emerald-700 bg-emerald-100'
-            } ${isDark ? 'text-white/90' : ''}`}>
+            <span className={`text-xs font-bold px-2 py-1 rounded-full ${estimatedPacketLoss > 5 ? 'text-red-700 bg-red-100' : estimatedPacketLoss > 1 ? 'text-orange-700 bg-orange-100' : 'text-emerald-700 bg-emerald-100'
+              } ${isDark ? 'text-white/90' : ''}`}>
               {estimatedPacketLoss > 1 ? 'Alert' : 'Good'}
             </span>
           </div>
@@ -176,34 +174,31 @@ export default function ConnectionMetrics({ downloadSpeed, uploadSpeed, ping, ji
             return (
               <div
                 key={index}
-                className={`p-4 rounded-lg border-2 flex items-start gap-3 transition-all ${
-                  insight.type === 'success'
+                className={`p-4 rounded-lg border-2 flex items-start gap-3 transition-all ${insight.type === 'success'
                     ? isDark
                       ? 'bg-emerald-900/20 border-emerald-500/30'
                       : 'bg-emerald-100 border-emerald-400 shadow-sm'
                     : insight.type === 'warning'
-                    ? isDark
-                      ? 'bg-orange-900/20 border-orange-500/30'
-                      : 'bg-orange-100 border-orange-400 shadow-sm'
-                    : isDark
-                    ? 'bg-blue-900/20 border-blue-500/30'
-                    : 'bg-blue-100 border-blue-400 shadow-sm'
-                }`}
+                      ? isDark
+                        ? 'bg-orange-900/20 border-orange-500/30'
+                        : 'bg-orange-100 border-orange-400 shadow-sm'
+                      : isDark
+                        ? 'bg-blue-900/20 border-blue-500/30'
+                        : 'bg-blue-100 border-blue-400 shadow-sm'
+                  }`}
               >
-                <IconComponent className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
-                  insight.type === 'success'
+                <IconComponent className={`w-5 h-5 flex-shrink-0 mt-0.5 ${insight.type === 'success'
                     ? isDark ? 'text-emerald-400' : 'text-emerald-700'
                     : insight.type === 'warning'
-                    ? isDark ? 'text-orange-400' : 'text-orange-700'
-                    : isDark ? 'text-blue-400' : 'text-blue-700'
-                }`} />
-                <span className={`text-sm font-semibold ${
-                  insight.type === 'success'
+                      ? isDark ? 'text-orange-400' : 'text-orange-700'
+                      : isDark ? 'text-blue-400' : 'text-blue-700'
+                  }`} />
+                <span className={`text-sm font-semibold ${insight.type === 'success'
                     ? isDark ? 'text-emerald-300' : 'text-emerald-900'
                     : insight.type === 'warning'
-                    ? isDark ? 'text-orange-300' : 'text-orange-900'
-                    : isDark ? 'text-blue-300' : 'text-blue-900'
-                }`}>
+                      ? isDark ? 'text-orange-300' : 'text-orange-900'
+                      : isDark ? 'text-blue-300' : 'text-blue-900'
+                  }`}>
                   {insight.message}
                 </span>
               </div>

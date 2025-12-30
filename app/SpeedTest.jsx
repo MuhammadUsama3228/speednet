@@ -34,7 +34,7 @@ export default function SpeedTestComponent() {
   const [selectedServer, setSelectedServer] = useState(null);
 
   // Multi-test averaging
-  const [multiTestEnabled, setMultiTestEnabled] = useState(false);
+  const [multiTest, setMultiTest] = useState(false);
   const [currentTestNumber, setCurrentTestNumber] = useState(1);
   const [totalTests, setTotalTests] = useState(3);
   const [testResults, setTestResults] = useState([]);
@@ -457,9 +457,9 @@ export default function SpeedTestComponent() {
   };
 
   const runTest = async () => {
-    console.log('runTest called, multiTestEnabled:', multiTestEnabled);
+    console.log('runTest called, multiTest:', multiTest);
     console.log('Current testing state:', testing);
-    if (multiTestEnabled) {
+    if (multiTest) {
       // Multi-test mode
       setTesting(true);
       setTestResults([]);
@@ -603,12 +603,12 @@ export default function SpeedTestComponent() {
                 });
               }}
               aria-label="Start internet speed test"
-              className={`group relative px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 hover:scale-105 ${theme === 'dark'
+              className={`group relative w-full sm:w-auto px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 hover:scale-105 ${theme === 'dark'
                 ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_20px_rgba(37,99,235,0.5)]'
                 : 'bg-white text-blue-600 shadow-xl hover:shadow-2xl'
                 }`}
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center justify-center gap-2">
                 <Activity className="w-5 h-5 group-hover:animate-pulse" />
                 {APP_STRINGS.START_BUTTON}
               </span>
@@ -622,12 +622,12 @@ export default function SpeedTestComponent() {
             <button
               onClick={togglePause}
               aria-label={isPaused ? "Resume test" : "Pause test"}
-              className={`group relative px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 hover:scale-105 shadow-xl ${isPaused
+              className={`group relative w-full sm:w-auto px-8 py-4 rounded-full text-lg font-bold transition-all duration-300 hover:scale-105 shadow-xl ${isPaused
                 ? 'bg-green-500 hover:bg-green-600 text-white shadow-green-500/20' // Green for Resume
                 : 'bg-amber-500 hover:bg-amber-600 text-white shadow-amber-500/20' // Amber for Pause
                 }`}
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center justify-center gap-2">
                 {isPaused ? (
                   <>
                     <PlayCircle className="w-5 h-5" />
@@ -645,78 +645,82 @@ export default function SpeedTestComponent() {
         )}
 
         {/* Main Card */}
-        <section className={`rounded-3xl p-8 shadow-2xl border transition-colors duration-300 ${theme === 'dark'
+        <section className={`rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-2xl border transition-colors duration-300 ${theme === 'dark'
           ? 'backdrop-blur-xl bg-white/10 border-white/20 shadow-black/20'
           : 'bg-white border-slate-200 shadow-sm'
           }`} aria-label="Speed Test Panel">
 
           {/* IP & Location */}
-          <section aria-label="Real-time Network Connection Diagnostics" className={`flex flex-col sm:flex-row justify-between items-center gap-4 mb-8 pb-6 border-b text-sm ${theme === 'dark' ? 'border-white/10 text-blue-200' : 'border-slate-200 text-slate-600'
+          <section aria-label="Real-time Network Connection Diagnostics" className={`flex flex-col sm:flex-row justify-between items-center gap-4 mb-6 pb-6 border-b text-xs sm:text-sm ${theme === 'dark' ? 'border-white/5 text-blue-200/70' : 'border-slate-100 text-slate-500'
             }`}>
             <div className="flex items-center gap-2">
-              <Globe className="w-4 h-4" aria-hidden="true" focusable="false" />
-              <span>{APP_STRINGS.IP_LABEL} <span className={`font-mono font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{ip || APP_STRINGS.IP_DETECTING}</span></span>
+              <Globe className="w-3.5 h-3.5" aria-hidden="true" focusable="false" />
+              <span>{APP_STRINGS.IP_LABEL} <span className={`font-mono font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-700'}`}>{ip || APP_STRINGS.IP_DETECTING}</span></span>
             </div>
             <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4" aria-hidden="true" focusable="false" />
-              <span>{location || APP_STRINGS.LOCATION_DETECTING}</span>
+              <MapPin className="w-3.5 h-3.5" aria-hidden="true" focusable="false" />
+              <span className="font-medium">{location || APP_STRINGS.LOCATION_DETECTING}</span>
             </div>
           </section>
 
           {/* Selected Server Display */}
           {selectedServer && (
-            <div className={`mb-6 p-4 rounded-2xl border transition-all ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-blue-100 shadow-sm'}`}>
+            <div className={`mb-6 p-4 rounded-2xl border transition-all ${isDark ? 'bg-white/5 border-white/10 shadow-sm' : 'bg-white border-blue-50 shadow-sm'}`}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <Globe className={`w-5 h-5 ${isDark ? 'text-blue-300' : 'text-blue-600'}`} />
+                  <div className={`p-2 rounded-xl ${isDark ? 'bg-blue-500/10' : 'bg-blue-50'}`}>
+                    <Globe className={`w-5 h-5 ${isDark ? 'text-blue-300' : 'text-blue-600'}`} />
+                  </div>
                   <div>
-                    <h2 className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>
+                    <h2 className={`font-bold text-sm ${isDark ? 'text-white' : 'text-slate-800'}`}>
                       Test Server
                     </h2>
-                    <p className={`text-sm ${isDark ? 'text-blue-200' : 'text-slate-600'}`}>
+                    <p className={`text-[11px] sm:text-xs opacity-70 ${isDark ? 'text-blue-200' : 'text-slate-600'}`}>
                       Automatically selected for optimal performance
                     </p>
                   </div>
                 </div>
                 <div className={`text-right ${isDark ? 'text-blue-300' : 'text-slate-700'}`}>
-                  <div className="font-semibold">{selectedServer.name}</div>
-                  <div className="text-sm opacity-75">{selectedServer.location}</div>
+                  <div className="font-bold text-sm sm:text-base">{selectedServer.name}</div>
+                  <div className="text-[11px] sm:text-xs opacity-75">{selectedServer.location}</div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Multi-Test Toggle */}
-          <div className={`mb-6 p-4 rounded-2xl border transition-all ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-blue-100 shadow-sm'}`}>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Activity className={`w-5 h-5 ${isDark ? 'text-blue-300' : 'text-blue-600'}`} />
-                <div>
-                  <h2 className={`font-bold ${isDark ? 'text-white' : 'text-slate-800'}`}>
-                    Multi-Test Mode
+          {/* Multi-Test Toggle Card */}
+          <div className={`mb-8 p-0 border transition-all overflow-hidden ${isDark ? 'bg-white/[0.03] border-white/5 shadow-2xl shadow-black/20' : 'bg-slate-50 border-slate-200 shadow-inner'
+            } rounded-2xl`}>
+            <div className={`flex items-center justify-between p-4 sm:p-5 gap-4`}>
+              <div className="flex items-center gap-3.5">
+                <div className={`flex-shrink-0 p-2.5 rounded-xl ${isDark ? 'bg-blue-500/10 border border-blue-500/20' : 'bg-blue-100 border border-blue-200 shadow-sm'
+                  }`}>
+                  <Activity className={`w-5 h-5 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
+                </div>
+                <div className="flex flex-col">
+                  <h2 className={`font-bold text-sm sm:text-base leading-none ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>
+                    Multi-Test Accuracy Mode
                   </h2>
-                  <p className={`text-sm ${isDark ? 'text-blue-200' : 'text-slate-600'}`}>
-                    Enable bandwidth averaging for most precise speed results
+                  <p className={`text-[11px] sm:text-xs leading-normal mt-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+                    Average results across multiple nodes for 99.9% precision
                   </p>
                 </div>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={multiTestEnabled}
-                  onChange={(e) => setMultiTestEnabled(e.target.checked)}
-                  className="sr-only peer"
-                  disabled={testing}
-                  id="multiTestToggle"
-                  aria-checked={multiTestEnabled}
-                  aria-label="Enable multi-test averaging"
+
+              <button
+                onClick={() => setMultiTest(!multiTest)}
+                disabled={testing}
+                role="switch"
+                aria-checked={multiTest}
+                className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${multiTest ? (isDark ? 'bg-blue-500 shadow-[0_0_12px_rgba(59,130,246,0.5)]' : 'bg-blue-600')
+                  : (isDark ? 'bg-slate-700' : 'bg-slate-300')
+                  } ${testing ? 'opacity-40 cursor-not-allowed' : ''}`}
+              >
+                <span
+                  className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg transition-transform duration-300 ease-in-out ${multiTest ? 'translate-x-5' : 'translate-x-0'
+                    }`}
                 />
-                <span className="sr-only">Enable multi-test averaging</span>
-                <div className={`w-11 h-6 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 transition-all ${multiTestEnabled
-                  ? 'bg-blue-600 peer-focus:ring-blue-800'
-                  : isDark ? 'bg-gray-600' : 'bg-gray-200'
-                  } peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
-              </label>
+              </button>
             </div>
           </div>
 
@@ -788,25 +792,27 @@ export default function SpeedTestComponent() {
           </section>
 
           {/* Test Standards Info */}
-          {!testing && !stage && (
-            <div className={`p-4 rounded-xl border text-xs text-center mx-auto max-w-lg transition-all ${theme === 'dark' ? 'bg-white/5 border-white/10 text-slate-400' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
-              <h2 className="font-bold uppercase tracking-widest mb-3 opacity-70">Adaptive Test Standards</h2>
-              <div className="flex justify-center gap-4 sm:gap-8">
-                <div className="flex flex-col">
-                  <span className={`font-mono font-bold text-lg ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}>Max 60s</span>
-                  <span className="opacity-70">Download (1GB+)</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className={`font-mono font-bold text-lg ${theme === 'dark' ? 'text-sky-400' : 'text-sky-600'}`}>Max 60s</span>
-                  <span className="opacity-70">Upload (200MB+)</span>
-                </div>
-                <div className="flex flex-col">
-                  <span className={`font-mono font-bold text-lg ${theme === 'dark' ? 'text-amber-400' : 'text-amber-600'}`}>20x</span>
-                  <span className="opacity-70">Latency Samples</span>
+          {
+            !testing && !stage && (
+              <div className={`p-4 rounded-xl border text-xs text-center mx-auto max-w-lg transition-all ${theme === 'dark' ? 'bg-white/5 border-white/10 text-slate-400' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
+                <h2 className="font-bold uppercase tracking-widest mb-3 opacity-70">Adaptive Test Standards</h2>
+                <div className="flex justify-center gap-4 sm:gap-8">
+                  <div className="flex flex-col">
+                    <span className={`font-mono font-bold text-lg ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}>Max 60s</span>
+                    <span className="opacity-70">Download (1GB+)</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className={`font-mono font-bold text-lg ${theme === 'dark' ? 'text-sky-400' : 'text-sky-600'}`}>Max 60s</span>
+                    <span className="opacity-70">Upload (200MB+)</span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className={`font-mono font-bold text-lg ${theme === 'dark' ? 'text-amber-400' : 'text-amber-600'}`}>20x</span>
+                    <span className="opacity-70">Latency Samples</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )
+          }
 
           {/* Speed Chart */}
           <SpeedChart
@@ -817,24 +823,26 @@ export default function SpeedTestComponent() {
           />
 
           {/* Progress */}
-          {testing && (
-            <section className="mb-6" aria-label="Test Progress Section">
-              <div
-                className={`h-3 rounded-full overflow-hidden ${theme === 'dark' ? 'bg-white/10' : 'bg-slate-200'}`}
-                role="progressbar"
-                aria-valuenow={progress}
-                aria-valuemin="0"
-                aria-valuemax="100"
-                aria-label="Test Progress"
-              >
+          {
+            testing && (
+              <section className="mb-6" aria-label="Test Progress Section">
                 <div
-                  className="h-full bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 transition-all duration-500"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-              <p className={`text-center text-lg font-bold mt-4 animate-pulse ${theme === 'dark' ? 'text-blue-300' : 'text-blue-600'}`} aria-live="polite">{stage}</p>
-            </section>
-          )}
+                  className={`h-3 rounded-full overflow-hidden ${theme === 'dark' ? 'bg-white/10' : 'bg-slate-200'}`}
+                  role="progressbar"
+                  aria-valuenow={progress}
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                  aria-label="Test Progress"
+                >
+                  <div
+                    className="h-full bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 transition-all duration-500"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
+                <p className={`text-center text-lg font-bold mt-4 animate-pulse ${theme === 'dark' ? 'text-blue-300' : 'text-blue-600'}`} aria-live="polite">{stage}</p>
+              </section>
+            )
+          }
 
           {/* Test Button */}
           <button
@@ -855,67 +863,73 @@ export default function SpeedTestComponent() {
           </button>
 
           {/* Test History */}
-          {!testing && history.length > 0 && (
-            <div className={`mt-6 p-5 rounded-2xl border ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-blue-100 shadow-sm'}`}>
-              <h2 className={`font-bold mb-3 flex items-center justify-between ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
-                <span>Test History</span>
-                <button
-                  onClick={clearHistory}
-                  className={`text-xs px-2 py-1 rounded hover:bg-red-500/10 ${theme === 'dark' ? 'text-blue-300 hover:text-red-400' : 'text-slate-500 hover:text-red-600'}`}
-                >
-                  Clear
-                </button>
-              </h2>
-              <div className="space-y-2 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
-                {history.map((test, index) => (
-                  <div key={index} className={`flex items-center justify-between text-xs p-2 rounded-md ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50'}`}>
-                    <div className="flex flex-col">
-                      <span className={`font-mono text-[10px] ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{test.date}</span>
-                      <span className={`font-bold mt-0.5 ${theme === 'dark' ? 'text-white' : 'text-slate-700'}`}>{test.dl} ↓ / {test.ul} ↑</span>
+          {
+            !testing && history.length > 0 && (
+              <div className={`mt-6 p-5 rounded-2xl border ${theme === 'dark' ? 'bg-white/5 border-white/10' : 'bg-white border-blue-100 shadow-sm'}`}>
+                <h2 className={`font-bold mb-3 flex items-center justify-between ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
+                  <span>Test History</span>
+                  <button
+                    onClick={clearHistory}
+                    className={`text-xs px-2 py-1 rounded hover:bg-red-500/10 ${theme === 'dark' ? 'text-blue-300 hover:text-red-400' : 'text-slate-500 hover:text-red-600'}`}
+                  >
+                    Clear
+                  </button>
+                </h2>
+                <div className="space-y-2 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
+                  {history.map((test, index) => (
+                    <div key={index} className={`flex items-center justify-between text-xs p-2 rounded-md ${theme === 'dark' ? 'bg-white/5' : 'bg-slate-50'}`}>
+                      <div className="flex flex-col">
+                        <span className={`font-mono text-[10px] ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>{test.date}</span>
+                        <span className={`font-bold mt-0.5 ${theme === 'dark' ? 'text-white' : 'text-slate-700'}`}>{test.dl} ↓ / {test.ul} ↑</span>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className={`font-bold ${theme === 'dark' ? 'text-amber-400' : 'text-amber-600'}`}>{test.ping} ms</span>
+                        {/* Force display ScanPing to correct old history */}
+                        <span className={`text-[10px] ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>Scanpings.net</span>
+                      </div>
                     </div>
-                    <div className="flex flex-col items-end">
-                      <span className={`font-bold ${theme === 'dark' ? 'text-amber-400' : 'text-amber-600'}`}>{test.ping} ms</span>
-                      {/* Force display ScanPing to correct old history */}
-                      <span className={`text-[10px] ${theme === 'dark' ? 'text-blue-300' : 'text-slate-400'}`}>Scanpings.net</span>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )
+          }
 
           {/* Results Summary */}
-          {!testing && downloadSpeed > 0 && (
-            <div className={`mt-6 p-5 rounded-2xl border ${theme === 'dark'
-              ? 'bg-green-500/10 border-green-500/20'
-              : 'bg-green-50 border-green-200'
-              }`} role="status">
-              <h2 className={`font-bold mb-3 flex items-center gap-2 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
-                <CheckCircle className="w-5 h-5 text-green-400" aria-hidden="true" />
-                {APP_STRINGS.RESULTS_TITLE}
-              </h2>
-              <div className={`text-sm space-y-2 ${theme === 'dark' ? 'text-blue-200' : 'text-slate-600'}`}>
-                <p>• {APP_STRINGS.RESULTS_DOWNLOAD} <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.formatSpeedWithBytes(downloadSpeed)}</span></p>
-                <p>• {APP_STRINGS.RESULTS_UPLOAD} <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.formatSpeedWithBytes(uploadSpeed)}</span></p>
-                <p>• {APP_STRINGS.RESULTS_LATENCY} <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.formatPing(ping)}</span> <span className="opacity-50">|</span> Jitter: <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.formatPing(jitter)}</span></p>
+          {
+            !testing && downloadSpeed > 0 && (
+              <div className={`mt-6 p-5 rounded-2xl border ${theme === 'dark'
+                ? 'bg-green-500/10 border-green-500/20'
+                : 'bg-green-50 border-green-200'
+                }`} role="status">
+                <h2 className={`font-bold mb-3 flex items-center gap-2 ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>
+                  <CheckCircle className="w-5 h-5 text-green-400" aria-hidden="true" />
+                  {APP_STRINGS.RESULTS_TITLE}
+                </h2>
+                <div className={`text-sm space-y-2 ${theme === 'dark' ? 'text-blue-200' : 'text-slate-600'}`}>
+                  <p>• {APP_STRINGS.RESULTS_DOWNLOAD} <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.formatSpeedWithBytes(downloadSpeed)}</span></p>
+                  <p>• {APP_STRINGS.RESULTS_UPLOAD} <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.formatSpeedWithBytes(uploadSpeed)}</span></p>
+                  <p>• {APP_STRINGS.RESULTS_LATENCY} <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.formatPing(ping)}</span> <span className="opacity-50">|</span> Jitter: <span className={`font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.formatPing(jitter)}</span></p>
+                </div>
               </div>
-            </div>
-          )}
+            )
+          }
 
           {/* Test Insights Tabs (Video, Analysis, Gaming, Insights) */}
-          {!testing && downloadSpeed > 0 && (
-            <TestInsightsTabs
-              downloadSpeed={downloadSpeed}
-              uploadSpeed={uploadSpeed}
-              ping={ping}
-              jitter={jitter}
-              qualityScore={20}
-              packetLoss={'5.00%'}
-              speedRatio={'1:1'}
-              likelyType={'Slow'}
-            />
-          )}
-        </section>
+          {
+            !testing && downloadSpeed > 0 && (
+              <TestInsightsTabs
+                downloadSpeed={downloadSpeed}
+                uploadSpeed={uploadSpeed}
+                ping={ping}
+                jitter={jitter}
+                qualityScore={20}
+                packetLoss={'5.00%'}
+                speedRatio={'1:1'}
+                likelyType={'Slow'}
+              />
+            )
+          }
+        </section >
 
         {/* SEO Content removed (moved to About page) */}
 
@@ -923,7 +937,7 @@ export default function SpeedTestComponent() {
         <footer className={`text-center mt-12 mb-8 text-sm ${theme === 'dark' ? 'text-blue-300' : 'text-slate-500'}`} role="contentinfo">
           <p>{APP_STRINGS.FOOTER_TEXT}</p>
         </footer>
-      </div>
-    </main>
+      </div >
+    </main >
   );
 }

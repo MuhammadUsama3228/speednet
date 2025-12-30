@@ -79,10 +79,14 @@ export default function SpeedChart({ downloadData, uploadData, theme, isVisible 
         display: true,
         position: 'top',
         labels: {
-          color: isDark ? '#e0e7ff' : '#374151',
+          color: isDark ? '#94a3b8' : '#64748b',
+          usePointStyle: true,
+          pointStyle: 'circle',
+          padding: window.innerWidth < 640 ? 10 : 20,
           font: {
-            size: 12,
-          },
+            size: window.innerWidth < 640 ? 10 : 12,
+            weight: '600'
+          }
         },
       },
       tooltip: {
@@ -139,7 +143,7 @@ export default function SpeedChart({ downloadData, uploadData, theme, isVisible 
       <h3 className={`font-bold mb-4 text-center ${isDark ? 'text-white' : 'text-slate-800'}`}>
         Real-Time Speed Graph
       </h3>
-      <div className="h-64 w-full">
+      <div className="h-48 md:h-64 w-full">
         <Line ref={chartRef} data={data} options={options} />
       </div>
     </div>

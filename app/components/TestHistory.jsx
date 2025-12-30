@@ -7,7 +7,7 @@ export default function TestHistory({ history, clearHistory, theme }) {
     if (history.length === 0) return null;
 
     return (
-        <div className={`mt-6 p-5 rounded-2xl border ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-blue-100 shadow-sm'}`} aria-label="Recent WiFi Speed Test Results">
+        <div className={`mt-6 p-4 sm:p-5 rounded-2xl border ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-blue-100 shadow-sm'}`} aria-label="Recent WiFi Speed Test Results">
             <h3 className={`font-bold mb-3 flex items-center justify-between ${isDark ? 'text-white' : 'text-slate-800'}`}>
                 <span>Test History</span>
                 <button
@@ -24,10 +24,10 @@ export default function TestHistory({ history, clearHistory, theme }) {
                             <span className={`font-mono text-[10px] ${isDark ? 'text-blue-300' : 'text-slate-400'}`}>{test.date}</span>
                             <span className={`font-bold mt-0.5 ${isDark ? 'text-white' : 'text-slate-700'}`}>{test.dl} ↓ / {test.ul} ↑</span>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3">
                             <div className="flex flex-col items-end">
-                                <span className={`font-bold ${isDark ? 'text-amber-400' : 'text-amber-600'}`}>{test.ping} ms</span>
-                                <span className={`text-[10px] ${isDark ? 'text-blue-300' : 'text-slate-400'}`}>Scanpings.net</span>
+                                <span className={`font-bold text-[11px] sm:text-xs ${isDark ? 'text-amber-400' : 'text-amber-600'}`}>{test.ping} ms</span>
+                                <span className={`text-[9px] sm:text-[10px] ${isDark ? 'text-blue-300' : 'text-slate-400'}`}>Scanpings.net</span>
                             </div>
                         </div>
                     </div>

@@ -32,7 +32,7 @@ export default function Navbar() {
 
     return (
         <nav className={`fixed top-0 w-full z-50 border-b transition-colors duration-300 ${isDark ? 'backdrop-blur-lg bg-[#0f172a]/80 border-white/10' : 'bg-white/95 border-slate-200'
-                }`}>
+            }`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
 
@@ -46,7 +46,7 @@ export default function Navbar() {
                             className="w-8 h-8"
                             priority
                         />
-                        <span className={`text-xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                        <span className={`text-lg sm:text-xl font-bold ${isDark ? 'text-white' : 'text-slate-900'}`}>
                             {APP_STRINGS.APP_NAME}
                         </span>
                     </Link>

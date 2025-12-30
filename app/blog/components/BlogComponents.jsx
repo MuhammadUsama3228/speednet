@@ -9,12 +9,12 @@ export function BlogCTA({
     textColor = "text-blue-600"
 }) {
     return (
-        <div className={`bg-gradient-to-r ${gradient} p-8 rounded-2xl text-center text-white my-12`}>
-            <h3 className="text-2xl font-bold mb-3">{title}</h3>
-            <p className="text-blue-100 mb-6">{description}</p>
+        <div className={`bg-gradient-to-br ${gradient} p-6 sm:p-8 rounded-3xl text-center text-white my-10 sm:my-12 shadow-xl shadow-blue-500/10`}>
+            <h3 className="text-xl sm:text-2xl font-black mb-3 leading-tight">{title}</h3>
+            <p className="text-sm sm:text-base text-blue-50/90 mb-6 max-w-md mx-auto">{description}</p>
             <a
                 href="/"
-                className={`inline-block bg-white ${textColor} font-bold py-3 px-8 rounded-full transition-all hover:scale-105 shadow-xl hover:bg-blue-50`}
+                className={`inline-block bg-white ${textColor} font-bold py-3 px-8 rounded-full transition-all hover:scale-105 shadow-xl hover:bg-blue-50 active:scale-95`}
             >
                 {buttonText}
             </a>
@@ -34,11 +34,11 @@ export function QuickAnswer({ title = "⚡ Quick Answer", children, color = "eme
     const [bgGradient, borderColor, titleColor, textColor] = (colorClasses[color] || colorClasses.emerald).split(' ');
 
     return (
-        <div className={`my-8 p-6 bg-gradient-to-r ${bgGradient} border-2 ${borderColor} rounded-2xl`}>
-            <h2 className={`text-lg font-bold mb-3 ${titleColor} flex items-center gap-2`}>
+        <div className={`my-8 p-5 sm:p-6 bg-gradient-to-br ${bgGradient} border-2 ${borderColor} rounded-2xl shadow-lg shadow-emerald-500/5`}>
+            <h2 className={`text-base sm:text-lg font-black mb-3 ${titleColor} flex items-center gap-2 uppercase tracking-wide`}>
                 {title}
             </h2>
-            <div className={textColor}>
+            <div className={`${textColor} leading-relaxed text-sm sm:text-base`}>
                 {children}
             </div>
         </div>
@@ -58,9 +58,9 @@ export function InfoBox({ type = "info", title, children }) {
     };
 
     return (
-        <div className={`my-10 p-6 ${types[type]} border-l-4 rounded-r-xl`}>
-            {title && <h3 className="font-bold text-lg mb-2">{title}</h3>}
-            <div className="m-0">
+        <div className={`my-8 p-5 sm:p-6 ${types[type]} border-l-[6px] rounded-r-2xl shadow-sm`}>
+            {title && <h3 className="font-black text-base sm:text-lg mb-2 uppercase tracking-tight">{title}</h3>}
+            <div className="text-sm sm:text-base leading-relaxed">
                 {children}
             </div>
         </div>

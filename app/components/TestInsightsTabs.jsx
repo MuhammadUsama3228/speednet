@@ -82,7 +82,7 @@ export default function TestInsightsTabs({
     <div className="mt-6 sm:mt-8">
       {/* Tabs Navigation */}
       <nav
-        className={`flex gap-1 p-1.5 rounded-xl mb-4 ${isDark
+        className={`flex gap-1 p-1.5 rounded-xl mb-4 overflow-x-auto no-scrollbar scroll-smooth ${isDark
           ? 'bg-slate-800/50 border border-white/10'
           : 'bg-white border border-slate-200 shadow-sm'
           }`}
@@ -100,7 +100,7 @@ export default function TestInsightsTabs({
               onClick={() => setActiveTab(tab.key)}
               className={`
                 flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg
-                transition-all duration-200 ease-out
+                transition-all duration-200 ease-out whitespace-nowrap flex-shrink-0
                 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500
                 ${isActive
                   ? isDark
@@ -113,7 +113,7 @@ export default function TestInsightsTabs({
               `}
             >
               <Icon className={`w-4 h-4 transition-transform duration-200 ${isActive ? 'scale-110' : ''}`} />
-              <span className="hidden sm:inline">{tab.label}</span>
+              <span>{tab.label}</span>
             </button>
           );
         })}
@@ -141,22 +141,24 @@ export default function TestInsightsTabs({
               ].map(([label, value, colorClass], i) => (
                 <div
                   key={i}
-                  className={`p-4 rounded-xl border transition-all duration-200 hover:scale-[1.02] cursor-default ${isDark
-                    ? 'bg-slate-700/50 border-slate-600 hover:bg-slate-700'
-                    : 'bg-slate-50 border-slate-200 hover:bg-white hover:shadow-md hover:border-slate-300'
+                  className={`p-3 sm:p-4 rounded-xl border transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] cursor-default flex flex-col justify-center min-h-[85px] sm:min-h-[100px] ${isDark
+                    ? 'bg-slate-700/30 border-white/[0.08] hover:bg-slate-700/50 hover:border-white/10 shadow-lg'
+                    : 'bg-white border-slate-200 shadow-sm hover:shadow-md hover:border-blue-200'
                     }`}
                 >
-                  <div className={`text-2xl font-bold ${isDark ? colorClass : colorClass}`}>{value}</div>
-                  <div className={`text-sm mt-1 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{label}</div>
+                  <div className={`text-xl sm:text-2xl font-black tracking-tight ${isDark ? colorClass : colorClass.replace('-400', '-600')}`}>{value}</div>
+                  <div className={`text-[10px] sm:text-xs font-bold uppercase tracking-wider mt-1.5 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>{label}</div>
                 </div>
               ))}
             </div>
-            <div className={`p-4 rounded-xl border flex items-start gap-3 ${isDark
-              ? 'bg-blue-900/40 border-blue-500/30'
-              : 'bg-blue-50 border-blue-300'
+            <div className={`p-4 sm:p-5 rounded-xl border flex items-start gap-3.5 transition-all shadow-xl ${isDark
+              ? 'bg-blue-900/40 border-blue-500/20 shadow-blue-900/20'
+              : 'bg-blue-50/50 border-blue-200 shadow-blue-500/5'
               }`}>
-              <Info className={`w-5 h-5 flex-shrink-0 mt-0.5 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
-              <p className={`text-sm ${isDark ? 'text-blue-100' : 'text-blue-700'}`}>
+              <div className={`p-2 rounded-lg ${isDark ? 'bg-blue-500/10' : 'bg-blue-100'}`}>
+                <Info className={`w-5 h-5 flex-shrink-0 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
+              </div>
+              <p className={`text-sm leading-relaxed ${isDark ? 'text-blue-100/90' : 'text-blue-800'}`}>
                 {metrics.qualityScore > 80
                   ? 'Excellent WiFi speed test results! Your connection is perfect for all activities including 4K streaming and low-latency competitive gaming.'
                   : metrics.qualityScore > 60

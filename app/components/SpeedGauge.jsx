@@ -2,12 +2,29 @@
 import React, { useEffect, useRef } from 'react';
 import { APP_STRINGS } from '../constants/strings';
 
-export default function SpeedGauge({ value, maxValue = 100, label, unit, colorClass, theme, size = 120 }) {
+export default function SpeedGauge({ value, maxValue = 100, label, unit, colorClass, theme, size: initialSize = 120 }) {
   const canvasRef = useRef(null);
   const animationRef = useRef(null);
   const currentValueRef = useRef(0);
+  const [size, setSize] = React.useState(initialSize);
 
   const isDark = theme === 'dark';
+
+  // Adaptive sizing for mobile
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 380) {
+        setSize(Math.min(initialSize, 100));
+      } else if (window.innerWidth < 640) {
+        setSize(Math.min(initialSize, 110));
+      } else {
+        setSize(initialSize);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [initialSize]);
 
   // Calculate dynamic unit and value
   const dynamicValue = APP_STRINGS.formatSpeedValue(value);
@@ -53,8 +70,8 @@ export default function SpeedGauge({ value, maxValue = 100, label, unit, colorCl
       // Draw background circle
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-      ctx.lineWidth = 8;
-      ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+      ctx.lineWidth = 6;
+      ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
       ctx.stroke();
 
       // Draw progress arc
@@ -63,27 +80,27 @@ export default function SpeedGauge({ value, maxValue = 100, label, unit, colorCl
 
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, -Math.PI / 2, endAngle);
-      ctx.lineWidth = 8;
+      ctx.lineWidth = 6;
       ctx.strokeStyle = getColorFromClass(colorClass);
       ctx.lineCap = 'round';
       ctx.stroke();
 
       // Draw center text (value)
-      ctx.fillStyle = isDark ? '#ffffff' : '#1f2937';
-      ctx.font = `bold ${Math.max(16, rect.width * 0.18)}px 'Segoe UI', 'Helvetica Neue', Arial, sans-serif`;
+      ctx.fillStyle = isDark ? '#ffffff' : '#111827';
+      ctx.font = `bold ${Math.max(16, rect.width * 0.20)}px Inter, system-ui, -apple-system, sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(dynamicValue, centerX, centerY - rect.width * 0.08);
+      ctx.fillText(dynamicValue, centerX, centerY - rect.width * 0.10);
 
       // Draw unit (with more spacing)
-      ctx.fillStyle = isDark ? '#e0e7ff' : '#6b7280';
-      ctx.font = `${Math.max(12, rect.width * 0.12)}px 'Segoe UI', 'Helvetica Neue', Arial, sans-serif`;
+      ctx.fillStyle = isDark ? '#94a3b8' : '#64748b';
+      ctx.font = `600 ${Math.max(12, rect.width * 0.14)}px Inter, system-ui, -apple-system, sans-serif`;
       ctx.fillText(dynamicUnit, centerX, centerY + rect.width * 0.12);
 
       // Draw label (with more spacing from unit)
-      ctx.fillStyle = isDark ? '#e0e7ff' : '#6b7280';
-      ctx.font = `${Math.max(10, rect.width * 0.08)}px 'Segoe UI', 'Helvetica Neue', Arial, sans-serif`;
-      ctx.fillText(label, centerX, centerY + rect.width * 0.26);
+      ctx.fillStyle = isDark ? '#64748b' : '#94a3b8';
+      ctx.font = `500 ${Math.max(10, rect.width * 0.09)}px Inter, system-ui, -apple-system, sans-serif`;
+      ctx.fillText(label, centerX, centerY + rect.width * 0.28);
     };
 
     animate();
