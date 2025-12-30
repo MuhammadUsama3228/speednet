@@ -7,7 +7,7 @@ export default function TestHistory({ history, clearHistory, theme }) {
     if (history.length === 0) return null;
 
     return (
-        <div className={`mt-6 p-5 rounded-2xl border ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-blue-100 shadow-sm'}`}>
+        <div className={`mt-6 p-5 rounded-2xl border ${isDark ? 'bg-white/5 border-white/10' : 'bg-white border-blue-100 shadow-sm'}`} aria-label="Recent WiFi Speed Test Results">
             <h3 className={`font-bold mb-3 flex items-center justify-between ${isDark ? 'text-white' : 'text-slate-800'}`}>
                 <span>Test History</span>
                 <button

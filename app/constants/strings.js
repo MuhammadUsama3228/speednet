@@ -11,6 +11,10 @@ export const APP_STRINGS = {
     HEADER_TITLE: 'ScanPing',
     HEADER_SUBTITLE: 'Fast, Accurate Internet Speed Test',
 
+    // Hero Section (SEO Optimized)
+    HERO_TITLE: 'Internet Speed Test-Check WiFi Speed & Bandwidth',
+    HERO_SUBTITLE: 'Fastest and most accurate network diagnostic tool to test your WiFi speed, latency, and broadband performance in seconds.',
+
     // Connection Info
     CONNECTION_TITLE: 'Your Connection',
     IP_LABEL: 'IP:',

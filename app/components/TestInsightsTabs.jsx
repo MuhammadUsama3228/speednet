@@ -96,6 +96,7 @@ export default function TestInsightsTabs({
               key={tab.key}
               role="tab"
               aria-selected={isActive}
+              aria-label={`View ${tab.label}`}
               onClick={() => setActiveTab(tab.key)}
               className={`
                 flex items-center gap-2 px-4 py-2.5 text-sm font-semibold rounded-lg
@@ -129,7 +130,7 @@ export default function TestInsightsTabs({
         {activeTab === 'analysis' && (
           <div className="animate-fadeIn">
             <h3 className={`font-bold mb-4 text-lg ${isDark ? 'text-white' : 'text-slate-800'}`}>
-              Connection Analysis
+              Full Technical Network Analysis
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
               {[
@@ -157,12 +158,12 @@ export default function TestInsightsTabs({
               <Info className={`w-5 h-5 flex-shrink-0 mt-0.5 ${isDark ? 'text-blue-400' : 'text-blue-600'}`} />
               <p className={`text-sm ${isDark ? 'text-blue-100' : 'text-blue-700'}`}>
                 {metrics.qualityScore > 80
-                  ? 'Excellent connection for all activities including 4K streaming and competitive gaming.'
+                  ? 'Excellent WiFi speed test results! Your connection is perfect for all activities including 4K streaming and low-latency competitive gaming.'
                   : metrics.qualityScore > 60
-                    ? 'Good for most uses, but may experience occasional buffering with 4K content.'
+                    ? 'Good internet speed. Your connection is fast for most uses, but may experience occasional buffering with high-bitrate 4K content.'
                     : metrics.qualityScore > 40
-                      ? 'Fair connection. Expect some issues with high-definition streaming and online gaming.'
-                      : 'Poor connection quality. Consider upgrading your internet plan for better performance.'}
+                      ? 'Fair connection performance. You might experience lag during online gaming or buffering in Ultra HD video streaming.'
+                      : 'Poor connection quality. Consider checking your WiFi router or internet service provider for better bandwidth performance.'}
               </p>
             </div>
           </div>
@@ -172,7 +173,7 @@ export default function TestInsightsTabs({
         {activeTab === 'video' && (
           <div className="space-y-3 animate-fadeIn">
             <h3 className={`font-bold mb-4 text-lg ${isDark ? 'text-white' : 'text-slate-800'}`}>
-              Video Streaming Quality
+              WiFi Video & 4K Streaming Quality Standards
             </h3>
             {VIDEO_QUALITY_REQUIREMENTS.map((v, i) => {
               const ok = downloadSpeed >= v.minSpeed;
@@ -224,7 +225,7 @@ export default function TestInsightsTabs({
         {activeTab === 'gaming' && (
           <div className="space-y-4 animate-fadeIn">
             <h3 className={`font-bold mb-4 text-lg ${isDark ? 'text-white' : 'text-slate-800'}`}>
-              Gaming Performance
+              Real-time Online Gaming & Lag Analysis
             </h3>
             {GAMING_REQUIREMENTS.map((g, i) => {
               const ok = downloadSpeed >= g.minSpeed && ping <= g.maxPing;
@@ -281,7 +282,7 @@ export default function TestInsightsTabs({
           <div className="animate-fadeIn">
             <h3 className={`font-bold mb-4 text-lg flex items-center gap-2 ${isDark ? 'text-white' : 'text-slate-800'}`}>
               <Zap className="w-5 h-5 text-amber-500" />
-              Performance Summary
+              Internet Speed & Bandwidth Summary
             </h3>
             <div className={`p-5 rounded-xl border-2 ${isDark
               ? 'bg-gradient-to-br from-slate-700 to-slate-800 border-slate-600'

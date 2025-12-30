@@ -9,67 +9,44 @@ import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Fast Internet Speed Test`,
+  // OPTIMIZED TITLE: Targets "Internet Speed Test" (4M), "WiFi Speed" (800k), and "Bandwidth"
+  title: `Internet Speed Test - Check WiFi Speed & Bandwidth | ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}`,
   applicationName: process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing',
-  description: `Test your internet speed with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}. Fast, accurate online speed test for download, upload, ping, and latency.`,
+  // OPTIMIZED DESCRIPTION: Includes "Check", "Free", "WiFi", "Broadband" for max CTR
+  description: `Check your internet speed instantly with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}. Free WiFi speed test and broadband bandwidth checker. Measure download, upload, ping, and jitter accurately.`,
   keywords: [
-    // Core high-volume keywords (highest search intent & volume, e.g., "speed test" ~9-10M monthly global)
-    'speed test',
-    'internet speed test',
-    'online speed test',
-    'free speed test',
-    'test my internet speed',
-    'check internet speed',
-    'broadband speed test',
-    'wifi speed test',
+    // --- TIER 1: HIGH VOLUME / LOW COMPETITION (The "Golden List") ---
+    'internet speed test',      // 4M+ Volume
+    'wifi speed test',          // 823k Volume (Huge opportunity)
+    'check internet speed',     // 60k Volume (High Intent)
+    'broadband speed test',     // Tuned for ISP searches
+    'test my internet speed',   // Natural language search
+    'internet speed test free', // "Free" is a strong trigger
+
+    // --- TIER 2: TECHNICAL & VARIATIONS ---
     'download speed test',
     'upload speed test',
-    'speed test of internet',
-    'speed check wifi',
-    'speed test for wifi',
-    'network speed',
-    'test internet speed fast',
-    'speed check for internet',
-    'speed check on internet',
-    'speedtest sites',
-    'wi fi speed',
-    'my speed test internet',
-
-    // Brand & unique strengths (your differentiators)
-    'scanping',
-    'cloudflare speed test',
-    'accurate speed test',
-    'best internet speed test',
-
-    // Competitor/alternative terms (capture users seeking options)
-    'speedtest.net alternative',
-    'fast.com alternative',
-    'ookla speedtest alternative',
-    'speedtest net alternative',
-    'fast com speed test',
-    'fast',
-    'cloudflare',
-    'speedtest',
-
-    // Technical/diagnostic terms (your existing + refined)
+    'bandwidth test',
     'ping test',
     'jitter test',
-    'packet loss test',
     'latency test',
-    'bandwidth test',
-    'network speed test',
-    'internet speed checker',
-    'mbps test',
-
-    // Long-tail & user-intent phrases (lower competition, high conversion)
-    'what is my internet speed',
-    'test internet speed',
+    'network speed',
+    'check wifi speed',
     'measure internet speed',
     'connection speed test',
-    'internet speed meter',
-    'broadband test',
+
+    // --- TIER 3: BRAND & COMPETITOR ALTERNATIVES ---
+    'scanping',
+    'accurate speed test',
+    'speedtest alternative',
+    'fast.com alternative',
+    'cloudflare speed test',
+
+    // Legacy/Other
+    'online speed test',
+    'packet loss test',
     'network diagnostics',
-    'librespeed speed test'
+    'mbps test'
   ],
   authors: [{ name: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} Team` }],
   creator: process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing',
@@ -84,8 +61,9 @@ export const metadata = {
     canonical: '/',
   },
   openGraph: {
-    title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Free Online Internet Speed Test`,
-    description: `Test your internet speed instantly with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}. Check download speed, upload speed, ping, and latency. Free wifi speed test and network diagnostics.`,
+    // SYNCED WITH MAIN METADATA
+    title: `Internet Speed Test - Check WiFi Speed & Bandwidth | ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}`,
+    description: `Check your internet speed instantly with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}. Free WiFi speed test and broadband bandwidth checker. Measure download, upload, ping, and latency accurately.`,
     url: 'https://scanpings.net',
     siteName: process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing',
     images: [
@@ -101,8 +79,8 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: `${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - Free Online Internet Speed Test`,
-    description: `Test your internet speed instantly with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}. Check download speed, upload speed, ping, and latency. Free wifi speed test.`,
+    title: `Internet Speed Test - Check WiFi Speed & Bandwidth | ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}`,
+    description: `Check your internet speed instantly with ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}. Free WiFi speed test and broadband bandwidth checker.`,
     images: ['/og-image.svg'],
     creator: `@${(process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing').toLowerCase()}`,
   },
