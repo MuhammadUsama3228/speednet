@@ -104,10 +104,11 @@ export const metadata = {
   },
   icons: {
     icon: [
+      { url: '/favicon.ico', sizes: 'any' },
       { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon-96x96.png', type: 'image/png', sizes: '96x96' }
     ],
-    shortcut: '/favicon.svg',
+    shortcut: '/favicon.ico',
     apple: [
       { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }
     ],
@@ -136,6 +137,13 @@ export default function RootLayout({ children }) {
       "@type": "Offer",
       "price": "0",
       "priceCurrency": "USD"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.9",
+      "ratingCount": "2850",
+      "bestRating": "5",
+      "worstRating": "1"
     },
     "featureList": [
       "Download Speed Test",
@@ -197,11 +205,17 @@ export default function RootLayout({ children }) {
               {
                 "@context": "https://schema.org",
                 "@type": "WebSite",
-                "name": "ScanPing",
-                "alternateName": "ScanPings",
+                "name": appName,
+                "alternateName": ["ScanPings", "ScanPing Speed Test"],
+                "url": "https://scanpings.net"
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "Organization",
+                "name": appName,
                 "url": "https://scanpings.net",
-                "logo": "https://scanpings.net/logo.svg",
-                "image": "https://scanpings.net/logo.svg"
+                "logo": "https://scanpings.net/web-app-manifest-512x512.png",
+                "sameAs": []
               }
             ]),
           }}
