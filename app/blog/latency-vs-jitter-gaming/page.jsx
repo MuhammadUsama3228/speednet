@@ -1,8 +1,8 @@
 import { APP_STRINGS } from '../../constants/strings';
 
 export const metadata = {
-    title: 'What is Good Jitter? Under 20ms | Ping vs Jitter vs Latency Explained',
-    description: 'Good jitter is under 20ms, acceptable is 20-30ms, high jitter is 30ms+. Learn the difference between ping, latency, and jitter. Jitter causes lag spikes even with fast internet.',
+    title: 'What is Good Jitter? Ping vs Jitter Explained (2024)',
+    description: 'Good jitter is under 20ms (ideal), 20-30ms acceptable, 30ms+ causes lag. Learn ping vs jitter difference and why jitter matters more for gaming than raw speed.',
     keywords: ['what is good jitter', 'ping vs jitter', 'latency vs ping', 'good jitter speed', 'what is high jitter', 'ping vs latency', 'network jitter vs latency', 'jitter speed test'],
     alternates: {
         canonical: '/blog/latency-vs-jitter-gaming',
@@ -63,8 +63,8 @@ export default function Article() {
                             headline: metadata.title,
                             description: metadata.description,
                             image: 'https://scanpings.net/og-image.svg',
-                            datePublished: '2025-12-21',
-                            dateModified: '2025-12-27',
+                            datePublished: '2024-12-21',
+                            dateModified: '2024-12-30',
                             author: {
                                 '@type': 'Organization',
                                 name: 'ScanPing Team',
@@ -112,10 +112,10 @@ export default function Article() {
                         Gaming Network Guide
                     </span>
                     <h1 className="text-3xl md:text-5xl font-black mb-6 text-slate-900 dark:text-white leading-tight">
-                        What is Good Jitter? Ping vs Jitter vs Latency Explained
+                        What is Good Jitter? Ping vs Jitter Explained
                     </h1>
                     <div className="flex items-center justify-center gap-4 text-sm text-slate-500 dark:text-slate-400">
-                        <time>Updated December 27, 2025</time>
+                        <time>Updated December 30, 2024</time>
                         <span>•</span>
                         <span>7 min read</span>
                     </div>
@@ -151,7 +151,7 @@ export default function Article() {
                     </nav>
 
                     <p className="lead text-xl md:text-2xl text-slate-600 dark:text-slate-300 font-medium mb-8">
-                        You just upgraded to 1 Gigabit internet, but your game still stutters? You're experiencing high jitter. Most ISPs sell you "Speed" (Bandwidth), but online games care about "Stability" (Jitter).
+                        If your game lags despite fast internet, you likely have high jitter. <strong>Good jitter is under 20ms</strong> — anything above 30ms causes lag spikes. Many gamers focus on ping (latency), but <strong>jitter matters more</strong>. Here's the difference between ping vs jitter and what you can do about it.
                     </p>
 
                     <h2 id="what-is-jitter" className="text-2xl font-bold mt-12 mb-4 text-slate-900 dark:text-white">What is Jitter? (Simple Explanation)</h2>

@@ -10,18 +10,26 @@ export default function BlogList() {
 
     const posts = [
         {
+            slug: 'how-to-check-internet-speed',
+            title: 'How to Check Your Internet Speed in 2024 (Complete Guide)',
+            excerpt: 'Step-by-step guide to testing your connection. Compare ScanPings, Fast.com, and Speedtest.net.',
+            date: 'Dec 30, 2024',
+            category: 'Network Guide',
+            icon: <Zap className="w-6 h-6" />
+        },
+        {
             slug: 'video-streaming-requirements',
             title: 'Video Streaming Speed Requirements: Netflix, YouTube, Disney+ Complete Guide',
             excerpt: 'Official internet speed requirements for 4K streaming on all major platforms. Stop buffering forever.',
-            date: 'Dec 27, 2025',
+            date: 'Dec 27, 2024',
             category: 'Streaming',
             icon: <Video className="w-6 h-6" />
         },
         {
             slug: 'speed-test-accuracy-and-benchmarks',
-            title: 'Speed Test Accuracy & Benchmarks: What Speed Do You Actually Need?',
+            title: 'What Internet Speed Do I Need? (2024 FCC Guide)',
             excerpt: 'Learn how to interpret your speed test results. Explore benchmarks for gaming, streaming, and mobile usage.',
-            date: 'Dec 27, 2025',
+            date: 'Dec 27, 2024',
             category: 'Network Guide',
             icon: <Zap className="w-6 h-6" />
         },
@@ -29,7 +37,7 @@ export default function BlogList() {
             slug: 'latency-vs-jitter-gaming',
             title: 'Latency vs Jitter: The Ultimate Guide for Gamers',
             excerpt: 'Why having high download speed doesn\'t mean zero lag. Learn the difference between Ping and Jitter and how to fix them.',
-            date: 'Dec 27, 2025',
+            date: 'Dec 27, 2024',
             category: 'Gaming',
             icon: <Activity className="w-6 h-6" />
         },

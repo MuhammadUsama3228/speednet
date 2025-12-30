@@ -1,15 +1,15 @@
 import { APP_STRINGS } from '../../constants/strings';
 
 export const metadata = {
-    title: 'What Internet Speed Do I Need? 100 Mbps for 2024 | Speed Test Guide',
-    description: 'FCC 2024 standard: 100 Mbps download, 20 Mbps upload. Gaming needs 15 Mbps + under 30ms ping. Streaming 4K needs 25 Mbps. Complete speed benchmarks guide.',
+    title: 'What Internet Speed Do I Need in 2024? (Complete Guide)',
+    description: 'FCC standard: 100 Mbps download, 20 Mbps upload. Gaming needs 15 Mbps + under 30ms ping. 4K streaming needs 25 Mbps. Complete internet speed requirements guide.',
     keywords: ['what internet speed do i need', 'how much internet speed do i need', 'good internet speed', 'internet speed for gaming', 'speed test accuracy', 'fcc broadband speed'],
     alternates: {
         canonical: '/blog/speed-test-accuracy-and-benchmarks',
     },
     openGraph: {
-        title: 'What Internet Speed Do I Need? 2024 Benchmarks Guide',
-        description: 'FCC says 100/20 Mbps is the new standard. Find out what speed you actually need for gaming, streaming, and work.',
+        title: 'What Internet Speed Do I Need? 2024 FCC Guide',
+        description: 'FCC says 100/20 Mbps is the new standard. Find out exactly what speed you need for gaming, streaming, remote work, and more.',
         url: 'https://scanpings.net/blog/speed-test-accuracy-and-benchmarks',
         siteName: 'ScanPing',
         images: [
@@ -38,8 +38,8 @@ export default function Article() {
                             headline: metadata.title,
                             description: metadata.description,
                             image: 'https://scanpings.net/og-image.svg',
-                            datePublished: '2025-12-24',
-                            dateModified: '2025-12-27',
+                            datePublished: '2024-12-24',
+                            dateModified: '2024-12-30',
                             author: {
                                 '@type': 'Organization',
                                 name: 'ScanPing Team',
@@ -63,15 +63,68 @@ export default function Article() {
                     }}
                 />
 
+                {/* FAQ Schema - For Google Rich Results */}
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            '@context': 'https://schema.org',
+                            '@type': 'FAQPage',
+                            mainEntity: [
+                                {
+                                    '@type': 'Question',
+                                    name: 'What internet speed do I need?',
+                                    acceptedAnswer: {
+                                        '@type': 'Answer',
+                                        text: 'The FCC 2024 standard recommends 100 Mbps download and 20 Mbps upload for modern households. For gaming, you need 15 Mbps + under 30ms ping. For 4K streaming, you need 25 Mbps. For households with multiple devices, 100+ Mbps is recommended.'
+                                    }
+                                },
+                                {
+                                    '@type': 'Question',
+                                    name: 'What is a good internet speed for gaming?',
+                                    acceptedAnswer: {
+                                        '@type': 'Answer',
+                                        text: 'For competitive gaming, you need 15 Mbps download, 2 Mbps upload, under 30ms ping, and under 3ms jitter. Cloud gaming requires 50+ Mbps download. Ping and jitter matter more than raw speed for gaming.'
+                                    }
+                                },
+                                {
+                                    '@type': 'Question',
+                                    name: 'How much internet speed do I need for 4K streaming?',
+                                    acceptedAnswer: {
+                                        '@type': 'Answer',
+                                        text: 'For 4K streaming: Netflix requires 25 Mbps, YouTube requires 20 Mbps, Disney+ requires 25 Mbps, and Amazon Prime requires 25 Mbps. If multiple devices stream simultaneously, multiply by the number of streams and add 20% buffer.'
+                                    }
+                                },
+                                {
+                                    '@type': 'Question',
+                                    name: 'Is fiber internet better than cable?',
+                                    acceptedAnswer: {
+                                        '@type': 'Answer',
+                                        text: 'Yes, fiber internet has lower latency (7-14ms) compared to cable (15-25ms), more consistent speeds, and better performance under load. Fiber is ideal for gaming and cloud services. Cable can suffer from congestion during peak hours.'
+                                    }
+                                },
+                                {
+                                    '@type': 'Question',
+                                    name: 'What is the FCC broadband standard for 2024?',
+                                    acceptedAnswer: {
+                                        '@type': 'Answer',
+                                        text: 'In March 2024, the FCC raised the national broadband benchmark from 25/3 Mbps to 100 Mbps download / 20 Mbps upload. This is the new minimum for what constitutes broadband internet in the United States.'
+                                    }
+                                }
+                            ]
+                        })
+                    }}
+                />
+
                 <header className="mb-10 text-center">
                     <span className="inline-block px-3 py-1 mb-4 text-xs font-bold tracking-wider text-blue-600 dark:text-blue-400 uppercase bg-blue-100 dark:bg-blue-900/30 rounded-full">
                         Network Guides
                     </span>
                     <h1 className="text-3xl md:text-5xl font-black mb-6 text-slate-900 dark:text-white leading-tight">
-                        Speed Test Accuracy & Benchmarks: What is a "Good" Score?
+                        What Internet Speed Do I Need? (2024 Guide)
                     </h1>
                     <div className="flex items-center justify-center gap-4 text-sm text-slate-500 dark:text-slate-400">
-                        <time>Updated December 27, 2025</time>
+                        <time>Updated December 30, 2024</time>
                         <span>•</span>
                         <span>7 min read</span>
                     </div>
@@ -79,7 +132,7 @@ export default function Article() {
 
                 <div className="prose prose-lg dark:prose-invert mx-auto">
                     <p className="lead text-xl md:text-2xl text-slate-600 dark:text-slate-300 font-medium mb-8">
-                        Most internet users think of "speed" as a single number. In reality, your connection is a complex symphony of latency, jitter, and throughput. ScanPing provides the forensic data you need to understand your true network performance.
+                        <strong>What internet speed do I need?</strong> The FCC says 100 Mbps download and 20 Mbps upload is the new standard. But the actual speed you need depends on your activities: gaming, 4K streaming, video calls, or household size. This guide breaks down exactly what speed you need.
                     </p>
 
                     <div className="my-8 p-6 bg-green-50 dark:bg-green-900/20 border-l-4 border-green-500 rounded-r-xl">

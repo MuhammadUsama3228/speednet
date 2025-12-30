@@ -1,8 +1,8 @@
 import { APP_STRINGS } from '../../constants/strings';
 
 export const metadata = {
-    title: '4K Streaming Speed: Netflix 25 Mbps, YouTube 20 Mbps | Full Guide',
-    description: 'Netflix needs 25 Mbps for 4K, YouTube needs 20 Mbps, Disney+ needs 25 Mbps. Official streaming speed requirements for all platforms. Stop buffering forever.',
+    title: 'Netflix 4K Speed: 25 Mbps Required | Streaming Guide 2024',
+    description: 'Netflix 4K needs 25 Mbps, YouTube 4K needs 20 Mbps, Disney+ needs 25 Mbps. Official streaming speed requirements for all platforms. Complete buffering fix guide.',
     keywords: ['netflix speed requirements', '4k streaming speed', 'youtube bandwidth requirements', 'disney plus internet speed', 'streaming speed test', 'how much internet for 4k'],
     alternates: {
         canonical: '/blog/video-streaming-requirements',
@@ -38,8 +38,8 @@ export default function Article() {
                             headline: metadata.title,
                             description: metadata.description,
                             image: 'https://scanpings.net/og-image.svg',
-                            datePublished: '2025-12-27',
-                            dateModified: '2025-12-27',
+                            datePublished: '2024-12-27',
+                            dateModified: '2024-12-30',
                             author: {
                                 '@type': 'Organization',
                                 name: 'ScanPing Team',
@@ -63,15 +63,76 @@ export default function Article() {
                     }}
                 />
 
+                {/* FAQ Schema - For Google Rich Results */}
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            '@context': 'https://schema.org',
+                            '@type': 'FAQPage',
+                            mainEntity: [
+                                {
+                                    '@type': 'Question',
+                                    name: 'What speed do I need for Netflix 4K?',
+                                    acceptedAnswer: {
+                                        '@type': 'Answer',
+                                        text: 'Netflix requires 25 Mbps for 4K Ultra HD streaming. For HD (1080p), you need 5 Mbps. For SD quality, 3 Mbps is sufficient. These are per-stream requirements, so multiply by the number of simultaneous streams in your household.'
+                                    }
+                                },
+                                {
+                                    '@type': 'Question',
+                                    name: 'How much internet speed for 4K streaming?',
+                                    acceptedAnswer: {
+                                        '@type': 'Answer',
+                                        text: 'Most platforms require 20-25 Mbps for 4K: Netflix needs 25 Mbps, YouTube needs 20 Mbps (35-50 Mbps for 60fps), Disney+ needs 25 Mbps, and Amazon Prime needs 25 Mbps. For multiple 4K streams, multiply accordingly.'
+                                    }
+                                },
+                                {
+                                    '@type': 'Question',
+                                    name: 'Why is my Netflix buffering?',
+                                    acceptedAnswer: {
+                                        '@type': 'Answer',
+                                        text: 'Netflix buffering is caused by: insufficient bandwidth (below 25 Mbps for 4K), network congestion from multiple devices, WiFi interference, ISP throttling during peak hours, or distance from CDN servers. Test your speed and use ethernet for best results.'
+                                    }
+                                },
+                                {
+                                    '@type': 'Question',
+                                    name: 'What is adaptive bitrate streaming?',
+                                    acceptedAnswer: {
+                                        '@type': 'Answer',
+                                        text: 'Adaptive Bitrate Streaming (ABR) automatically adjusts video quality based on your current bandwidth. If speed drops, quality lowers to prevent buffering. When bandwidth improves, quality increases. This is why videos start in SD and gradually sharpen to 4K.'
+                                    }
+                                },
+                                {
+                                    '@type': 'Question',
+                                    name: 'Does the AV1 codec reduce streaming bandwidth?',
+                                    acceptedAnswer: {
+                                        '@type': 'Answer',
+                                        text: 'Yes, the AV1 codec delivers the same quality at 30% lower bandwidth. Netflix, YouTube, and Disney+ are adopting AV1. If your device supports AV1, you may stream 4K with as little as 15-18 Mbps instead of 25 Mbps.'
+                                    }
+                                },
+                                {
+                                    '@type': 'Question',
+                                    name: 'How much speed for multiple 4K TVs?',
+                                    acceptedAnswer: {
+                                        '@type': 'Answer',
+                                        text: 'For multiple 4K streams, multiply 25 Mbps by the number of TVs. For example: 3 TVs streaming 4K = 75 Mbps minimum. Always add 20% buffer for network overhead, so 90+ Mbps recommended for 3 simultaneous 4K streams.'
+                                    }
+                                }
+                            ]
+                        })
+                    }}
+                />
+
                 <header className="mb-10 text-center">
                     <span className="inline-block px-3 py-1 mb-4 text-xs font-bold tracking-wider text-red-600 dark:text-red-400 uppercase bg-red-100 dark:bg-red-900/30 rounded-full">
                         Streaming Guide
                     </span>
                     <h1 className="text-3xl md:text-5xl font-black mb-6 text-slate-900 dark:text-white leading-tight">
-                        Video Streaming Speed Requirements: The Complete 2025 Guide
+                        Netflix 4K, YouTube & Disney+ Speed Requirements (2024)
                     </h1>
                     <div className="flex items-center justify-center gap-4 text-sm text-slate-500 dark:text-slate-400">
-                        <time>December 27, 2025</time>
+                        <time>December 30, 2024</time>
                         <span>•</span>
                         <span>7 min read</span>
                     </div>
