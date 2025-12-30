@@ -29,8 +29,18 @@ export default function SpeedChart({ downloadData, uploadData, theme, isVisible 
 
   const isDark = theme === 'dark';
 
+  // Determine total points for the X-axis
+  const totalPoints = downloadData.length + uploadData.length;
+  // Pad upload data with nulls so it starts AFTER download finishes
+  const paddedUploadData = [...Array(downloadData.length).fill(null), ...uploadData];
+
+  // Generate labels 1..N
+  // Use a max to ensure we always have at least some grid
+  const labelCount = Math.max(totalPoints, 10);
+  const labels = Array.from({ length: labelCount }, (_, i) => i + 1);
+
   const data = {
-    labels: downloadData.map((_, index) => index + 1),
+    labels: labels,
     datasets: [
       {
         label: 'Download (Mbps)',
@@ -41,16 +51,18 @@ export default function SpeedChart({ downloadData, uploadData, theme, isVisible 
         tension: 0.4,
         pointRadius: 0,
         pointHoverRadius: 4,
+        spanGaps: false, // Don't bridge gaps
       },
       {
         label: 'Upload (Mbps)',
-        data: uploadData,
+        data: paddedUploadData,
         borderColor: 'rgb(14, 165, 233)',
         backgroundColor: 'rgba(14, 165, 233, 0.1)',
         fill: true,
         tension: 0.4,
         pointRadius: 0,
         pointHoverRadius: 4,
+        spanGaps: false,
       },
     ],
   };

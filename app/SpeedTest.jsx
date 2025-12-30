@@ -140,7 +140,7 @@ export default function SpeedTestComponent() {
     console.log('runSingleTest called');
     const { default: SpeedTest } = await import('@cloudflare/speedtest');
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       setDownloadSpeed(0);
       setUploadSpeed(0);
       setPing(0);
@@ -152,124 +152,142 @@ export default function SpeedTestComponent() {
 
       console.clear();
       console.log(`%c${APP_STRINGS.CONSOLE_START}`, 'color: #00ff00; font-size: 18px; font-weight: bold');
-      console.log(`%c${APP_STRINGS.CONSOLE_ENGINE}`, 'color: #ffaa00; font-size: 14px');
-      console.log('');
 
+      // ----------------------------------------------------------------------
+      // PHASE 1: PROBE (Estimate Speed)
+      // ----------------------------------------------------------------------
+      setStage('Estimating connection type...');
+      let estimatedSpeedMbps = 0;
+
+      try {
+        const probeTest = new SpeedTest({
+          autoStart: true,
+          measureUpload: false,
+          measureDownload: true,
+          measurements: [
+            { type: 'download', bytes: 250000, count: 2 } // 0.5MB Probe (Faster)
+          ]
+        });
+
+        // Wait for probe to finish (approx 1-3 seconds)
+        await new Promise((resolveProbe) => {
+          probeTest.onFinish = (results) => {
+            const dl = results.getDownloadBandwidth();
+            estimatedSpeedMbps = dl ? (dl / 1000000) : 0;
+            console.log('Probe Speed:', estimatedSpeedMbps, 'Mbps');
+            resolveProbe();
+          };
+          probeTest.onError = () => resolveProbe(); // Continue even if probe fails (assume slow)
+        });
+      } catch (e) {
+        console.warn('Probe failed, defaulting to Med profile');
+      }
+
+      // ----------------------------------------------------------------------
+      // PHASE 2: SELECT PROFILE
+      // ----------------------------------------------------------------------
+      let measurements = [];
+      let profileName = "";
+
+      if (estimatedSpeedMbps < 10) {
+        // SLOW PROFILE (Max download ~4MB)
+        // RECALIBRATION: 200KB was too small (overhead dominated). Increased to 500KB to allow full speed saturation.
+        // Count reduced to 8 to keep total duration safe (~25-30s).
+        profileName = "Slow Connection";
+        measurements = [
+          { type: 'download', bytes: 5e5, count: 8 },    // 500KB x 8 (Target ~30s at 1Mbps)
+          { type: 'upload', bytes: 2e5, count: 8 },      // 200KB x 8
+          { type: 'latency', numPackets: 20 }
+        ];
+      } else if (estimatedSpeedMbps < 50) { // Increased threshold slightly for Medium vs Fast
+        // MEDIUM PROFILE
+        profileName = "Standard Broadband";
+        measurements = [
+          { type: 'download', bytes: 1.5e6, count: 12 }, // 1.5MB chunks
+          { type: 'upload', bytes: 8e5, count: 10 },
+          { type: 'latency', numPackets: 20 }
+        ];
+      } else if (estimatedSpeedMbps < 500) {
+        // FAST PROFILE
+        profileName = "High Speed Fiber/Cable";
+        measurements = [
+          { type: 'download', bytes: 5e6, count: 30 }, // 5MB chunks
+          { type: 'upload', bytes: 2e6, count: 20 },   // 2MB chunks
+          { type: 'latency', numPackets: 20 }
+        ];
+      } else {
+        // GIGABIT PROFILE
+        profileName = "Gigabit Fiber";
+        measurements = [
+          { type: 'download', bytes: 2.5e7, count: 40 }, // 25MB chunks
+          { type: 'upload', bytes: 1e7, count: 20 },     // 10MB chunks
+          { type: 'latency', numPackets: 20 }
+        ];
+      }
+
+      console.log(`Selected Profile: ${profileName}`);
+      setStage(`Testing (${profileName})...`);
+
+      // ----------------------------------------------------------------------
+      // PHASE 3: EXECUTE MAIN TEST
+      // ----------------------------------------------------------------------
       const speedTest = new SpeedTest({
         autoStart: false,
         measureUpload: true,
         measureDownload: true,
-        measurements: [
-          { type: 'latency', numPackets: 10 }, // Reduced latency checks
-          { type: 'download', bytes: 5e5, count: 16 }, // Lightweight: 500KB x 16 = 8MB Max (Super fast, no stuck tests)
-          { type: 'upload', bytes: 5e5, count: 8 },   // Lightweight: 500KB x 8 = 4MB Max
-          { type: 'latency', numPackets: 5 }
-        ]
+        measurements: measurements
       });
       speedTestRef.current = speedTest;
 
-      console.log('Speed test initialized:', speedTest);
-
-      speedTest.onResultsChange = () => {
-        console.log('Results changed callback triggered');
-        try {
-          const downloadBw = speedTest.results.getDownloadBandwidth();
-          const uploadBw = speedTest.results.getUploadBandwidth();
-          const latency = speedTest.results.getUnloadedLatency();
-
-          // Try different jitter methods
-          let jitter = 0;
-          try {
-            jitter = speedTest.results.getUnloadedJitter();
-          } catch (e) {
-            console.log('getUnloadedJitter failed, trying alternatives');
-            // Try to calculate jitter from latency points
-            const latencyPoints = speedTest.results.getUnloadedLatencyPoints();
-            if (latencyPoints && latencyPoints.length > 1) {
-              const variations = [];
-              for (let i = 1; i < latencyPoints.length; i++) {
-                variations.push(Math.abs(latencyPoints[i] - latencyPoints[i - 1]));
-              }
-              if (variations.length > 0) {
-                jitter = variations.reduce((sum, v) => sum + v, 0) / variations.length;
-              }
-            }
-          }
-
-          console.log('Raw results - download:', downloadBw, 'upload:', uploadBw, 'latency:', latency, 'jitter:', jitter);
-
-          const dlMbps = downloadBw ? (downloadBw / 1_000_000).toFixed(2) : 0;
-          const ulMbps = uploadBw ? (uploadBw / 1_000_000).toFixed(2) : 0;
-          const pingMs = latency ? Math.round(latency) : 0;
-          const jitterMs = jitter ? Math.round(jitter) : 0;
-
-          console.log('Converted results - download:', dlMbps, 'upload:', ulMbps, 'ping:', pingMs, 'jitter:', jitterMs);
-
-          if (dlMbps > 0) setDownloadSpeed(parseFloat(dlMbps));
-          if (ulMbps > 0) setUploadSpeed(parseFloat(ulMbps));
-          if (pingMs > 0) setPing(pingMs);
-          if (jitterMs > 0) setJitter(jitterMs); // Update jitter during test
-
-          const currentLive = dlMbps > ulMbps ? dlMbps : ulMbps;
-          if (currentLive > 0) setLiveSpeed(parseFloat(currentLive));
-
-          // Update chart data
-          if (dlMbps > 0) {
-            setDownloadData(prev => [...prev.slice(-50), parseFloat(dlMbps)]);
-          }
-          if (ulMbps > 0) {
-            setUploadData(prev => [...prev.slice(-50), parseFloat(ulMbps)]);
-          }
-
-          const downloadPoints = speedTest.results.getDownloadBandwidthPoints()?.length || 0;
-          const uploadPoints = speedTest.results.getUploadBandwidthPoints()?.length || 0;
-          const totalPoints = downloadPoints + uploadPoints;
-          if (testing) {
-            setProgress(Math.min(99, Math.round(totalPoints * 3)));
-          }
-        } catch (e) {
-          console.log('Error updating results:', e);
-        }
-      };
-
-      let currentStage = APP_STRINGS.STAGE_LATENCY;
-      setStage(currentStage);
-
-      stageIntervalRef.current = setInterval(() => {
-        try {
-          const latency = speedTest.results.getUnloadedLatency();
-          const downloadBw = speedTest.results.getDownloadBandwidth();
-
-          if (latency > 0 && currentStage === APP_STRINGS.STAGE_LATENCY) {
-            currentStage = APP_STRINGS.STAGE_DOWNLOAD;
-            setStage(currentStage);
-          } else if (downloadBw > 0 && currentStage === APP_STRINGS.STAGE_DOWNLOAD) {
-            currentStage = APP_STRINGS.STAGE_UPLOAD;
-            setStage(currentStage);
-          }
-        } catch (e) {
-          // Ignore errors during stage updates
-        }
-      }, 1000);
-
-      speedTest.onFinish = (results) => {
-        console.log('Speed test finished:', results);
+      const handleFinish = (results) => {
         if (stageIntervalRef.current) clearInterval(stageIntervalRef.current);
 
         try {
-          const downloadBw = results.getDownloadBandwidth();
-          const uploadBw = results.getUploadBandwidth();
-          const latency = results.getUnloadedLatency();
+          // CUSTOM CALCULATION: 90th Percentile (Cloudflare Standard Logic)
+          // "We take the 90th percentile of the measurements." - Cloudflare Blog
 
-          // Try different jitter methods
+          const calcOptimizedSpeed = (points) => {
+            if (!points || points.length === 0) return 0;
+            // Inspect first point to find the correct property (bandwidth or value)
+            const testPoint = points[0];
+            const valProp = 'bandwidth' in testPoint ? 'bandwidth' : 'value';
+
+            if (points.length < 5) return points[points.length - 1][valProp];
+
+            // Extract values safely
+            const values = points.map(p => p[valProp]).filter(v => v !== undefined && v !== null && !isNaN(v));
+            if (values.length === 0) return 0;
+
+            // Cloudflare Logic: 90th Percentile (Not Average)
+            values.sort((a, b) => a - b); // Ascending
+
+            const index = Math.floor(values.length * 0.9); // 90th %
+            const p90Value = values[Math.min(index, values.length - 1)];
+
+            return p90Value;
+          };
+
+          // Get raw data points
+          const dlPoints = results.getDownloadBandwidthPoints() || speedTest.results.getDownloadBandwidthPoints() || [];
+          const ulPoints = results.getUploadBandwidthPoints() || speedTest.results.getUploadBandwidthPoints() || [];
+
+          // Calculate optimized speeds
+          const optDl = dlPoints.length > 0 ? calcOptimizedSpeed(dlPoints) : 0;
+          const optUl = ulPoints.length > 0 ? calcOptimizedSpeed(ulPoints) : 0;
+
+          // Use optimized calc, but strictly fallback to library default if optimized returns 0/NaN
+          const downloadBw = (optDl > 0) ? optDl : (results.getDownloadBandwidth() || speedTest.results.getDownloadBandwidth());
+          const uploadBw = (optUl > 0) ? optUl : (results.getUploadBandwidth() || speedTest.results.getUploadBandwidth());
+
+          const latency = results.getUnloadedLatency() || speedTest.results.getUnloadedLatency();
+
+          // Calculate Jitter
           let jitterVal = 0;
           try {
             jitterVal = results.getUnloadedJitter();
           } catch (e) {
-            console.log('getUnloadedJitter failed in onFinish, trying alternatives');
-            // Try to calculate jitter from latency points
-            const latencyPoints = results.getUnloadedLatencyPoints();
-            if (latencyPoints && latencyPoints.length > 1) {
+            const latencyPoints = results.getUnloadedLatencyPoints() || [];
+            if (latencyPoints.length > 1) {
               const variations = [];
               for (let i = 1; i < latencyPoints.length; i++) {
                 variations.push(Math.abs(latencyPoints[i] - latencyPoints[i - 1]));
@@ -280,14 +298,12 @@ export default function SpeedTestComponent() {
             }
           }
 
-          console.log('Final results - download:', downloadBw, 'upload:', uploadBw, 'latency:', latency, 'jitter:', jitterVal);
+          console.log('Final results - download:', downloadBw, 'upload:', uploadBw, 'latency:', latency);
 
           const finalDl = downloadBw ? (downloadBw / 1_000_000).toFixed(2) : 0;
           const finalUl = uploadBw ? (uploadBw / 1_000_000).toFixed(2) : 0;
           const finalPing = latency ? Math.round(latency) : 0;
           const finalJitter = jitterVal ? Math.round(jitterVal) : 0;
-
-          console.log('Final converted - download:', finalDl, 'upload:', finalUl, 'ping:', finalPing, 'jitter:', finalJitter);
 
           setDownloadSpeed(parseFloat(finalDl));
           setUploadSpeed(parseFloat(finalUl));
@@ -297,10 +313,8 @@ export default function SpeedTestComponent() {
           setStage(APP_STRINGS.STAGE_COMPLETE);
           setLiveSpeed(0);
           setTesting(false);
-          if (stageIntervalRef.current) clearInterval(stageIntervalRef.current);
 
-          console.log(`%c${APP_STRINGS.CONSOLE_COMPLETE}`, 'color: #00ff00; font-size: 16px; font-weight: bold');
-          console.log(`${APP_STRINGS.DOWNLOAD_LABEL}: ${APP_STRINGS.formatSpeed(finalDl)} | ${APP_STRINGS.UPLOAD_LABEL}: ${APP_STRINGS.formatSpeed(finalUl)} | ${APP_STRINGS.PING_LABEL}: ${finalPing} ${APP_STRINGS.PING_UNIT} | ${APP_STRINGS.JITTER_LABEL}: ${finalJitter} ${APP_STRINGS.PING_UNIT}`);
+          console.log(`${APP_STRINGS.DOWNLOAD_LABEL}: ${finalDl} | ${APP_STRINGS.UPLOAD_LABEL}: ${finalUl}`);
 
           resolve({
             download: parseFloat(finalDl),
@@ -310,29 +324,131 @@ export default function SpeedTestComponent() {
           });
 
         } catch (e) {
-          console.error('Error in onFinish:', e);
+          console.error('Error in handleFinish:', e);
           setStage(APP_STRINGS.STAGE_COMPLETE);
           setTesting(false);
           reject(e);
         }
       };
 
+      // Safety Timer (Max 180s / 3 mins)
+      // "ensure that test never be end till everything is not calculated"
+      // Extended to 3 minutes to provide a virtually infinite buffer for slow connections.
+      const SAFETY_TIMEOUT = 180000;
+      const safetyTimer = setTimeout(() => {
+        console.warn('Test exceeded max duration (180s) - Forcing finish');
+        speedTest.pause();
+        handleFinish(speedTest.results);
+      }, SAFETY_TIMEOUT);
+
+      speedTest.onResultsChange = () => {
+        try {
+          const calcLiveSpeed = (points) => {
+            if (!points || points.length === 0) return 0;
+            // Inspect first point to find the correct property
+            const testPoint = points[0];
+            // Check common property names: bandwidth (lib), bps (csv), value (generic)
+            const valProp = 'bandwidth' in testPoint ? 'bandwidth'
+              : 'bps' in testPoint ? 'bps'
+                : 'value' in testPoint ? 'value'
+                  : null;
+
+            if (!valProp) return 0;
+
+            // For live speed, we just want the latest trend (moving average of last 3)
+            const lastPoints = points.slice(-3);
+            const sum = lastPoints.reduce((a, b) => a + (b[valProp] || 0), 0);
+            return sum / lastPoints.length;
+          };
+
+          const dlPoints = speedTest.results.getDownloadBandwidthPoints() || [];
+          const ulPoints = speedTest.results.getUploadBandwidthPoints() || [];
+
+          // Calculate with custom logic, but STRICTLY fallback to library default if custom returns 0
+          const liveDl = dlPoints.length > 0 ? calcLiveSpeed(dlPoints) : 0;
+          const liveUl = ulPoints.length > 0 ? calcLiveSpeed(ulPoints) : 0;
+
+          const downloadBw = (liveDl > 0) ? liveDl : (speedTest.results.getDownloadBandwidth() || 0);
+          const uploadBw = (liveUl > 0) ? liveUl : (speedTest.results.getUploadBandwidth() || 0);
+
+          const latency = speedTest.results.getUnloadedLatency();
+
+          // Jitter calculation
+          let jitter = 0;
+          try {
+            jitter = speedTest.results.getUnloadedJitter();
+          } catch (e) { } // Jitter may not be avail immediately
+
+          const dlMbps = downloadBw ? (downloadBw / 1_000_000).toFixed(2) : 0;
+          const ulMbps = uploadBw ? (uploadBw / 1_000_000).toFixed(2) : 0;
+          const pingMs = latency ? Math.round(latency) : 0;
+          const jitterMs = jitter ? Math.round(jitter) : 0;
+
+          if (dlMbps > 0) setDownloadSpeed(parseFloat(dlMbps));
+          if (ulMbps > 0) setUploadSpeed(parseFloat(ulMbps));
+          if (pingMs > 0) setPing(pingMs);
+          if (jitterMs > 0) setJitter(jitterMs);
+
+          const currentLive = dlMbps > ulMbps ? dlMbps : ulMbps;
+          if (currentLive > 0) setLiveSpeed(parseFloat(currentLive));
+
+          // Dynamic Stage Updates
+          if (downloadBw > 0 && currentStage !== APP_STRINGS.STAGE_DOWNLOAD && currentStage !== APP_STRINGS.STAGE_UPLOAD) {
+            currentStage = APP_STRINGS.STAGE_DOWNLOAD;
+            setStage(APP_STRINGS.STAGE_DOWNLOAD + ` (${profileName})`);
+          }
+          if (uploadBw > 0 && currentStage !== APP_STRINGS.STAGE_UPLOAD) {
+            currentStage = APP_STRINGS.STAGE_UPLOAD;
+            setStage(APP_STRINGS.STAGE_UPLOAD + ` (${profileName})`);
+          }
+
+          // Charts
+          if (dlMbps > 0) setDownloadData(prev => [...prev.slice(-50), parseFloat(dlMbps)]);
+          if (ulMbps > 0) setUploadData(prev => [...prev.slice(-50), parseFloat(ulMbps)]);
+
+          // Progress
+          const downloadPoints = speedTest.results.getDownloadBandwidthPoints()?.length || 0;
+          const uploadPoints = speedTest.results.getUploadBandwidthPoints()?.length || 0;
+
+          // Estimate total points based on profile
+          const targetDlPoints = measurements.reduce((acc, m) => m.type === 'download' ? acc + (m.count || 0) : acc, 0);
+          const targetUlPoints = measurements.reduce((acc, m) => m.type === 'upload' ? acc + (m.count || 0) : acc, 0);
+          const totalMeasurableEvents = targetDlPoints + targetUlPoints;
+
+          if (testing && totalMeasurableEvents > 0) {
+            const currentPoints = downloadPoints + uploadPoints;
+            const rawProgress = Math.round((currentPoints / totalMeasurableEvents) * 100);
+            // Ensure progress keeps moving but doesn't hit 100 prematurely
+            setProgress(Math.min(98, Math.max(5, rawProgress)));
+          }
+        } catch (e) {
+          console.log('Error updating results:', e);
+        }
+      };
+
+      // Stage Updates - Set Initial Stage
+      let currentStage = APP_STRINGS.STAGE_LATENCY;
+      setStage(currentStage + "...");
+
+      // Removed conflicting setInterval loop for stage updates
+
+      speedTest.onFinish = (results) => {
+        clearTimeout(safetyTimer);
+        handleFinish(results);
+      };
+
       speedTest.onError = (error) => {
-        console.error('Speed test error:', error);
+        clearTimeout(safetyTimer);
         setStage(APP_STRINGS.STAGE_FAILED);
         setTesting(false);
         if (stageIntervalRef.current) clearInterval(stageIntervalRef.current);
         reject(error);
       };
 
-      // Start the actual speed test
       try {
         speedTest.play();
-        console.log('Speed test started successfully');
       } catch (playError) {
-        console.error('Error starting speed test:', playError);
         reject(playError);
-        return;
       }
     });
   };
@@ -443,7 +559,7 @@ export default function SpeedTestComponent() {
 
         {/* Start Button */}
         {!testing && (
-          <div className="flex justify-center mb-12">
+          <div className="flex justify-center mb-10">
             <button
               onClick={() => {
                 console.log('Button clicked');
@@ -610,16 +726,16 @@ export default function SpeedTestComponent() {
 
           {/* Test Standards Info */}
           {!testing && !stage && (
-            <div className={`mb-8 p-4 rounded-xl border text-xs text-center mx-auto max-w-lg transition-all ${theme === 'dark' ? 'bg-white/5 border-white/10 text-slate-400' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
+            <div className={`p-4 rounded-xl border text-xs text-center mx-auto max-w-lg transition-all ${theme === 'dark' ? 'bg-white/5 border-white/10 text-slate-400' : 'bg-slate-50 border-slate-200 text-slate-500'}`}>
               <h2 className="font-bold uppercase tracking-widest mb-3 opacity-70">Adaptive Test Standards</h2>
               <div className="flex justify-center gap-4 sm:gap-8">
                 <div className="flex flex-col">
-                  <span className={`font-mono font-bold text-lg ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}>Adaptive</span>
-                  <span className="opacity-70">Download (~8MB)</span>
+                  <span className={`font-mono font-bold text-lg ${theme === 'dark' ? 'text-green-400' : 'text-green-600'}`}>Max 60s</span>
+                  <span className="opacity-70">Download (1GB+)</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className={`font-mono font-bold text-lg ${theme === 'dark' ? 'text-sky-400' : 'text-sky-600'}`}>Adaptive</span>
-                  <span className="opacity-70">Upload (~4MB)</span>
+                  <span className={`font-mono font-bold text-lg ${theme === 'dark' ? 'text-sky-400' : 'text-sky-600'}`}>Max 60s</span>
+                  <span className="opacity-70">Upload (200MB+)</span>
                 </div>
                 <div className="flex flex-col">
                   <span className={`font-mono font-bold text-lg ${theme === 'dark' ? 'text-amber-400' : 'text-amber-600'}`}>20x</span>
@@ -634,7 +750,7 @@ export default function SpeedTestComponent() {
             downloadData={downloadData}
             uploadData={uploadData}
             theme={theme}
-            isVisible={testing}
+            isVisible={testing || downloadData.length > 0 || uploadData.length > 0}
           />
 
           {/* Progress */}
@@ -667,9 +783,9 @@ export default function SpeedTestComponent() {
             }}
             disabled={testing}
             aria-label={testing ? 'Test in progress' : 'Start Speed Test'}
-            className={`w-full py-5 rounded-2xl font-bold text-lg transition-all shadow-lg text-white mb-6 ${testing
+            className={`w-full py-5 rounded-2xl font-bold text-lg transition-all shadow-lg text-white mb-2 mt-8 ${testing
               ? 'bg-slate-700 cursor-not-allowed opacity-50'
-              : 'bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 hover:scale-[1.02] active:scale-95'
+              : 'bg-gradient-to-r from-indigo-500 via-blue-500 to-cyan-500 hover:from-indigo-600 hover:via-blue-600 hover:to-cyan-600 hover:scale-[1.02] active:scale-95 shadow-blue-500/20'
               }`}
           >
             {testing ? APP_STRINGS.BUTTON_TESTING : APP_STRINGS.BUTTON_START}
