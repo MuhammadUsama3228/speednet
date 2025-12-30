@@ -301,10 +301,10 @@ export default function TestInsightsTabs({
 
               <div className="grid grid-cols-2 gap-3 mt-4">
                 {[
-                  { label: 'Download', value: `${downloadSpeed} Mbps`, icon: '↓', color: 'text-emerald-600' },
-                  { label: 'Upload', value: `${uploadSpeed} Mbps`, icon: '↑', color: 'text-blue-600' },
-                  { label: 'Ping', value: `${ping} ms`, icon: '◉', color: 'text-amber-600' },
-                  { label: 'Jitter', value: `${jitter} ms`, icon: '~', color: 'text-purple-600' },
+                  { label: 'Download', value: `${Number(downloadSpeed).toFixed(2)} Mbps`, icon: '↓', color: 'text-emerald-600' },
+                  { label: 'Upload', value: `${Number(uploadSpeed).toFixed(2)} Mbps`, icon: '↑', color: 'text-blue-600' },
+                  { label: 'Ping', value: `${Math.round(ping)} ms`, icon: '◉', color: 'text-amber-600' },
+                  { label: 'Jitter', value: `${Math.round(jitter)} ms`, icon: '~', color: 'text-purple-600' },
                 ].map((item, i) => (
                   <div key={i} className={`p-3 rounded-lg border ${isDark
                     ? 'bg-slate-700/50 border-slate-600'
@@ -313,7 +313,7 @@ export default function TestInsightsTabs({
                     <div className={`text-xs uppercase tracking-wide font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                       <span className={item.color}>{item.icon}</span> {item.label}
                     </div>
-                    <div className={`text-lg font-bold mt-1 ${isDark ? 'text-white' : 'text-slate-800'}`}>
+                    <div className={`text-base md:text-lg font-bold mt-1 truncate ${isDark ? 'text-white' : 'text-slate-800'}`}>
                       {item.value}
                     </div>
                   </div>

@@ -372,10 +372,10 @@ export default function SpeedTestComponent() {
         const avgPing = results.reduce((sum, r) => sum + r.ping, 0) / results.length;
         const avgJitter = results.reduce((sum, r) => sum + r.jitter, 0) / results.length;
 
-        setDownloadSpeed(avgDownload);
-        setUploadSpeed(avgUpload);
-        setPing(avgPing);
-        setJitter(avgJitter);
+        setDownloadSpeed(parseFloat(avgDownload.toFixed(2)));
+        setUploadSpeed(parseFloat(avgUpload.toFixed(2)));
+        setPing(Math.round(avgPing));
+        setJitter(Math.round(avgJitter));
         setTestResults(results);
         setStage(`Average of ${results.length} tests`);
         setTesting(false);
