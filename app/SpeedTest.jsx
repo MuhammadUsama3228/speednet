@@ -576,21 +576,11 @@ export default function SpeedTestComponent() {
   };
 
   return (
-    <main className={`min-h-screen pt-20 p-4 flex items-center justify-center transition-colors duration-300 ${theme === 'dark'
-      ? 'bg-gradient-to-br from-blue-900 via-blue-800 to-purple-900'
-      : 'bg-gradient-to-br from-blue-50 via-white to-blue-100'
-      }`}>
-
+    <div className={`py-4 px-4 flex flex-col items-center justify-center transition-colors duration-300`}>
       <div className="w-full max-w-3xl relative">
-
-        {/* Header */}
-        <header className="text-center mb-8" role="banner">
-          <div className="flex items-center justify-center gap-3 mb-3">
-            <Wifi className={`w-8 h-8 md:w-9 md:h-9 ${theme === 'dark' ? 'text-blue-300' : 'text-blue-600'}`} aria-hidden="true" />
-            <h1 className={`text-3xl md:text-5xl font-bold ${theme === 'dark' ? 'text-white' : 'text-slate-800'}`}>{APP_STRINGS.HEADER_TITLE}</h1>
-          </div>
-          <p className={`text-lg ${theme === 'dark' ? 'text-blue-200' : 'text-slate-600'}`}>{APP_STRINGS.HEADER_SUBTITLE}</p>
-        </header>
+        <div className="sr-only">
+          <h2>Standardized WiFi Speed Test & Internet Diagnostics</h2>
+        </div>
 
         {/* Start Button */}
         {!testing && (
@@ -930,14 +920,7 @@ export default function SpeedTestComponent() {
             )
           }
         </section >
-
-        {/* SEO Content removed (moved to About page) */}
-
-        {/* Footer */}
-        <footer className={`text-center mt-12 mb-8 text-sm ${theme === 'dark' ? 'text-blue-300' : 'text-slate-500'}`} role="contentinfo">
-          <p>{APP_STRINGS.FOOTER_TEXT}</p>
-        </footer>
       </div >
-    </main >
+    </div >
   );
 }

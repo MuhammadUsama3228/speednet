@@ -4,9 +4,7 @@ import { Rocket } from 'lucide-react';
 import { APP_STRINGS } from '../constants/strings';
 import { motion } from 'framer-motion';
 
-export default function SpeedHero({ theme }) {
-    const isDark = theme === 'dark';
-
+export default function SpeedHero() {
     return (
         <div className="text-center mb-8 md:mb-12 pt-4">
             <motion.div
@@ -21,10 +19,10 @@ export default function SpeedHero({ theme }) {
             >
                 <Rocket className="w-8 h-8 md:w-10 md:h-10 text-blue-500" />
             </motion.div>
-            <h1 className={`text-3xl md:text-5xl lg:text-6xl font-black mb-3 tracking-tight leading-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-black mb-3 tracking-tight leading-tight text-slate-900 dark:text-white">
                 {APP_STRINGS.HERO_TITLE}
             </h1>
-            <p className={`text-sm md:text-lg max-w-2xl mx-auto px-6 ${isDark ? 'text-blue-200' : 'text-slate-600'}`}>
+            <p className="text-sm md:text-lg max-w-2xl mx-auto px-6 text-slate-600 dark:text-blue-200">
                 {APP_STRINGS.HERO_SUBTITLE}
             </p>
         </div>

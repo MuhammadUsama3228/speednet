@@ -1,11 +1,5 @@
-"use client";
+import SimpleFooter from '../../components/SimpleFooter';
 
-import { useTheme } from '../../context/ThemeContext';
-
-/**
- * Reusable Blog Article Layout Component
- * Provides consistent structure for all blog posts
- */
 export default function BlogLayout({
     children,
     category,
@@ -25,7 +19,7 @@ export default function BlogLayout({
     };
 
     return (
-        <article className="min-h-screen pt-24 px-4 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-gray-200 transition-colors duration-300">
+        <article className="min-h-screen pt-24 pb-20 px-4 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-gray-200 transition-colors duration-300">
             <div className="max-w-3xl mx-auto backdrop-blur-sm bg-white/50 dark:bg-slate-800/50 p-6 md:p-12 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-xl">
 
                 {/* Render all schemas */}
@@ -51,9 +45,11 @@ export default function BlogLayout({
                     </div>
                 </header>
 
-                <div className="prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert mx-auto leading-relaxed">
+                <div className="prose prose-sm sm:prose-base lg:prose-lg dark:prose-invert mx-auto leading-relaxed mb-12">
                     {children}
                 </div>
+
+                <SimpleFooter />
             </div>
         </article>
     );

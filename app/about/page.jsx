@@ -1,14 +1,14 @@
 import AboutContent from './AboutContent';
 
 export const metadata = {
-    title: `About ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - FAQ & Speed Test Guide`,
-    description: 'Learn how ScanPing tests your internet speed, understand Ping, Jitter, and Latency, and find answers to common network questions.',
+    title: `Our Mission & Technology - Why We Built ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}`,
+    description: `Learn about the mission behind ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}—providing radical transparency in network diagnostics using Cloudflare edge intelligence and a privacy-first manifesto.`,
     alternates: {
         canonical: '/about',
     },
     openGraph: {
-        title: `About ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'} - FAQ & Guide`,
-        description: 'Everything you need to know about internet speed testing, latency, and network diagnostics.',
+        title: `Our Mission & Technology - Why We Built ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}`,
+        description: 'Discover why we prioritize latency transparency and how we use global edge intelligence to provide the most accurate speed test results.',
         url: 'https://scanpings.net/about',
         siteName: 'ScanPing',
         images: [
@@ -16,7 +16,7 @@ export const metadata = {
                 url: '/og-image.svg',
                 width: 1200,
                 height: 630,
-                alt: 'About ScanPing - Internet Speed Test Guide',
+                alt: 'About ScanPing - Our Mission & Technology',
             },
         ],
         locale: 'en_US',
@@ -31,26 +31,26 @@ export default function AboutPage() {
         "mainEntity": [
             {
                 "@type": "Question",
-                "name": "What is ScanPing?",
+                "name": "What is the mission of ScanPing?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "ScanPing is a free, high-performance internet speed test tool that measures your download speed, upload speed, ping (latency), and jitter to provide a comprehensive analysis of your network connection."
+                    "text": "ScanPing aims to provide radical transparency in network diagnostics, focusing on quality metrics like Ping and Jitter that traditional speed tests often overlook."
                 }
             },
             {
                 "@type": "Question",
-                "name": "How is Jitter different from Ping?",
+                "name": "How does ScanPing technology work?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Ping measures the time it takes for data to travel to a server and back (latency), while Jitter measures the consistency of that time. High jitter means your connection is unstable, which can cause lag spikes in gaming."
+                    "text": "ScanPing utilizes thousands of Cloudflare edge nodes globally, connecting users to the nearest possible point of presence for scientifically accurate latency and bandwidth measurements."
                 }
             },
             {
                 "@type": "Question",
-                "name": "What is a good internet speed?",
+                "name": "Is my data private on ScanPing?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "A good speed depends on your needs. For streaming 4K video, 25 Mbps is recommended. For online gaming, anything above 10-20 Mbps is usually fine, but low Ping (<50ms) and low Jitter are more important."
+                    "text": "Yes. ScanPing follows a strict Privacy Manifesto: we do not store IP addresses permanently, do not sell metadata, and use no tracking pixels."
                 }
             }
         ]

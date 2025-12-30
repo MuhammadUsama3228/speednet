@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useTheme } from '../context/ThemeContext';
 import { ArrowRight, Wifi, Zap, Activity, Video } from 'lucide-react';
-import { APP_STRINGS } from '../constants/strings';
+import SimpleFooter from '../components/SimpleFooter';
 
 export default function BlogList() {
     const { theme } = useTheme();
@@ -98,9 +98,7 @@ export default function BlogList() {
                     ))}
                 </div>
 
-                <footer className={`text-center mt-20 mb-12 text-sm ${theme === 'dark' ? 'text-blue-300' : 'text-slate-500'}`}>
-                    <p>{APP_STRINGS.FOOTER_TEXT}</p>
-                </footer>
+                <SimpleFooter />
             </div>
         </main>
     );

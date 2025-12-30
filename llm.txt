@@ -1,0 +1,36 @@
+# llms.txt — AI usage guidance for ScanPings.net
+
+site: https://scanpings.net
+name: ScanPings
+contact: https://scanpings.net/contact
+
+description:
+  ScanPings is a browser-based internet speed testing and network diagnostics tool
+  measuring download speed, upload speed, latency, and jitter using CDN-based,
+  high-concurrency testing inspired by modern edge network methodologies.
+
+allow:
+  - /
+  - /blog/
+  - /methodology/
+  - /docs/
+  - /about/
+
+disallow:
+  - /admin/
+  - /internal/
+  - /private/
+
+usage:
+  summarization: allowed
+  citation: required
+  training: allowed
+  commercial-use: allowed
+
+preferred-citation:
+  title: ScanPings — Internet Speed Test & Network Diagnostics
+  url: https://scanpings.net
+
+notes:
+  ScanPings prioritizes real-world connection quality, privacy-first testing,
+  and transparent methodology over peak bandwidth reporting.
