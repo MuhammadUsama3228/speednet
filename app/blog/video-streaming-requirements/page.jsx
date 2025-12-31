@@ -1,7 +1,7 @@
 import { APP_STRINGS } from '../../constants/strings';
 
 export const metadata = {
-    title: 'Netflix 4K Speed: 25 Mbps Required | Streaming Guide 2024',
+    title: 'Netflix 4K Speed: 25 Mbps Required | Streaming Guide 2025',
     description: 'Netflix 4K needs 25 Mbps, YouTube 4K needs 20 Mbps, Disney+ needs 25 Mbps. Official streaming speed requirements for all platforms. Complete buffering fix guide.',
     keywords: ['netflix speed requirements', '4k streaming speed', 'youtube bandwidth requirements', 'disney plus internet speed', 'streaming speed test', 'how much internet for 4k'],
     alternates: {

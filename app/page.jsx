@@ -1,10 +1,20 @@
-import SpeedTest from './SpeedTest'
+import dynamic from 'next/dynamic'
 import SpeedHero from './components/SpeedHero'
-import SEOContent from './components/SEOContent'
 import SimpleFooter from './components/SimpleFooter'
 
+const SpeedTest = dynamic(() => import('./SpeedTest'), {
+  loading: () => <div className="min-h-[400px] flex items-center justify-center">
+    <div className="animate-pulse text-blue-500 font-medium">Loading Speedometer...</div>
+  </div>,
+  ssr: false // Huge performance win for TTI
+})
+
+const SEOContent = dynamic(() => import('./components/SEOContent'), {
+  ssr: true // Keep SSR for SEO
+})
+
 export const metadata = {
-  title: 'Internet Speedometer - Fast Speed Test',
+  title: 'Internet Speedometer - Fast Speed Test & WiFi Checker',
   description: 'Check how fast is my internet with our accurate Internet Speedometer. Run a fast speed test for wifi, broadband, and mobile in 30 seconds. 100% free.',
   keywords: [
     'fast speed test',

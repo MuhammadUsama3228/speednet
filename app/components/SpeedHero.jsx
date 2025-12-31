@@ -2,23 +2,23 @@
 import React from 'react';
 import { Rocket } from 'lucide-react';
 import { APP_STRINGS } from '../constants/strings';
-import { motion } from 'framer-motion';
 
 export default function SpeedHero() {
     return (
         <div className="text-center mb-8 md:mb-12 pt-4">
-            <motion.div
-                initial={{ y: 0 }}
-                animate={{ y: [-10, 0, -10] }}
-                transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-                className="inline-block p-2 md:p-3 rounded-2xl bg-blue-500/10 mb-3 md:mb-4 will-change-transform"
-            >
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                @keyframes float {
+                    0%, 100% { transform: translateY(0); }
+                    50% { transform: translateY(-10px); }
+                }
+                .animate-float {
+                    animation: float 2s ease-in-out infinite;
+                }
+            `}} />
+            <div className="inline-block p-2 md:p-3 rounded-2xl bg-blue-500/10 mb-3 md:mb-4 animate-float will-change-transform">
                 <Rocket className="w-8 h-8 md:w-10 md:h-10 text-blue-500" />
-            </motion.div>
+            </div>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-black mb-3 tracking-tight leading-tight text-slate-900 dark:text-white">
                 {APP_STRINGS.HERO_TITLE}
             </h1>

@@ -11,7 +11,7 @@ export default function BlogList() {
     const posts = [
         {
             slug: 'how-to-check-internet-speed',
-            title: 'How to Check Your Internet Speed in 2024 (Complete Guide)',
+            title: 'How to Check Internet Speed in 2025 (Step-by-Step Guide)',
             excerpt: 'Step-by-step guide to testing your connection. Compare ScanPings, Fast.com, and Speedtest.net.',
             date: 'Dec 30, 2024',
             category: 'Network Guide',
@@ -19,27 +19,59 @@ export default function BlogList() {
         },
         {
             slug: 'video-streaming-requirements',
-            title: 'Video Streaming Speed Requirements: Netflix, YouTube, Disney+ Complete Guide',
+            title: 'Netflix 4K Speed: 25 Mbps Required | Streaming Guide 2025',
             excerpt: 'Official internet speed requirements for 4K streaming on all major platforms. Stop buffering forever.',
             date: 'Dec 27, 2024',
             category: 'Streaming',
             icon: <Video className="w-6 h-6" />
         },
         {
-            slug: 'speed-test-accuracy-and-benchmarks',
-            title: 'What Internet Speed Do I Need? (2024 FCC Guide)',
-            excerpt: 'Learn how to interpret your speed test results. Explore benchmarks for gaming, streaming, and mobile usage.',
+            slug: 'gaming-speed-test',
+            title: 'Ultimate Gaming Speed Test Guide: Best Ping for Gaming',
+            excerpt: 'Stop the lag. Learn what makes a good gaming internet connection and how to optimize your ping.',
             date: 'Dec 27, 2024',
-            category: 'Network Guide',
+            category: 'Gaming',
             icon: <Zap className="w-6 h-6" />
         },
         {
             slug: 'latency-vs-jitter-gaming',
-            title: 'Latency vs Jitter: The Ultimate Guide for Gamers',
-            excerpt: 'Why having high download speed doesn\'t mean zero lag. Learn the difference between Ping and Jitter and how to fix them.',
+            title: 'What is Good Jitter? Ping vs Jitter Explained (2025 Guide)',
+            excerpt: 'Why having high download speed doesn\'t mean zero lag. Learn the difference between Ping and Jitter.',
             date: 'Dec 27, 2024',
             category: 'Gaming',
             icon: <Activity className="w-6 h-6" />
+        },
+        {
+            slug: 'packet-loss-test',
+            title: 'Packet Loss Test: How to Fix Rubberbanding & Lag (2025)',
+            excerpt: 'Identify network drops and fix your connection for smooth gaming and choppy video calls.',
+            date: 'Dec 26, 2024',
+            category: 'Gaming',
+            icon: <Activity className="w-6 h-6" />
+        },
+        {
+            slug: 'bufferbloat-test',
+            title: 'Bufferbloat Test: Why Your Ping Spikes Under Load (2025)',
+            excerpt: 'Learn how to perform a bufferbloat test and fix ping spikes with SQM and QoS settings.',
+            date: 'Dec 25, 2024',
+            category: 'Gaming',
+            icon: <Activity className="w-6 h-6" />
+        },
+        {
+            slug: 'netflix-speed-test',
+            title: 'Netflix Speed Test: Fast.com vs ScanPing Accuracy (2025)',
+            excerpt: 'Learn the difference between Fast.com (Netflix) and ScanPings (Cloudflare) results.',
+            date: 'Dec 24, 2024',
+            category: 'Streaming',
+            icon: <Video className="w-6 h-6" />
+        },
+        {
+            slug: 'speed-test-accuracy-and-benchmarks',
+            title: 'What Internet Speed Do I Need in 2025? (Complete Guide)',
+            excerpt: 'Learn how to interpret your speed test results. Explore benchmarks for gaming and 4K streaming.',
+            date: 'Dec 23, 2024',
+            category: 'Network Guide',
+            icon: <Zap className="w-6 h-6" />
         },
     ];
 

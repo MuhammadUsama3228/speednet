@@ -702,6 +702,7 @@ export default function SpeedTestComponent() {
                 disabled={testing}
                 role="switch"
                 aria-checked={multiTest}
+                aria-label="Toggle Multi-Test Accuracy Mode"
                 className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${multiTest ? (isDark ? 'bg-blue-500 shadow-[0_0_12px_rgba(59,130,246,0.5)]' : 'bg-blue-600')
                   : (isDark ? 'bg-slate-700' : 'bg-slate-300')
                   } ${testing ? 'opacity-40 cursor-not-allowed' : ''}`}

@@ -1,7 +1,7 @@
 import { APP_STRINGS } from '../../constants/strings';
 
 export const metadata = {
-    title: 'What is Good Jitter? Ping vs Jitter Explained (2024)',
+    title: 'What is Good Jitter? Ping vs Jitter Explained (2025 Guide)',
     description: 'Good jitter is under 20ms (ideal), 20-30ms acceptable, 30ms+ causes lag. Learn ping vs jitter difference and why jitter matters more for gaming than raw speed.',
     keywords: ['what is good jitter', 'ping vs jitter', 'latency vs ping', 'good jitter speed', 'what is high jitter', 'ping vs latency', 'network jitter vs latency', 'jitter speed test'],
     alternates: {

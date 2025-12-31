@@ -178,10 +178,14 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
+        <link rel="preconnect" href="https://cloudflare.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://ipapi.co" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+
         {/* Google Analytics 4 */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID || 'G-VQ6VB5LY8D'}`}
-          strategy="lazyOnload"
+          strategy="afterInteractive" // Changed from lazyOnload for better balance
         />
         <Script id="google-analytics" strategy="lazyOnload">
           {`
@@ -225,7 +229,9 @@ export default function RootLayout({ children }) {
         <ClientProviders>
           <Navbar />
           <Toaster position="top-right" />
-          {children}
+          <main id="main-content">
+            {children}
+          </main>
         </ClientProviders>
       </body>
     </html>

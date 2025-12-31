@@ -3,7 +3,7 @@ import { createBlogPostingSchema, createFAQSchema, createHowToSchema } from '../
 import { BlogCTA, QuickAnswer, InfoBox, RelatedArticles, FAQSection } from '../components/BlogComponents';
 
 export const metadata = {
-    title: 'Packet Loss Test: How to Fix Rubberbanding and Lag (2025)',
+    title: 'Packet Loss Test: How to Fix Rubberbanding & Lag (2025)',
     description: 'Frustrated by lag in games or choppy video calls? Learn how to run a packet loss test, identify network drops, and fix your connection for good.',
     keywords: ['packet loss test', 'fix packet loss', 'what causes packet loss', 'how to reduce packet loss', 'ping loss test', 'network packet loss guide'],
     alternates: {

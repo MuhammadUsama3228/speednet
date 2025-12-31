@@ -3,7 +3,7 @@ import { createBlogPostingSchema, createFAQSchema } from '../utils/schemas';
 import { BlogCTA, QuickAnswer, InfoBox, RelatedArticles, FAQSection } from '../components/BlogComponents';
 
 export const metadata = {
-    title: 'Netflix Speed Test: Fast.com vs ScanPings Explained (2025)',
+    title: 'Netflix Speed Test: Fast.com vs ScanPing Accuracy (2025)',
     description: 'Why do speed test results differ? Learn the difference between Fast.com (Netflix) and ScanPings (Cloudflare). Find your true speed for 4K streaming.',
     keywords: ['netflix speed test', 'fast.com vs scanpings', 'test netflix speed', 'how fast is my internet for netflix', 'streaming speed test', 'fast.com accuracy'],
     alternates: {

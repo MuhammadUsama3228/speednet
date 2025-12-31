@@ -12,6 +12,7 @@ export default function TestHistory({ history, clearHistory, theme }) {
                 <span>Test History</span>
                 <button
                     onClick={clearHistory}
+                    aria-label="Clear test history"
                     className={`text-xs px-2 py-1 rounded hover:bg-red-500/10 ${isDark ? 'text-blue-300 hover:text-red-400' : 'text-slate-500 hover:text-red-600'}`}
                 >
                     Clear

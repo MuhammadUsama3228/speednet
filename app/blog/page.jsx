@@ -8,7 +8,7 @@ export const metadata = {
         canonical: '/blog',
     },
     openGraph: {
-        title: 'ScanPing Blog - Network Insights',
+        title: 'ScanPing Blog: Internet Speed Tips & Network Guide 2025',
         description: 'Expert guides on internet speed and gaming performance.',
         url: 'https://scanpings.net/blog',
     }

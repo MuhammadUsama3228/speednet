@@ -1,7 +1,7 @@
 import { APP_STRINGS } from '../../constants/strings';
 
 export const metadata = {
-    title: 'What Internet Speed Do I Need in 2024? (Complete Guide)',
+    title: 'What Internet Speed Do I Need in 2025? (Complete Guide)',
     description: 'FCC standard: 100 Mbps download, 20 Mbps upload. Gaming needs 15 Mbps + under 30ms ping. 4K streaming needs 25 Mbps. Complete internet speed requirements guide.',
     keywords: ['what internet speed do i need', 'how much internet speed do i need', 'good internet speed', 'internet speed for gaming', 'speed test accuracy', 'fcc broadband speed'],
     alternates: {

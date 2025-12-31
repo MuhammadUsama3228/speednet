@@ -1,7 +1,7 @@
 import AboutContent from './AboutContent';
 
 export const metadata = {
-    title: `Our Mission & Technology - Why We Built ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}`,
+    title: `Our Mission & Technology: Why We Built the ScanPing Tool`,
     description: `Learn about the mission behind ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}—providing radical transparency in network diagnostics using Cloudflare edge intelligence and a privacy-first manifesto.`,
     alternates: {
         canonical: '/about',

@@ -3,7 +3,7 @@ import { createBlogPostingSchema, createFAQSchema } from '../utils/schemas';
 import { BlogCTA, QuickAnswer, InfoBox, RelatedArticles, FAQSection } from '../components/BlogComponents';
 
 export const metadata = {
-    title: 'Bufferbloat Test: Why Your Ping Spikes Under Load (2025 Guide)',
+    title: 'Bufferbloat Test: Why Your Ping Spikes Under Load (2025)',
     description: 'Experiencing lag while others stream? Learn how to perform a bufferbloat test, understand loaded latency, and fix ping spikes with SQM and QoS settings.',
     keywords: ['bufferbloat test', 'what is bufferbloat', 'fix bufferbloat', 'high latency under load', 'ping spikes while streaming', 'bufferbloat fix guide'],
     alternates: {

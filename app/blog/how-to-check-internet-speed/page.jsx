@@ -3,7 +3,7 @@ import { createBlogPostingSchema, createFAQSchema, createHowToSchema } from '../
 import { BlogCTA, QuickAnswer, InfoBox, RelatedArticles } from '../components/BlogComponents';
 
 export const metadata = {
-    title: 'How to Check Your Internet Speed in 2024 (Step-by-Step)',
+    title: 'How to Check Internet Speed in 2025 (Step-by-Step Guide)',
     description: 'Learn how to check your internet speed in 3 simple steps. Compare ScanPings, Speedtest.net, and Fast.com. Find out if your ISP is delivering promised speeds.',
     keywords: ['how to check internet speed', 'how to test internet speed', 'check my internet speed', 'test internet connection', 'internet speed test free'],
     alternates: {

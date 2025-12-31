@@ -3,7 +3,7 @@ import { createBlogPostingSchema, createFAQSchema, createHowToSchema } from '../
 import { BlogCTA, QuickAnswer, InfoBox, RelatedArticles, FAQSection } from '../components/BlogComponents';
 
 export const metadata = {
-    title: 'Ultimate Gaming Speed Test Guide: Best Ping for Gaming (2025)',
+    title: 'Ultimate Gaming Speed Test Guide: Best Ping for Gaming',
     description: 'Stop the lag. Learn what makes a good gaming internet connection, how to optimize your ping, and why jitter is more important than download speed.',
     keywords: ['gaming speed test', 'best ping for gaming', 'reduce lag valorant', 'gaming internet optimization', 'optimum gaming speed', 'high jitter gaming fix'],
     alternates: {
