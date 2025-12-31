@@ -23,10 +23,6 @@ export function ThemeProvider({ children }) {
         document.documentElement.classList.toggle('dark', newTheme === 'dark');
     };
 
-    if (!mounted) {
-        return null; // Prevent hydration mismatch
-    }
-
     return (
         <ThemeContext.Provider value={{ theme, toggleTheme }}>
             {children}
