@@ -6,7 +6,12 @@ import Navbar from './components/Navbar'
 import Script from 'next/script'
 import { Inter } from 'next/font/google'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true,
+  variable: '--font-inter'
+})
 
 export const metadata = {
   // OPTIMIZED TITLE: Targets "Internet Speed Test" (4M), "WiFi Speed" (800k), and "Bandwidth"
@@ -181,19 +186,24 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://cloudflare.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://ipapi.co" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
 
-        {/* Google Analytics 4 */}
+        {/* Google Analytics 4 - Optimized loading */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID || 'G-VQ6VB5LY8D'}`}
-          strategy="afterInteractive" // Changed from lazyOnload for better balance
+          strategy="afterInteractive"
         />
-        <Script id="google-analytics" strategy="lazyOnload">
+        <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-
-            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID || 'G-VQ6VB5LY8D'}');
+            gtag('config', '${process.env.NEXT_PUBLIC_GA_ID || 'G-VQ6VB5LY8D'}', {
+              page_title: document.title,
+              page_location: window.location.href,
+              send_page_view: true
+            });
           `}
         </Script>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
@@ -245,7 +255,7 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.variable} font-sans antialiased`}>
         <ClientProviders>
           <Navbar />
           <Toaster position="top-right" />

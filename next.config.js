@@ -7,7 +7,16 @@ const nextConfig = {
   },
   images: {
     unoptimized: false,
+    formats: ['image/webp', 'image/avif'],
   },
+  // Performance optimizations
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  // Enable compression
+  compress: true,
+  // Optimize fonts
+  optimizeFonts: true,
   async headers() {
     return [
       {
