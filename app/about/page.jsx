@@ -3,6 +3,7 @@ import AboutContent from './AboutContent';
 export const metadata = {
     title: `Our Mission & Technology: Why We Built the ScanPing Tool`,
     description: `Learn about the mission behind ${process.env.NEXT_PUBLIC_APP_NAME || 'ScanPing'}—providing radical transparency in network diagnostics using Cloudflare edge intelligence and a privacy-first manifesto.`,
+    keywords: 'internet speed test, network diagnostics, Cloudflare edge intelligence, ping test, jitter test, latency measurement, bandwidth test, privacy-first speed test, connection quality analysis',
     alternates: {
         canonical: '/about',
     },
